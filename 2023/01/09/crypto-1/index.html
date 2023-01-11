@@ -16,7 +16,7 @@
 <meta property="og:description" content="1.base如何识别base家族   首先看有没有结尾的&#x3D;   其次看对应的字符是否在base家族对应的字符集上   base16: 0-9,A-F 共16个以及补位的“&#x3D;”   base32: A-Z,2-7 共32个以及补位的“&#x3D;”（注意：没有1）   base64: a-z,0-9,A-F,+,&#x2F; 共64个以及补位的“&#x3D;&#x3D;”">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-01-09T03:12:13.000Z">
-<meta property="article:modified_time" content="2023-01-11T02:44:46.380Z">
+<meta property="article:modified_time" content="2023-01-11T02:58:45.684Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -201,6 +201,17 @@
 <p>lafg	ea{s	_eya	y_sc	yprt	}o</p>
 </blockquote>
 <p>如<code>flag</code>原本排列为<code>1234</code>经3124变化后成为<code>lafg</code></p>
+<p>云影密码  </p>
+<p>仅包含<strong>01248</strong>五个数字，0用来分割  </p>
+<p>其余数字做加和后转换为明文。</p>
+<p>栅栏密码  </p>
+<p>栅栏密码密钥只有一个数字<strong>k</strong>，表示栅栏长度，将加密的明文分为k个一组，然后取每组的一个字符拼接，拼接而成的就是密文。  </p>
+<blockquote>
+<p>m&#x3D;”flag{zhalan_mima_}”</p>
+<p>k&#x3D;5</p>
+<p>分为flag{	zhala	n_mim	ma_}</p>
+<p>拼接的密文为	fznmlh_aaam_gli}{am</p>
+</blockquote>
 
       
 
