@@ -181,17 +181,9 @@
 <p>格式是flag{ }，那么afZ_对应的就是flag</p>
 <p>凯撒密码的原理是对字母的位移替换加密。</p>
 <p>当a&#x3D;f时向后位移是5，f&#x3D;l时向后位移是6，Z&#x3D;a时向后位移是1，好像找不出什么规律呢</p>
-<p>但是可以从另一个角度来看（以下ascii码均为十进制）</p>
-<p>a的ascii码是97，f的ascii码是102。102-97&#x3D;5</p>
-<p>f的ascii码是102，l的ascii码是108。108-102&#x3D;6</p>
-<p>Z的ascii码是90，a的ascii码是97。97-90&#x3D;7</p>
-<p>突然就发现规律了！</p>
-<p>_和g的ascii码相差为8</p>
-<p>那么这个变异凯撒，其实是将在字母表上的位移，变成了在ascii码上的位移，并且每外后一个字符位移加一。写python脚本解题。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">m=<span class="string">&quot;afZ_r9VYfScOeO_UL^RWUc&quot;</span></span><br><span class="line">j=<span class="number">5</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> m :</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">chr</span>(<span class="built_in">ord</span>(i)+j),end=<span class="string">&quot;&quot;</span>)</span><br><span class="line">    j+=<span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p>得<code>flag为flag&#123;Caesar_variation&#125;</code></p>
-
+        
+          <a class="article-more-a" href="/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8crypto/#more">more >></a>
+        
       
 
       
