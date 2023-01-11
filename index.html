@@ -180,27 +180,9 @@
 <p>base32: A-Z,2-7 共32个以及补位的“&#x3D;”（注意：没有1）  </p>
 <p>base64: a-z,0-9,A-F,+,&#x2F; 共64个以及补位的“&#x3D;&#x3D;”    </p>
 <p>进行base家族多种编码的解码  </p>
-<p><a target="_blank" rel="noopener" href="http://ctf.ssleye.com/">http://ctf.ssleye.com/</a></p>
-<p>python demon</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line">s = <span class="string">&#x27;flag&#x27;</span></span><br><span class="line">s_by = <span class="built_in">bytes</span>(s, <span class="string">&#x27;UTF-8&#x27;</span>) <span class="comment"># 转换成编码</span></span><br><span class="line"><span class="built_in">print</span>(s_by, <span class="built_in">type</span>(s_by))</span><br><span class="line">s_base64_by = base64.b64encode(s_by)</span><br><span class="line"><span class="built_in">print</span>(s_base64_by, <span class="built_in">type</span>(s_base64_by)) <span class="comment"># 类型还是编码</span></span><br><span class="line">s_base64 = s_base64_by.decode()</span><br><span class="line"><span class="built_in">print</span>(s_base64, <span class="built_in">type</span>(s_base64)) <span class="comment"># decode变为字符串</span></span><br><span class="line"><span class="built_in">print</span>(base64.b16encode(<span class="built_in">bytes</span>(<span class="string">&#x27;flag&#x27;</span>, <span class="string">&#x27;UTF-8&#x27;</span>)).decode())</span><br><span class="line"><span class="built_in">print</span>(base64.b32encode(<span class="built_in">bytes</span>(<span class="string">&#x27;flag&#x27;</span>, <span class="string">&#x27;UTF-8&#x27;</span>)).decode())</span><br><span class="line"><span class="built_in">print</span>(base64.b64encode(<span class="built_in">bytes</span>(<span class="string">&#x27;flag&#x27;</span>, <span class="string">&#x27;UTF-8&#x27;</span>)).decode())</span><br><span class="line"><span class="built_in">print</span>(base64.b16decode(<span class="string">&quot;666C6167&quot;</span>.upper()))</span><br><span class="line"><span class="built_in">print</span>(base64.b32decode(<span class="string">&quot;MZWGCZY=&quot;</span>)) </span><br><span class="line"><span class="built_in">print</span>(base64.b64decode(<span class="string">&quot;ZmxhZw==&quot;</span>))</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-古典密码"><a href="#2-古典密码" class="headerlink" title="2.古典密码"></a>2.古典密码</h2><ol>
-<li><p>简单移位密码</p>
-<p>明文根据密钥进行位置变换</p>
-<p><code>m=&#39;&#39;flag&#123;easy easy crypto&#125;&#39;&#39;</code></p>
-<p><code>k=&quot;3124&quot;</code></p>
-<p> 首先m以k的长度（4）切分，</p>
-<blockquote>
-<p>flag {eas	y_ea	sy_c	rypt	o}</p>
-</blockquote>
-<p>然后按照<code>3124</code>的顺序对每一部分密钥进行变化:</p>
-<blockquote>
-<p>lafg	ea{s	_eya	y_sc	yprt	}o</p>
-</blockquote>
-<p>如<code>flag</code>原本排列为<code>1234</code>经3124变化后成为<code>lafg</code></p>
-</li>
-</ol>
-
+        
+          <a class="article-more-a" href="/2023/01/09/crypto-1/#more">more >></a>
+        
       
 
       
