@@ -153,6 +153,92 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-第一周web" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/">第一周web</a>
+    </h1>
+  
+
+        
+        <a href="/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/" class="archive-article-date">
+  	<time datetime="2023-01-11T05:56:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-01-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="SSTI（模板注入）"><a href="#SSTI（模板注入）" class="headerlink" title="SSTI（模板注入）"></a>SSTI（模板注入）</h2><p>SSTI主要是python，PHP，Java的一些框架在使用渲染函数时，由于代码不规范或过于信任用户的输入导致了服务端模板注入。<br></p>
+<p>模板：类似于作文模板，是拼接字符串的体力活。</p>
+<p><img src="/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/6c258773c5fc6fca7229b978a7a27b8ff1b326f0.png"></p>
+<p>把数据塞进模板里面，然后让渲染引擎把塞进去的东西生成html文本，返回给浏览器。</p>
+<p>这里提供几个解释概念和基操很好的几个博客（非常适合新手去了解一些基础的概念）<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/dojo-lzz/p/5518474.html">浅谈模板引擎</a><br><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/3679">flask之ssti模板注入从零到入门</a></p>
+<p>例题：bugku：Simple_SSTI_2<br>题解：python的flask框架的模板注入<br>手工注入<code>payload:/?flag=&#123;&#123;config.__class__.__init__.__globals__['os'].popen('cat ../app/flag').read()&#125;&#125;</code></p>
+<p>但是不理解怎么办？那就去试着理解ta</p>
+<blockquote>
+<p><code>config</code>为对象；</p>
+<p><code>__class__</code>:返回对象所属类；</p>
+<p><code>__init__</code>:类的初始方法，初始化实例，返回类型是function；</p>
+<p><code>__globals__</code>:使用方式是 函数名<code>.__globals__</code>获取function所处空间下可使用的module、方法以及所有变量；</p>
+<p><code>os</code>就是返回字典里的一个模块</p>
+<p><code>popen</code>()返回一个输出流，然后通过read()读取这个返回的流里面的数据</p>
+<p>payload构造过程：</p>
+<ol>
+<li>明确要利用的目标函数；<code>popen</code></li>
+<li>找到目标函数被定义的位置，目标模块<code>os</code>，或者目标类</li>
+<li>构造前一部分payload，大部分思路固定，目标是拿到所有Object类的子类</li>
+<li>如果这些子类很多没有加载，调用它们显式定义的方法，解析器会加载并执行模块，</li>
+<li>（如果模块刚好存在目标函数，则跳过该步）考虑在被加载模块中存在导入目标模块的import语句</li>
+<li>导入目标函数或者目标模块后，在当前命名空间就存在它们变量，这样一来就通过这个变量。</li>
+</ol>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-第一周crypto" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
