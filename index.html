@@ -153,6 +153,75 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-第一周pwn" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/">第一周pwn</a>
+    </h1>
+  
+
+        
+        <a href="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/" class="archive-article-date">
+  	<time datetime="2023-01-15T09:40:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-01-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="rip"><a href="#rip" class="headerlink" title="rip"></a>rip</h2><p>先用checksec查看开启了哪些保护机制（这种题就没必要保护了吧！！！）</p>
+<img src="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_17-42-47.png" style="zoom:80%;">
+
+<p>Arch:判断是拉进ida 32还是64，使用p32还是p64(为什么这个是32但要拉进64？)</p>
+<p>RELRO:此项技术主要针对GOT改写的攻击方式。分为Partial和Full两种，部分（Partial）RELRO易受到攻击，而完全(Full)RELRO使整个GOT只读，从而无法被覆盖，但这样会大大增加程序启动时间，因为程序在启动之前需要解析所有的符号。</p>
+        
+          <a class="article-more-a" href="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-第一周web" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
