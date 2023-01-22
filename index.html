@@ -173,7 +173,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><h2 id="warmup-csaw-2016"><a href="#warmup-csaw-2016" class="headerlink" title="warmup_csaw_2016"></a>warmup_csaw_2016</h2><p>首先checksec检查一下，<img src="/2023/01/17/%E7%AC%AC%E4%BA%8C%E5%91%A8pwn/Snipaste_2023-01-16_17-09-13.png"></p>
+        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><h2 id="warmup-csaw-2016"><a href="#warmup-csaw-2016" class="headerlink" title="warmup_csaw_2016"></a>warmup_csaw_2016</h2><p>首先checksec检查一下，<img src="/2023/01/17/%E7%AC%AC%E4%BA%8C%E5%91%A8pwn/Snipaste_2023-01-22_17-19-29.png"></p>
 <p>依旧无事发生，拉进ida里分析。</p>
 <p>main函数中有危险函数gets，<img src="/2023/01/17/%E7%AC%AC%E4%BA%8C%E5%91%A8pwn/Snipaste_2023-01-16_17-10-27.png">同时，发现v5和rbp(对应32位中的ebp)的距离是40h，也就是说只需要40h+8就可以覆盖返回地址</p>
 <p>之后再来寻找目标函数地址，shift+f12寻找，找到cat flag.txt，右键＋X找到目标函数sub_40060D，开始于40060D。</p>
