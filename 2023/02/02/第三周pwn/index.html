@@ -40,7 +40,7 @@
 <meta property="og:image" content="http://example.com/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-04_12-37-51.png">
 <meta property="og:image" content="http://example.com/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-04_12-43-08.png">
 <meta property="article:published_time" content="2023-02-02T13:32:49.000Z">
-<meta property="article:modified_time" content="2023-02-04T08:15:11.651Z">
+<meta property="article:modified_time" content="2023-02-12T03:08:10.328Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
@@ -199,7 +199,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-02-04 16:15:11" itemprop="dateModified" datetime="2023-02-04T16:15:11+08:00">2023-02-04</time>
+                <time title="Modified: 2023-02-12 11:08:10" itemprop="dateModified" datetime="2023-02-12T11:08:10+08:00">2023-02-12</time>
               </span>
 
           
@@ -217,7 +217,7 @@
 
 <p>发现打开了Canary和NX，就是说用不了栈溢出了</p>
 <p>打开ida反编译，在main函数中看到printf(&amp;buf);</p>
-<span id="more"></span>![](./第三周pwn/Snipaste_2023-02-02_21-35-57.png)
+<span id="more"></span>
 
 <p>考查格式化字符串漏洞，再观察函数，<img src="/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/Snipaste_2023-02-02_21-35-49.png"></p>
 <p>大意是将随机数与密码比较，如果相等，则拿到权限。</p>
@@ -273,7 +273,10 @@
     <a href="/2023/01/17/%E7%AC%AC%E4%BA%8C%E5%91%A8pwn/" rel="prev" title="第二周pwn">
       <i class="fa fa-chevron-left"></i> 第二周pwn
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2023/02/12/%E7%AC%AC%E5%9B%9B%E5%91%A8pwn/" rel="next" title="第四周pwn">
+      第四周pwn <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -346,7 +349,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

