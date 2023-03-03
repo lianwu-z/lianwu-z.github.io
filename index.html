@@ -150,6 +150,180 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/03/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%8F%8A%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/03/03/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%8F%8A%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" class="post-title-link" itemprop="url">局域网及虚拟机网络配置</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-03-03 13:05:49 / Modified: 17:29:30" itemprop="dateCreated datePublished" datetime="2023-03-03T13:05:49+08:00">2023-03-03</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="虚拟机网络设置"><a href="#虚拟机网络设置" class="headerlink" title="虚拟机网络设置"></a>虚拟机网络设置</h2><h3 id="桥接模式"><a href="#桥接模式" class="headerlink" title="桥接模式"></a>桥接模式</h3><p>这里我使用的是手机热点</p>
+<p>先查看物理机网络信息</p>
+<img src="/2023/03/03/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%8F%8A%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/Snipaste_2023-03-03_13-10-43.png" style="zoom:67%;">
+
+<p>在vm的虚拟机网络编辑器里，选择<img src="/2023/03/03/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%8F%8A%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/Snipaste_2023-03-03_13-15-06.png"></p>
+<p>在虚拟机中，使用</p>
+<p><code>nano /etc/network/interfaces</code>来配置</p>
+<p>根据自己的网络服务来设置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">  GNU nano 6.4               /etc/network/interfaces                         </span><br><span class="line"># This file describes the network interfaces available on your system</span><br><span class="line">#</span><br><span class="line"># and how to activate them. For more information, see interfaces(5).</span><br><span class="line"></span><br><span class="line">source /etc/network/interfaces.d/*</span><br><span class="line"></span><br><span class="line"># The loopback network interface</span><br><span class="line">auto lo</span><br><span class="line">iface lo inet loopback</span><br><span class="line">auto eth0</span><br><span class="line">iface eth0 inet static</span><br><span class="line">address 192.168.106.251</span><br><span class="line">netmask 255.255.255.0</span><br><span class="line">gateway 192.168.106.181</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后再编辑dns服务器</p>
+<p><code>nano /etc/resolv.conf</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nameserver 192.168.106.181</span><br></pre></td></tr></table></figure>
+
+<p>如果是使用的dhcp服务，注意使用一下这个命令</p>
+<p><code>dhclient eth0 </code></p>
+<p>然后重启一下网络服务</p>
+<p><code>systemctl restart networking</code></p>
+<h3 id="nat模式"><a href="#nat模式" class="headerlink" title="nat模式"></a>nat模式</h3><p>除了这一部分<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/130984945">VMware虚拟机网络配置-NAT篇 - 知乎 (zhihu.com)</a>，其他都跟桥接类比</p>
+<p>在校园网等需要认证的情况下，桥接模式不再适用。但nat依旧可以</p>
+<p>注：ip地址最后一部分建议不要跟物理机一样，不然物理机可能上不了网</p>
+<h2 id="三机互ping"><a href="#三机互ping" class="headerlink" title="三机互ping"></a>三机互ping</h2><p>centos(nat模式)253</p>
+<p><img src="/2023/03/03/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%8F%8A%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/Snipaste_2023-03-03_14-10-19.png"></p>
+<p>ping通<img src="/2023/03/03/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%8F%8A%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/Snipaste_2023-03-03_14-13-32.png"></p>
+<p>kali(桥接模式)251</p>
+<p><img src="/2023/03/03/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%8F%8A%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/Snipaste_2023-03-03_14-11-09.png"></p>
+<p>ping通<img src="/2023/03/03/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%8F%8A%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/Snipaste_2023-03-03_14-12-55.png"></p>
+<p>物理机(手机热点)254</p>
+<p><img src="/2023/03/03/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%8F%8A%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/Snipaste_2023-03-03_14-11-58.png"></p>
+<p>ping通<img src="/2023/03/03/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%8F%8A%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/Snipaste_2023-03-03_14-14-10.png"></p>
+<h2 id="局域网"><a href="#局域网" class="headerlink" title="局域网"></a>局域网</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>常用LAN表示。</p>
+<p>相较于广域网，局域网的范围更小，可以是一个家，一个学校，一个企业部门，甚至于是两台电脑</p>
+<p>类似于校园网，就是一个局域网，但是这个局域网连接到了因特网上，得以联网。</p>
+<p>局域网上的每台电脑，都有一个ip地址，以一个简单的局域网为例，我的虚拟机和物理机构成的局域网。</p>
+<p>centos的ip地址是192.168.106.253</p>
+<p>kali的ip地址是192.168.106.251</p>
+<p>物理机的ip地址是192.168.106.254</p>
+<p>在同一局域网下，每台网络设备的ip地址不能相同，在不同局域网下，ip地址可以重复。</p>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>局域网可以实现在计算机组中的文件管理，应用软件共享，文件共享等服务。</p>
+<p>局域网的灵活性很强，它的传输效率很高。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/" class="post-title-link" itemprop="url">第七周pwn</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-02-26 12:08:12" itemprop="dateCreated datePublished" datetime="2023-02-26T12:08:12+08:00">2023-02-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-03-03 22:33:26" itemprop="dateModified" datetime="2023-03-03T22:33:26+08:00">2023-03-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="HNCTF-2022-WEEK2-ret2csu"><a href="#HNCTF-2022-WEEK2-ret2csu" class="headerlink" title="[HNCTF 2022 WEEK2]ret2csu"></a>[HNCTF 2022 WEEK2]ret2csu</h2><p>上一周学了ret2csu，但是没能成功打通，这次来找个简单的题目试一试</p>
+<p>看起来简单罢了</p>
+<p>ROPgadget发现有pop_rdi</p>
+<p>但是尝试了一下，第一段获取write地址的好像不可以()</p>
+<p>所以算是半个csu罢</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/20/%E7%AC%AC%E5%85%AD%E5%91%A8pwn/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -181,7 +355,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-02-25 23:18:38" itemprop="dateModified" datetime="2023-02-25T23:18:38+08:00">2023-02-25</time>
+                <time title="Modified: 2023-02-26 12:25:14" itemprop="dateModified" datetime="2023-02-26T12:25:14+08:00">2023-02-26</time>
               </span>
 
           
@@ -741,157 +915,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/01/09/crypto-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/09/crypto-1/" class="post-title-link" itemprop="url">crypto(1)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-01-09 11:12:13" itemprop="dateCreated datePublished" datetime="2023-01-09T11:12:13+08:00">2023-01-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-01-17 12:06:02" itemprop="dateModified" datetime="2023-01-17T12:06:02+08:00">2023-01-17</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="1-base"><a href="#1-base" class="headerlink" title="1.base"></a>1.base</h2><p>如何识别base家族  </p>
-<p>首先看有没有结尾的&#x3D;  </p>
-<p>其次看对应的字符是否在base家族对应的字符集上  </p>
-<p>base16: 0-9,A-F 共16个以及补位的“&#x3D;”  </p>
-<p>base32: A-Z,2-7 共32个以及补位的“&#x3D;”（注意：没有1）  </p>
-<p>base64: a-z,0-9,A-F,+,&#x2F; 共64个以及补位的“&#x3D;&#x3D;”    </p>
-<p>进行base家族多种编码的解码  </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/09/crypto-1/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/01/07/hgame2023-week1-misc/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/07/hgame2023-week1-misc/" class="post-title-link" itemprop="url">hgame2023 week1 misc</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-01-07 17:12:57" itemprop="dateCreated datePublished" datetime="2023-01-07T17:12:57+08:00">2023-01-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-02-04 16:15:48" itemprop="dateModified" datetime="2023-02-04T16:15:48+08:00">2023-02-04</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="HGAME-2023-WEEK1-MISC"><a href="#HGAME-2023-WEEK1-MISC" class="headerlink" title="HGAME 2023 WEEK1 MISC"></a>HGAME 2023 WEEK1 MISC</h1><h2 id="1-Sign-in"><a href="#1-Sign-in" class="headerlink" title="1.Sign in"></a>1.Sign in</h2><p>简单的base64解码  </p>
-<h2 id="2-Where-am-I"><a href="#2-Where-am-I" class="headerlink" title="2.Where am I"></a>2.Where am I</h2><p>因本人技术有限，写不出来  </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/07/hgame2023-week1-misc/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -961,7 +984,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

