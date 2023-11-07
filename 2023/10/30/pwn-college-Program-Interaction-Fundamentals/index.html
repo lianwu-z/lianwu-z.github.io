@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="pwn-college的程序交互基础知识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwn-collegeProgram-Interaction-Fundamentals">
+<meta property="og:url" content="http://example.com/2023/10/30/pwn-college-Program-Interaction-Fundamentals/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="pwn-college的程序交互基础知识">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-10-30T01:56:41.000Z">
+<meta property="article:modified_time" content="2023-10-31T15:41:33.308Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="pwn-college">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/30/pwn-college-Program-Interaction-Fundamentals/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>pwn-collegeProgram-Interaction-Fundamentals | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/30/pwn-college-Program-Interaction-Fundamentals/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          pwn-collegeProgram-Interaction-Fundamentals
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-30 09:56:41" itemprop="dateCreated datePublished" datetime="2023-10-30T09:56:41+08:00">2023-10-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-10-31 23:41:33" itemprop="dateModified" datetime="2023-10-31T23:41:33+08:00">2023-10-31</time>
+              </span>
+
+          
+            <div class="post-description">pwn-college的程序交互基础知识</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="level-60cat"><a href="#level-60cat" class="headerlink" title="level 60	cat"></a>level 60	cat</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">WELCOME! This challenge makes the following asks of you:</span><br><span class="line">- the challenge checks for a specific parent process : binary</span><br><span class="line">- the challenge checks for a specific process at the other end of stdout : cat</span><br><span class="line"></span><br><span class="line">ONWARDS TO GREATNESS!</span><br><span class="line"></span><br><span class="line">[INFO] This challenge will now perform a bunch of checks.</span><br><span class="line">[INFO] If you pass these checks, you will receive the flag.</span><br><span class="line">[TEST] Performing checks on the parent process of this process.</span><br><span class="line">[TEST] Checking to make sure that the process is a custom binary that you created by compiling a C program</span><br><span class="line">[TEST] that you wrote. Make sure your C program has a function called &#x27;pwncollege&#x27; in it --- otherwise,</span><br><span class="line">[TEST] it won&#x27;t pass the checks.</span><br><span class="line">[HINT] If this is a check for the *parent* process, keep in mind that the exec() family of system calls</span><br><span class="line">[HINT] does NOT result in a parent-child relationship. The exec()ed process simply replaces the exec()ing</span><br><span class="line">[HINT] process. Parent-child relationships are created when a process fork()s off a child-copy of itself,</span><br><span class="line">[HINT] and the child-copy can then execve() a process that will be the new child. If we&#x27;re checking for a</span><br><span class="line">[HINT] parent process, that&#x27;s how you make that relationship.</span><br><span class="line">[INFO] The executable that we are checking is: /usr/bin/bash.</span><br><span class="line">[HINT] One frequent cause of the executable unexpectedly being a shell or docker-init is that your</span><br><span class="line">[HINT] parent process terminated before this check was run. This happens when your parent process launches</span><br><span class="line">[HINT] the child but does not wait on it! Look into the waitpid() system call to wait on the child!</span><br><span class="line"></span><br><span class="line">[HINT] Another frequent cause is the use of system() or popen() to execute the challenge. Both will actually</span><br><span class="line">[HINT] execute a shell that will then execute the challenge, so the parent of the challenge will be that</span><br><span class="line">[HINT] shell, rather than your program. You must use fork() and one of the exec family of functions (execve(),</span><br><span class="line">[HINT] execl(), etc).</span><br><span class="line">[FAIL] You did not satisfy all the execution requirements.</span><br><span class="line">[FAIL] Specifically, you must fix the following issue:</span><br><span class="line">[FAIL]    The process must be your own program in your own home directory.</span><br></pre></td></tr></table></figure>
+
+<p>程序要求我们编译一个c程序，程序内有一个pwncollege函数，同时在stdout端设置为cat进程</p>
+<p>考虑创建两个子进程，一个用来运行cat，一个运行challenge，并通过dup2重定向输入输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/stat.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;sys/wait.h&gt;</span><br><span class="line"></span><br><span class="line">int pwncollege()&#123;</span><br><span class="line">    char *a[]=&#123;NULL&#125;;</span><br><span class="line">    execl(&quot;/challenge/embryoio_level60&quot;,&quot;embryoio_level60&quot;,NULL);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">int main(int argc,char* argv[],char *env[])&#123;</span><br><span class="line">    int fd[2];#管道</span><br><span class="line">    </span><br><span class="line">    if( pipe(fd)==-1 )</span><br><span class="line">    &#123;</span><br><span class="line">        perror(&quot;pipe&quot;);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    int p1=fork();#第一个子进程</span><br><span class="line">    if(p1 &lt; 0)</span><br><span class="line">        perror(&quot;fork&quot;);</span><br><span class="line">    else if(p1==0)&#123;</span><br><span class="line">        printf(&quot;in this child his pid is %d,its cat&quot;,getpid());</span><br><span class="line">        close(fd[1]);#关闭该子进程的输出管道</span><br><span class="line">        dup2(fd[0],STDIN_FILENO);#重定向输入管道为标准输入</span><br><span class="line">        if(execl(&quot;/usr/bin/cat&quot;, &quot;cat&quot;, NULL) == -1)</span><br><span class="line">        &#123; </span><br><span class="line">            perror(&quot;exec&quot;);</span><br><span class="line">            exit(1);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    else&#123;</span><br><span class="line">        int p2=fork();</span><br><span class="line">        if(p2 &lt; 0)</span><br><span class="line">        perror(&quot;fork&quot;);</span><br><span class="line">        if(p2==0)&#123;#子程序中</span><br><span class="line">            printf(&quot;in this child his pid is %d&quot;,getpid());</span><br><span class="line">            close(fd[0]);#同上</span><br><span class="line">            dup2(fd[1],STDOUT_FILENO);</span><br><span class="line">            if(execl(&quot;/challenge/embryoio_level60&quot;, &quot;embryoio_level60&quot;, NULL) == -1)</span><br><span class="line">                perror(&quot;exec&quot;);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        else&#123;</span><br><span class="line">            wait(NULL);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/nyist327/article/details/35782015">参考链接:fork同时创建多个子进程的方法-CSDN博客</a></p>
+<h1 id="level-61grep"><a href="#level-61grep" class="headerlink" title="level 61	grep"></a>level 61	grep</h1><p>和60几乎是同样, 只需要把执行的命令换成grep即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/stat.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;sys/wait.h&gt;</span><br><span class="line"></span><br><span class="line">void pwncollege()&#123;</span><br><span class="line">&#125;</span><br><span class="line">int main(int argc,char* argv[],char *env[])&#123;</span><br><span class="line">    int fd[2];</span><br><span class="line">    </span><br><span class="line">    if( pipe(fd)==-1 )</span><br><span class="line">    &#123;</span><br><span class="line">        perror(&quot;pipe&quot;);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">    int p1=fork();</span><br><span class="line">    if(p1 &lt; 0)</span><br><span class="line">        perror(&quot;fork&quot;);</span><br><span class="line">    else if(p1==0)&#123;</span><br><span class="line">        printf(&quot;in this child his pid is %d,its cat&quot;,getpid());</span><br><span class="line">        close(fd[1]);</span><br><span class="line">        dup2(fd[0],STDIN_FILENO);</span><br><span class="line"></span><br><span class="line">        if(execl(&quot;/bin/grep&quot;, &quot;grep&quot;,&quot;pwn&quot;, NULL) == -1)</span><br><span class="line">        &#123; </span><br><span class="line">            perror(&quot;exec&quot;);</span><br><span class="line">            exit(1);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    else&#123;</span><br><span class="line">        int p2=fork();</span><br><span class="line">        if(p2 &lt; 0)</span><br><span class="line">        perror(&quot;fork&quot;);</span><br><span class="line">        if(p2==0)&#123;</span><br><span class="line">            printf(&quot;in this child his pid is %d&quot;,getpid());</span><br><span class="line">            close(fd[0]);</span><br><span class="line">            dup2(fd[1],STDOUT_FILENO);</span><br><span class="line">            if(execl(&quot;/challenge/embryoio_level61&quot;, &quot;embryoio_level61&quot;, NULL) == -1)</span><br><span class="line">                perror(&quot;exec&quot;);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        else&#123;</span><br><span class="line">            wait(NULL);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="level-62sed"><a href="#level-62sed" class="headerlink" title="level 62	sed"></a>level 62	sed</h1><p>sed命令：依照脚本的指令来处理、编辑文本文件。</p>
+<p>选项：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">sed [-hnV][-e&lt;script&gt;][-f&lt;script文件&gt;][文本文件]</span><br><span class="line">-e&lt;script&gt;或--expression=&lt;script&gt; 以选项中指定的script来处理输入的文本文件。</span><br><span class="line">-f&lt;script文件&gt;或--file=&lt;script文件&gt; 以选项中指定的script文件来处理输入的文本文件。</span><br><span class="line">-h或--help 显示帮助。</span><br><span class="line">-n或--quiet或--silent 仅显示script处理后的结果。</span><br><span class="line">-V或--version 显示版本信息。</span><br><span class="line">动作：</span><br><span class="line">a ：新增， a 的后面可以接字串，而这些字串会在新的一行出现(目前的下一行)～</span><br><span class="line">c ：取代， c 的后面可以接字串，这些字串可以取代 n1,n2 之间的行！</span><br><span class="line">d ：删除，因为是删除啊，所以 d 后面通常不接任何东东；</span><br><span class="line">i ：插入， i 的后面可以接字串，而这些字串会在新的一行出现(目前的上一行)；</span><br><span class="line">p ：打印，亦即将某个选择的数据印出。通常 p 会与参数 sed -n 一起运行～</span><br><span class="line">s ：取代，可以直接进行取代的工作哩！通常这个 s 的动作可以搭配正则表达式！例如 1,20s/old/new/g 就是啦！</span><br></pre></td></tr></table></figure>
+
+<p>这里只需要打印出，所以用<strong>p</strong>即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if(execl(&quot;/bin/sed&quot;, &quot;sed&quot;,&quot;p&quot;, NULL) == -1)</span><br></pre></td></tr></table></figure>
+
+<h1 id="level-63rev"><a href="#level-63rev" class="headerlink" title="level 63	rev"></a>level 63	rev</h1><p>rev命令：将文本文件反向</p>
+<p>参数为文件，</p>
+<p>若无参数，则可连续多次翻转</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if(execl(&quot;/bin/rev&quot;, &quot;rev&quot;, NULL) == -1)</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn-college/" rel="tag"># pwn-college</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/10/30/2022-ciscn-newest-note/" rel="prev" title="2022-ciscn-newest_note">
+      <i class="fa fa-chevron-left"></i> 2022-ciscn-newest_note
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/11/05/2023-HGAME-WEEK2-new-fast-note/" rel="next" title="2023-HGAME-WEEK2-new_fast_note">
+      2023-HGAME-WEEK2-new_fast_note <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#level-60cat"><span class="nav-number">1.</span> <span class="nav-text">level 60	cat</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level-61grep"><span class="nav-number">2.</span> <span class="nav-text">level 61	grep</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level-62sed"><span class="nav-number">3.</span> <span class="nav-text">level 62	sed</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level-63rev"><span class="nav-number">4.</span> <span class="nav-text">level 63	rev</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
