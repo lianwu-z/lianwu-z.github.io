@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概论本模块全部是使用curl,nc,requests(python)来完成web通信，都是非常基础的，简单写写就过吧 Solutionslevel1-31curl 127.0.0.1:80  123nc 127.0.0.1 80GET &#x2F; HTTP&#x2F;1.1  123from requests import *data&#x3D;get(&quot;http:&#x2F;&#x2F;127.0.0.1:80&quot;)prin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/09/27/pwn-college-talking-web/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="概论本模块全部是使用curl,nc,requests(python)来完成web通信，都是非常基础的，简单写写就过吧 Solutionslevel1-31curl 127.0.0.1:80  123nc 127.0.0.1 80GET &#x2F; HTTP&#x2F;1.1  123from requests import *data&#x3D;get(&quot;http:&#x2F;&#x2F;127.0.0.1:80&quot;)prin">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-09-27T08:32:07.007Z">
+<meta property="article:modified_time" content="2024-09-27T13:28:26.327Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2024/09/27/pwn-college-talking-web/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title> | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/09/27/pwn-college-talking-web/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-09-27 16:32:07 / Modified: 21:28:26" itemprop="dateCreated datePublished" datetime="2024-09-27T16:32:07+08:00">2024-09-27</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="概论"><a href="#概论" class="headerlink" title="概论"></a>概论</h1><p>本模块全部是使用<code>curl</code>,<code>nc</code>,<code>requests(python)</code>来完成web通信，都是非常基础的，简单写写就过吧</p>
+<h1 id="Solutions"><a href="#Solutions" class="headerlink" title="Solutions"></a>Solutions</h1><h2 id="level1-3"><a href="#level1-3" class="headerlink" title="level1-3"></a>level1-3</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl 127.0.0.1:80</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 80</span><br><span class="line"></span><br><span class="line">GET / HTTP/1.1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from requests import *</span><br><span class="line">data=get(&quot;http://127.0.0.1:80&quot;)</span><br><span class="line">print(data.text)</span><br></pre></td></tr></table></figure>
+
+<h2 id="level4-6"><a href="#level4-6" class="headerlink" title="level4-6"></a>level4-6</h2><p>修改Host Header</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl 127.0.0.1:80 -H &quot;Host:&lt;value&gt;&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 80</span><br><span class="line"></span><br><span class="line">GET / HTTP/1.1</span><br><span class="line">Host:&lt;value&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from requests import *</span><br><span class="line">header=&#123;</span><br><span class="line">	&quot;Host&quot;:&quot;&lt;value&gt;&quot;</span><br><span class="line">&#125;</span><br><span class="line">data=get(&quot;http://127.0.0.1:80&quot;,headers=header)</span><br><span class="line">print(data.text)</span><br></pre></td></tr></table></figure>
+
+<h2 id="level7-9"><a href="#level7-9" class="headerlink" title="level7-9"></a>level7-9</h2><p>访问特定路径</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl 127.0.0.1:80/&lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 80</span><br><span class="line"></span><br><span class="line">GET /&lt;path&gt; HTTP/1.1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from requests import *</span><br><span class="line">data=get(&quot;http://127.0.0.1:80/&lt;path&gt;&quot;)</span><br><span class="line">print(data.text)</span><br></pre></td></tr></table></figure>
+
+<h2 id="level10-12"><a href="#level10-12" class="headerlink" title="level10-12"></a>level10-12</h2><p>对路径编码(URL)</p>
+<p>将路径中的空格，#，&amp;等符号编码为URL编码后同<code>7-9</code></p>
+<h2 id="level13-15"><a href="#level13-15" class="headerlink" title="level13-15"></a>level13-15</h2><p>提供单个参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl 127.0.0.1:80?a=&lt;value&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 80</span><br><span class="line"></span><br><span class="line">GET /?a=&lt;value&gt; HTTP/1.1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from requests import *</span><br><span class="line">data=get(&quot;http://127.0.0.1:80&quot;,params=&#123;&quot;a&quot;:&quot;example&quot;&#125;)</span><br><span class="line">print(data.text)</span><br></pre></td></tr></table></figure>
+
+<h2 id="level16-18"><a href="#level16-18" class="headerlink" title="level16-18"></a>level16-18</h2><p>需要两个参数，b需要进行编码处理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl 127.0.0.1:80?a=&lt;value&gt;&amp;b=&lt;value2&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 80</span><br><span class="line"></span><br><span class="line">GET /?a=6ef373a3c8fe72904e0447f2b885b97b&amp;b=218d4108%209bd3ea27%262b218bbf%23495c256f HTTP/1.1</span><br><span class="line">Host: 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from requests import *</span><br><span class="line">data=get(&quot;http://127.0.0.1:80&quot;,params=&#123;&quot;a&quot;:&quot;example&quot;,&quot;b&quot;:r&quot;example2&quot;&#125;)</span><br><span class="line">print(data.text)</span><br></pre></td></tr></table></figure>
+
+<h2 id="level19-21"><a href="#level19-21" class="headerlink" title="level19-21"></a>level19-21</h2><p>POST</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST a=&lt;value&gt; 127.0.0.1:80</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 80</span><br><span class="line"></span><br><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 127.0.0.1</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 34</span><br><span class="line"></span><br><span class="line">a=&lt;value&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from requests import *</span><br><span class="line"></span><br><span class="line">data=post(&quot;http://127.0.0.1:80&quot;,data=&#123;&quot;a&quot;:&quot;&lt;value&gt;&quot;&#125;)</span><br><span class="line">print(data.text)</span><br></pre></td></tr></table></figure>
+
+<h2 id="level22-24"><a href="#level22-24" class="headerlink" title="level22-24"></a>level22-24</h2><p>POST 两个参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -d a=&#x27;&lt;value&gt;&amp;b=&lt;value2&gt;&#x27; 127.0.0.1:80</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 80</span><br><span class="line"></span><br><span class="line">POST / HTTP/1.1</span><br><span class="line">Host:127.0.0.1</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: &lt;len&gt;</span><br><span class="line"></span><br><span class="line">a=&lt;value&gt;</span><br><span class="line">b=&lt;value2&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from requests import *</span><br><span class="line">data=post(&quot;http://127.0.0.1:80&quot;,data=&#123;&quot;a&quot;:&quot;&lt;value&gt;&quot;,&quot;b&quot;:r&quot;&lt;value2&gt;&quot;&#125;)</span><br><span class="line">print(data.text)</span><br></pre></td></tr></table></figure>
+
+<h2 id="level25-27"><a href="#level25-27" class="headerlink" title="level25-27"></a>level25-27</h2><p>只需增加一个Content -Type即可,注意，传输的数据应是json格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -d &#x27;&#123;&quot;a&quot;:&quot;&lt;value&gt;&quot;&#125;&#x27; -H &quot;Content-Type: application/json&quot; 127.0.0.1:80</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 80</span><br><span class="line"></span><br><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 127.0.0.1</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Length: 40  #注意长度</span><br><span class="line"></span><br><span class="line">&#123;&quot;a&quot;:&quot;724bb31bbe5f11101d6c07fce397910f&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>python要注意使用json打包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from requests import *</span><br><span class="line">import json</span><br><span class="line">data=post(&quot;http://127.0.0.1:80&quot;,headers=&#123;&quot;Content-Type&quot;:&quot;application/json&quot;&#125;,data=json.dumps(&#123;&quot;a&quot;:&quot;53dc330a682e4c38ea7b9baf9fd0cf2f&quot;&#125;))</span><br><span class="line">print(data.text)</span><br></pre></td></tr></table></figure>
+
+<h2 id="level28"><a href="#level28" class="headerlink" title="level28"></a>level28</h2><p>较为复杂的JSON对象</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> curl -d &#x27;&#123;&quot;a&quot;:&quot;&lt;value1&gt;&quot;,&quot;b&quot;:&#123;&quot;c&quot;:&quot;&lt;value2&gt;&quot;,&quot;d&quot;:[&quot;&lt;value3&gt;&quot;,&quot;&lt;value3&gt;&quot;]&#125;&#125;&#x27; -H &quot;Content-T</span><br><span class="line">ype: application/json&quot; http://127.0.0.1:80</span><br></pre></td></tr></table></figure>
+
+<h2 id="level29"><a href="#level29" class="headerlink" title="level29"></a>level29</h2><p>使用bash方便执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">json_payload=&#x27;&#123;</span><br><span class="line">    &quot;a&quot;: &quot;3756062c87aa10f389a287c784199c4c&quot;,</span><br><span class="line">    &quot;b&quot;: &#123;</span><br><span class="line">        &quot;c&quot;: &quot;c1fad6d2&quot;,</span><br><span class="line">        &quot;d&quot;: [&quot;bac1d43b&quot;, &quot;dfd0db29 78dc0d18&amp;ad0fc24e#9bd35059&quot;]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;&#x27;</span><br><span class="line"></span><br><span class="line"># Define the length of the JSON payload</span><br><span class="line">content_length=$(echo -n &quot;$json_payload&quot; | wc -c)</span><br><span class="line"></span><br><span class="line"># Send the HTTP request using nc</span><br><span class="line">&#123;</span><br><span class="line">    echo -ne &quot;POST / HTTP/1.1\r\n&quot;</span><br><span class="line">    echo -ne &quot;Host: 127.0.0.1\r\n&quot;</span><br><span class="line">    echo -ne &quot;Content-Type: application/json\r\n&quot;</span><br><span class="line">    echo -ne &quot;Content-Length: $content_length\r\n&quot;</span><br><span class="line">    echo -ne &quot;\r\n&quot;</span><br><span class="line">    echo -ne &quot;$json_payload&quot;</span><br><span class="line">&#125; | nc 127.0.0.1 80 | grep pwn.college&#123;</span><br></pre></td></tr></table></figure>
+
+<p>主要卡在了计算Content-Length上</p>
+<h2 id="level30"><a href="#level30" class="headerlink" title="level30"></a>level30</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">from requests import *</span><br><span class="line">import json</span><br><span class="line">JSON=&#123;&quot;a&quot;:&quot;24d15198bf78c8a49316030c83a2cd73&quot;,&quot;b&quot;:&#123;&quot;c&quot;:&quot;512c400b&quot;,&quot;d&quot;:[&quot;aef2ba89&quot;,r&quot;8577e840 e4f7f4be&amp;91312c36#87765893&quot;]&#125;&#125;</span><br><span class="line">data=post(&quot;http://127.0.0.1:80&quot;,headers=&#123;&quot;Content-Type&quot;:&quot;application/json&quot;&#125;,data=json.dumps(JSON))</span><br><span class="line">print(data.text)</span><br></pre></td></tr></table></figure>
+
+<p>还是python简单啊</p>
+<h2 id="level31-33"><a href="#level31-33" class="headerlink" title="level31-33"></a>level31-33</h2><p>重定向，简单点了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -L 127.0.0.1:80</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 80</span><br><span class="line"></span><br><span class="line">GET / HTTP/1.1</span><br><span class="line"></span><br><span class="line">GET /&lt;path&gt; HTTP/1.1  #第二次执行</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from requests import *</span><br><span class="line">#import json</span><br><span class="line">#JSON=&#123;&quot;a&quot;:&quot;24d15198bf78c8a49316030c83a2cd73&quot;,&quot;b&quot;:&#123;&quot;c&quot;:&quot;512c400b&quot;,&quot;d&quot;:[&quot;aef2ba89&quot;,r&quot;8577e840 e4f7f4be&amp;91312c36#87765893&quot;]&#125;&#125;</span><br><span class="line">data=post(&quot;http://127.0.0.1:80&quot;)</span><br><span class="line">print(data.text)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>py的requests不用管就会重定向</p>
+<h2 id="level34-36"><a href="#level34-36" class="headerlink" title="level34-36"></a>level34-36</h2><p>cookie</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#首先获取cookie</span><br><span class="line">curl -c ./cookie 127.0.0.1</span><br><span class="line"></span><br><span class="line">curl -b &quot;cookie=&lt;cookie&gt;&quot; 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#首先获取cookie</span><br><span class="line">GET / HTTP/1.1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">HTTP/1.1 302 FOUND</span><br><span class="line">Server: Werkzeug/3.0.4 Python/3.8.10</span><br><span class="line">Date: Fri, 27 Sep 2024 13:14:37 GMT</span><br><span class="line">Content-Length: 189</span><br><span class="line">Location: /</span><br><span class="line">Set-Cookie: cookie=8cfeb913e6ae783eb6fc8ef132a9afef; Path=/</span><br><span class="line">Server: pwn.college</span><br><span class="line">Connection: close</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">GET / HTTP/1.1</span><br><span class="line">Cookie:cookie=&lt;value&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">from requests import *</span><br><span class="line">#import json</span><br><span class="line">#JSON=&#123;&quot;a&quot;:&quot;24d15198bf78c8a49316030c83a2cd73&quot;,&quot;b&quot;:&#123;&quot;c&quot;:&quot;512c400b&quot;,&quot;d&quot;:[&quot;aef2ba89&quot;,r&quot;8577e840 e4f7f4be&amp;91312c36#87765893&quot;]&#125;&#125;</span><br><span class="line">data=post(&quot;http://127.0.0.1:80&quot;)</span><br><span class="line">print(data.text)</span><br></pre></td></tr></table></figure>
+
+<p>python还是一把梭？？</p>
+<h2 id="level37-39"><a href="#level37-39" class="headerlink" title="level37-39"></a>level37-39</h2><p>发送四个有状态的请求，先把cookie拿过来先</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -c cookie.txt 127.0.0.1</span><br><span class="line">curl -c cookie.txt -b cookie.txt 127.0.0.1</span><br><span class="line">curl -c cookie.txt -b cookie.txt 127.0.0.1</span><br><span class="line">curl -c cookie.txt -b cookie.txt 127.0.0.1</span><br><span class="line">curl -c cookie.txt -b cookie.txt 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nc 127.0.0.1 80</span><br><span class="line">GET / HTTP/1.1</span><br><span class="line">Cookie:session=&lt;cookie&gt;*4</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">from requests import *</span><br><span class="line">#import json</span><br><span class="line">#JSON=&#123;&quot;a&quot;:&quot;24d15198bf78c8a49316030c83a2cd73&quot;,&quot;b&quot;:&#123;&quot;c&quot;:&quot;512c400b&quot;,&quot;d&quot;:[&quot;aef2ba89&quot;,r&quot;8577e840 e4f7f4be&amp;91312c36#87765893&quot;]&#125;&#125;</span><br><span class="line">data=post(&quot;http://127.0.0.1:80&quot;)</span><br><span class="line">print(data.text)</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/09/26/pwn-college-debugging-refresher/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/09/28/pwn-college-building-a-web-server/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">概论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Solutions"><span class="nav-number">2.</span> <span class="nav-text">Solutions</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#level1-3"><span class="nav-number">2.1.</span> <span class="nav-text">level1-3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level4-6"><span class="nav-number">2.2.</span> <span class="nav-text">level4-6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level7-9"><span class="nav-number">2.3.</span> <span class="nav-text">level7-9</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level10-12"><span class="nav-number">2.4.</span> <span class="nav-text">level10-12</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level13-15"><span class="nav-number">2.5.</span> <span class="nav-text">level13-15</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level16-18"><span class="nav-number">2.6.</span> <span class="nav-text">level16-18</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level19-21"><span class="nav-number">2.7.</span> <span class="nav-text">level19-21</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level22-24"><span class="nav-number">2.8.</span> <span class="nav-text">level22-24</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level25-27"><span class="nav-number">2.9.</span> <span class="nav-text">level25-27</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level28"><span class="nav-number">2.10.</span> <span class="nav-text">level28</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level29"><span class="nav-number">2.11.</span> <span class="nav-text">level29</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level30"><span class="nav-number">2.12.</span> <span class="nav-text">level30</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level31-33"><span class="nav-number">2.13.</span> <span class="nav-text">level31-33</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level34-36"><span class="nav-number">2.14.</span> <span class="nav-text">level34-36</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#level37-39"><span class="nav-number">2.15.</span> <span class="nav-text">level37-39</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

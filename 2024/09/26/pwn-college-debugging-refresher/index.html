@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="level312345678910111213141516You can examine the contents of memory using the &#96;x&#x2F;&lt;n&gt;&lt;u&gt;&lt;f&gt; &lt;address&gt;&#96; parameterized command. In this format &#96;&lt;u&gt;&#96; isthe unit size to displ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/09/26/pwn-college-debugging-refresher/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="level312345678910111213141516You can examine the contents of memory using the &#96;x&#x2F;&lt;n&gt;&lt;u&gt;&lt;f&gt; &lt;address&gt;&#96; parameterized command. In this format &#96;&lt;u&gt;&#96; isthe unit size to displ">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-09-25T23:58:34.704Z">
+<meta property="article:modified_time" content="2024-09-26T15:04:04.314Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2024/09/26/pwn-college-debugging-refresher/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title> | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/09/26/pwn-college-debugging-refresher/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-09-26 07:58:34 / Modified: 23:04:04" itemprop="dateCreated datePublished" datetime="2024-09-26T07:58:34+08:00">2024-09-26</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">You can examine the contents of memory using the `x/&lt;n&gt;&lt;u&gt;&lt;f&gt; &lt;address&gt;` parameterized command. In this format `&lt;u&gt;` is</span><br><span class="line">the unit size to display, `&lt;f&gt;` is the format to display it in, and `&lt;n&gt;` is the number of elements to display. Valid</span><br><span class="line">unit sizes are `b` (1 byte), `h` (2 bytes), `w` (4 bytes), and `g` (8 bytes). Valid formats are `d` (decimal), `x`</span><br><span class="line">(hexadecimal), `s` (string) and `i` (instruction). The address can be specified using a register name, symbol name, or</span><br><span class="line">absolute address. Additionally, you can supply mathematical expressions when specifying the address.</span><br><span class="line"></span><br><span class="line">For example, `x/8i $rip` will print the next 8 instructions from the current instruction pointer. `x/16i main` will</span><br><span class="line">print the first 16 instructions of main. You can also use `disassemble main`, or `disas main` for short, to print all of</span><br><span class="line">the instructions of main. Alternatively, `x/16gx $rsp` will print the first 16 values on the stack. `x/gx $rbp-0x32`</span><br><span class="line">will print the local variable stored there on the stack.</span><br><span class="line"></span><br><span class="line">You will probably want to view your instructions using the CORRECT assembly syntax. You can do that with the command</span><br><span class="line">`set disassembly-flavor intel`.</span><br><span class="line"></span><br><span class="line">In order to solve this level, you must figure out the random value on the stack (the value read in from `/dev/urandom`).</span><br><span class="line">Think about what the arguments to the read system call are.</span><br></pre></td></tr></table></figure>
+
+<p>找到从&#x2F;dev&#x2F;urandom读入的随机数</p>
+<p>首先用<code>layout regs</code> 查看反编译代码和寄存器，找到源码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">	0x6424531acc2c &lt;main+390&gt;       mov    $0x0,%esi                                                                                                               │</span><br><span class="line">│   0x6424531acc31 &lt;main+395&gt;       lea    0xbd5(%rip),%rdi        # 0x6424531ad80d                                                                                │</span><br><span class="line">│   0x6424531acc38 &lt;main+402&gt;       mov    $0x0,%eax                                                                                                               │</span><br><span class="line">│   0x6424531acc3d &lt;main+407&gt;       callq  0x6424531ac250 &lt;open@plt&gt;                                                                                               │</span><br><span class="line">│   0x6424531acc42 &lt;main+412&gt;       mov    %eax,%ecx                                                                                                               │</span><br><span class="line">│   0x6424531acc44 &lt;main+414&gt;       lea    -0x18(%rbp),%rax                                                                                                        │</span><br><span class="line">│   0x6424531acc48 &lt;main+418&gt;       mov    $0x8,%edx                                                                                                               │</span><br><span class="line">│   0x6424531acc4d &lt;main+423&gt;       mov    %rax,%rsi                                                                                                               │</span><br><span class="line">│   0x6424531acc50 &lt;main+426&gt;       mov    %ecx,%edi                                                                                                               │</span><br><span class="line">│   0x6424531acc52 &lt;main+428&gt;       callq  0x6424531ac210 &lt;read@plt&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt; ssize_t read(int fd, void *buf, size_t count)</span><br></pre></td></tr></table></figure>
+
+<p>从打开文件读入0x8大小到rbp-0x18</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x /20gx $rbp-0x18</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="level4"><a href="#level4" class="headerlink" title="level4"></a>level4</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">A critical part of dynamic analysis is getting your program to the state you are interested in analyzing. So far, these</span><br><span class="line">challenges have automatically set breakpoints for you to pause execution at states you may be interested in analyzing.</span><br><span class="line">It is important to be able to do this yourself.</span><br><span class="line"></span><br><span class="line">There are a number of ways to move forward in the program&#x27;s execution. You can use the `stepi &lt;n&gt;` command, or `si &lt;n&gt;`</span><br><span class="line">for short, in order to step forward one instruction. You can use the `nexti &lt;n&gt;` command, or `ni &lt;n&gt;` for short, in</span><br><span class="line">order to step forward one instruction, while stepping over any function calls. The `&lt;n&gt;` parameter is optional, but</span><br><span class="line">allows you to perform multiple steps at once. You can use the `finish` command in order to finish the currently</span><br><span class="line">executing function. You can use the `break *&lt;address&gt;` parameterized command in order to set a breakpoint at the</span><br><span class="line">specified-address. You have already used the `continue` command, which will continue execution until the program hits a</span><br><span class="line">breakpoint.</span><br><span class="line"></span><br><span class="line">While stepping through a program, you may find it useful to have some values displayed to you at all times. There are</span><br><span class="line">multiple ways to do this. The simplest way is to use the `display/&lt;n&gt;&lt;u&gt;&lt;f&gt;` parameterized command, which follows</span><br><span class="line">exactly the same format as the `x/&lt;n&gt;&lt;u&gt;&lt;f&gt;` parameterized command. For example, `display/8i $rip` will always show you</span><br><span class="line">the next 8 instructions. On the other hand, `display/4gx $rsp` will always show you the first 4 values on the stack.</span><br><span class="line">Another option is to use the `layout regs` command. This will put gdb into its TUI mode and show you the contents of all</span><br><span class="line">of the registers, as well as nearby instructions.</span><br><span class="line"></span><br><span class="line">In order to solve this level, you must figure out a series of random values which will be placed on the stack. You are</span><br><span class="line">highly encouraged to try using combinations of `stepi`, `nexti`, `break`, `continue`, and `finish` to make sure you have</span><br><span class="line">a good internal understanding of these commands. The commands are all absolutely critical to navigating a program&#x27;s</span><br><span class="line">execution.</span><br></pre></td></tr></table></figure>
+
+<p><code>si&lt;n&gt;</code>向前推进一条指令</p>
+<p><code>ni&lt;n&gt;</code>向前推进一条指令(跳过函数调用)</p>
+<p><code>finish</code>来结束当前执行的函数</p>
+<p><code>break *&lt;address&gt;</code>在指定地址断点</p>
+<p><code>continue</code>继续运行程序直到遇到断点</p>
+<p><code>display/&lt;n&gt;&lt;u&gt;&lt;f&gt;</code>用于始终显示某些值</p>
+<p>多次level3，只需要在read处断点，持续查看$rbp-0x18内存即可</p>
+<h1 id="level5"><a href="#level5" class="headerlink" title="level5"></a>level5</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">We write code in order to express an idea which can be reproduced and refined. We can think of our analysis as a program</span><br><span class="line">which injests the target to be analyzed as data. As the saying goes, code is data and data is code.</span><br><span class="line"></span><br><span class="line">While using gdb interactively as we&#x27;ve done with the past levels is incredibly powerful, another powerful tool is gdb</span><br><span class="line">scripting. By scripting gdb, you can very quickly create a custom-tailored program analysis tool. If you know how to</span><br><span class="line">interact with gdb, you already know how to write a gdb script--the syntax is exactly the same. You can write your</span><br><span class="line">commands to some file, for example `x.gdb`, and then launch gdb using the flag `-x &lt;PATH_TO_SCRIPT&gt;`. This file will</span><br><span class="line">execute all of the gdb commands after gdb launches. Alternatively, you can execute individual commands with `-ex</span><br><span class="line">&#x27;&lt;COMMAND&gt;&#x27;`. You can pass multiple commands with multiple `-ex` arguments. Finally, you can have some commands be</span><br><span class="line">always executed for any gdb session by putting them in `~/.gdbinit`. You probably want to put `set disassembly-flavor</span><br><span class="line">intel` in there.</span><br><span class="line"></span><br><span class="line">Within gdb scripting, a very powerful construct is breakpoint commands. Consider the following gdb script:</span><br><span class="line"></span><br><span class="line">  start</span><br><span class="line">  break *main+42</span><br><span class="line">  commands</span><br><span class="line">    x/gx $rbp-0x32</span><br><span class="line">    continue</span><br><span class="line">  end</span><br><span class="line">  continue</span><br><span class="line"></span><br><span class="line">In this case, whenever we hit the instruction at `main+42`, we will output a particular local variable and then continue</span><br><span class="line">execution.</span><br><span class="line"></span><br><span class="line">Now consider a similar, but slightly more advanced script using some commands you haven&#x27;t yet seen:</span><br><span class="line"></span><br><span class="line">  start</span><br><span class="line">  break *main+42</span><br><span class="line">  commands</span><br><span class="line">    silent</span><br><span class="line">    set $local_variable = *(unsigned long long*)($rbp-0x32)</span><br><span class="line">    printf &quot;Current value: %llx\n&quot;, $local_variable</span><br><span class="line">    continue</span><br><span class="line">  end</span><br><span class="line">  continue</span><br><span class="line"></span><br><span class="line">In this case, the `silent` indicates that we want gdb to not report that we have hit a breakpoint, to make the output a</span><br><span class="line">bit cleaner. Then we use the `set` command to define a variable within our gdb session, whose value is our local</span><br><span class="line">variable. Finally, we output the current value using a formatted string.</span><br><span class="line"></span><br><span class="line">Use gdb scripting to help you collect the random values.</span><br></pre></td></tr></table></figure>
+
+<p>本关直接要求写一个gdb脚本</p>
+<p>对于这样一个gdb脚本来说 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">start</span><br><span class="line"> break *main+42</span><br><span class="line"> commands</span><br><span class="line">   x/gx $rbp-0x32</span><br><span class="line">   continue</span><br><span class="line"> end</span><br><span class="line"> continue</span><br></pre></td></tr></table></figure>
+
+<p>每当我们到达断点时，gdb都会帮我们执行命令，然后继续执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">start</span><br><span class="line">break *main+42</span><br><span class="line">commands</span><br><span class="line">  silent</span><br><span class="line">  set $local_variable = *(unsigned long long*)($rbp-0x32)</span><br><span class="line">  printf &quot;Current value: %llx\n&quot;, $local_variable</span><br><span class="line">  continue</span><br><span class="line">end</span><br><span class="line">continue</span><br></pre></td></tr></table></figure>
+
+<p>这是一个更高级的脚本，silent表示我们不希望gdb报告到达断点，以便于输出更清晰</p>
+<p>依旧是收集随机值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">start</span><br><span class="line">break *main+709</span><br><span class="line">commands</span><br><span class="line">  silent</span><br><span class="line">  set $local_variable = *(unsigned long long*)($rbp-0x18)</span><br><span class="line">  printf &quot;Current value: %llx\n&quot;, $local_variable</span><br><span class="line">  continue</span><br><span class="line">end</span><br><span class="line">continue</span><br></pre></td></tr></table></figure>
+
+<p>多次手动输入即可</p>
+<h1 id="level6"><a href="#level6" class="headerlink" title="level6"></a>level6</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">As it turns out, gdb has FULL control over the target process. Not only can you analyze the program&#x27;s state, but you can</span><br><span class="line">also modify it. While gdb probably isn&#x27;t the best tool for doing long term maintenance on a program, sometimes it can be</span><br><span class="line">useful to quickly modify the behavior of your target process in order to more easily analyze it.</span><br><span class="line"></span><br><span class="line">You can modify the state of your target program with the `set` command. For example, you can use `set $rdi = 0` to zero</span><br><span class="line">out $rdi. You can use `set *((uint64_t *) $rsp) = 0x1234` to set the first value on the stack to 0x1234. You can use</span><br><span class="line">`set *((uint16_t *) 0x31337000) = 0x1337` to set 2 bytes at 0x31337000 to 0x1337.</span><br><span class="line"></span><br><span class="line">Suppose your target is some networked application which reads from some socket on fd 42. Maybe it would be easier for</span><br><span class="line">the purposes of your analysis if the target instead read from stdin. You could achieve something like that with the</span><br><span class="line">following gdb script:</span><br><span class="line"></span><br><span class="line">  start</span><br><span class="line">  catch syscall read</span><br><span class="line">  commands</span><br><span class="line">    silent</span><br><span class="line">    if ($rdi == 42)</span><br><span class="line">      set $rdi = 0</span><br><span class="line">    end</span><br><span class="line">    continue</span><br><span class="line">  end</span><br><span class="line">  continue</span><br><span class="line"></span><br><span class="line">This example gdb script demonstrates how you can automatically break on system calls, and how you can use conditions</span><br><span class="line">within your commands to conditionally perform gdb commands.</span><br><span class="line"></span><br><span class="line">In the previous level, your gdb scripting solution likely still required you to copy and paste your solutions. This</span><br><span class="line">time, try to write a script that doesn&#x27;t require you to ever talk to the program, and instead automatically solves each</span><br><span class="line">challenge by correctly modifying registers / memory.</span><br></pre></td></tr></table></figure>
+
+<p>本关提示我们不手动地复制粘贴，本来是想修改scanf的rdi，但后来有个更好的方法，</p>
+<p>使用<code>disassemble win</code>反编译win函数，直接运行win的时候即可获取flag</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">start</span><br><span class="line">break *main+572</span><br><span class="line">commands</span><br><span class="line">  silent</span><br><span class="line">  set $rip=*main+720</span><br><span class="line">  continue</span><br><span class="line">end</span><br><span class="line">continue</span><br></pre></td></tr></table></figure>
+
+<p>当调用read的时候，修改rip为win，改变程序控制流</p>
+<h1 id="level7"><a href="#level7" class="headerlink" title="level7"></a>level7</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">For help, type &quot;help&quot;.</span><br><span class="line">Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;...</span><br><span class="line">Reading symbols from /challenge/embryogdb_level7...</span><br><span class="line">(No debugging symbols found in /challenge/embryogdb_level7)</span><br><span class="line">(gdb) run</span><br><span class="line">Starting program: /challenge/embryogdb_level7 </span><br><span class="line">###</span><br><span class="line">### Welcome to /challenge/embryogdb_level7!</span><br><span class="line">###</span><br><span class="line"></span><br><span class="line">GDB is a very powerful dynamic analysis tool which you can use in order to understand the state of a program throughout</span><br><span class="line">its execution. You will become familiar with some of gdb&#x27;s capabilities in this module.</span><br><span class="line"></span><br><span class="line">As we demonstrated in the previous level, gdb has FULL control over the target process. Under normal circumstances, gdb</span><br><span class="line">running as your regular user cannot attach to a privileged process. This is why gdb isn&#x27;t a massive security issue which</span><br><span class="line">would allow you to just immediately solve all the levels. Nevertheless, gdb is still an extremely powerful tool.</span><br><span class="line"></span><br><span class="line">Running within this elevated instance of gdb gives you elevated control over the entire system. To clearly demonstrate</span><br><span class="line">this, see what happens when you run the command `call (void)win()`. As it turns out, all of the levels in this module</span><br><span class="line">can be solved in this way.</span><br><span class="line"></span><br><span class="line">GDB is very powerful!</span><br></pre></td></tr></table></figure>
+
+
+
+<p>本关也是提示了，该模块的所有level均可用<code>call (void)win()</code>来完成，本关也是要这样完成</p>
+<p><code>GDB IS VERY POWERFUL!</code></p>
+<h1 id="level8"><a href="#level8" class="headerlink" title="level8"></a>level8</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Starting program: /challenge/embryogdb_level8 </span><br><span class="line">###</span><br><span class="line">### Welcome to /challenge/embryogdb_level8!</span><br><span class="line">###</span><br><span class="line"></span><br><span class="line">GDB is a very powerful dynamic analysis tool which you can use in order to understand the state of a program throughout</span><br><span class="line">its execution. You will become familiar with some of gdb&#x27;s capabilities in this module.</span><br><span class="line"></span><br><span class="line">As we demonstrated in the previous level, gdb has FULL control over the target process. Under normal circumstances, gdb</span><br><span class="line">running as your regular user cannot attach to a privileged process. This is why gdb isn&#x27;t a massive security issue which</span><br><span class="line">would allow you to just immediately solve all the levels. Nevertheless, gdb is still an extremely powerful tool.</span><br><span class="line"></span><br><span class="line">Running within this elevated instance of gdb gives you elevated control over the entire system. To clearly demonstrate</span><br><span class="line">this, see what happens when you run the command `call (void)win()`.</span><br><span class="line"></span><br><span class="line">Note that this will _not_ get you the flag (it seems that we broke the win function!), so you&#x27;ll need to work a bit</span><br><span class="line">harder to get this flag!</span><br><span class="line"></span><br><span class="line">As it turns out, all of the levels other levels in module could be solved in this way.</span><br><span class="line"></span><br><span class="line">GDB is very powerful!</span><br></pre></td></tr></table></figure>
+
+<p>本关还是提示要<code>call (void)win()</code>, 但是不能直接获取flag，关卡破坏了win函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">0x00006049ee426951 &lt;+0&gt;:     endbr64 </span><br><span class="line">0x00006049ee426955 &lt;+4&gt;:     push   %rbp</span><br><span class="line">0x00006049ee426956 &lt;+5&gt;:     mov    %rsp,%rbp</span><br><span class="line">0x00006049ee426959 &lt;+8&gt;:     sub    $0x10,%rsp</span><br><span class="line">0x00006049ee42695d &lt;+12&gt;:    movq   $0x0,-0x8(%rbp)</span><br><span class="line">0x00006049ee426965 &lt;+20&gt;:    mov    -0x8(%rbp),%rax</span><br><span class="line">0x00006049ee426969 &lt;+24&gt;:    mov    (%rax),%eax</span><br><span class="line">0x00006049ee42696b &lt;+26&gt;:    lea    0x1(%rax),%edx</span><br><span class="line">0x00006049ee42696e &lt;+29&gt;:    mov    -0x8(%rbp),%rax</span><br><span class="line">0x00006049ee426972 &lt;+33&gt;:    mov    %edx,(%rax)</span><br><span class="line">0x00006049ee426974 &lt;+35&gt;:    lea    0x73e(%rip),%rdi        # 0x6049ee4270b9</span><br><span class="line">0x00006049ee42697b &lt;+42&gt;:    callq  0x6049ee426180 &lt;puts@plt&gt;</span><br><span class="line">0x00006049ee426980 &lt;+47&gt;:    mov    $0x0,%esi</span><br><span class="line">0x00006049ee426985 &lt;+52&gt;:    lea    0x749(%rip),%rdi        # 0x6049ee4270d5</span><br><span class="line">0x00006049ee42698c &lt;+59&gt;:    mov    $0x0,%eax</span><br><span class="line">0x00006049ee426991 &lt;+64&gt;:    callq  0x6049ee426240 &lt;open@plt&gt;</span><br><span class="line">0x00006049ee426996 &lt;+69&gt;:    mov    %eax,0x26a4(%rip)        # 0x6049ee429040 &lt;flag_fd.5712&gt;</span><br><span class="line">0x00006049ee42699c &lt;+75&gt;:    mov    0x269e(%rip),%eax        # 0x6049ee429040 &lt;flag_fd.5712&gt;</span><br><span class="line">0x00006049ee4269a2 &lt;+81&gt;:    test   %eax,%eax</span><br><span class="line">0x00006049ee4269a4 &lt;+83&gt;:    jns    0x6049ee4269ef &lt;win+158&gt;</span><br><span class="line">0x00006049ee4269a6 &lt;+85&gt;:    callq  0x6049ee426170 &lt;__errno_location@plt&gt;</span><br><span class="line">0x00006049ee4269ab &lt;+90&gt;:    mov    (%rax),%eax</span><br><span class="line">0x00006049ee4269ad &lt;+92&gt;:    mov    %eax,%edi</span><br><span class="line">0x00006049ee4269af &lt;+94&gt;:    callq  0x6049ee426270 &lt;strerror@plt&gt;</span><br><span class="line">0x00006049ee4269b4 &lt;+99&gt;:    mov    %rax,%rsi</span><br><span class="line">0x00006049ee4269b7 &lt;+102&gt;:   lea    0x722(%rip),%rdi        # 0x6049ee4270e0</span><br><span class="line">0x00006049ee4269be &lt;+109&gt;:   mov    $0x0,%eax</span><br><span class="line">0x00006049ee4269c3 &lt;+114&gt;:   callq  0x6049ee4261c0 &lt;printf@plt&gt;</span><br><span class="line">0x00006049ee4269c8 &lt;+119&gt;:   callq  0x6049ee4261f0 &lt;geteuid@plt&gt;</span><br><span class="line">0x00006049ee4269cd &lt;+124&gt;:   test   %eax,%eax</span><br><span class="line">0x00006049ee4269cf &lt;+126&gt;:   je     0x6049ee426a66 &lt;win+277&gt;</span><br><span class="line">0x00006049ee4269d5 &lt;+132&gt;:   lea    0x734(%rip),%rdi        # 0x6049ee427110</span><br><span class="line">0x00006049ee4269dc &lt;+139&gt;:   callq  0x6049ee426180 &lt;puts@plt&gt;</span><br><span class="line">0x00006049ee4269e1 &lt;+144&gt;:   lea    0x750(%rip),%rdi        # 0x6049ee427138</span><br><span class="line">0x00006049ee4269e8 &lt;+151&gt;:   callq  0x6049ee426180 &lt;puts@plt&gt;</span><br><span class="line">0x00006049ee4269ed &lt;+156&gt;:   jmp    0x6049ee426a66 &lt;win+277&gt;</span><br><span class="line">0x00006049ee4269ef &lt;+158&gt;:   mov    0x264b(%rip),%eax        # 0x6049ee429040 &lt;flag_fd.5712&gt;</span><br><span class="line">0x00006049ee4269f5 &lt;+164&gt;:   mov    $0x100,%edx</span><br><span class="line">0x00006049ee4269fa &lt;+169&gt;:   lea    0x265f(%rip),%rsi        # 0x6049ee429060 &lt;flag.5711&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x00006049ee42695d &lt;+12&gt;:    movq   $0x0,-0x8(%rbp)</span><br></pre></td></tr></table></figure>
+
+<p>win在这里将rbp-0x8赋值给0x0，很明显的错误，跳转到win+47，从这里开始执行open文件，之后会读入flag并输出</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/07/12/Kernel-1/" rel="prev" title="Kernel-1">
+      <i class="fa fa-chevron-left"></i> Kernel-1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/09/27/pwn-college-talking-web/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#level3"><span class="nav-number">1.</span> <span class="nav-text">level3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level4"><span class="nav-number">2.</span> <span class="nav-text">level4</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level5"><span class="nav-number">3.</span> <span class="nav-text">level5</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level6"><span class="nav-number">4.</span> <span class="nav-text">level6</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level7"><span class="nav-number">5.</span> <span class="nav-text">level7</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level8"><span class="nav-number">6.</span> <span class="nav-text">level8</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

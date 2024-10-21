@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="内核下载与编译 - CTF Wiki (ctf-wiki.org) 29、内核pwn环境搭建_哔哩哔哩_bilibili [原创]Linux内核入门——驱动模块-Pwn-看雪-安全社区|安全招聘|kanxue.com 【OS.0x01】Linux Kernel II：内核简易食用指北 - arttnba3’s blog Kernel Pwn 入门 (1)_内核pwn-CSDN博客 内核编译从htt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kernel-1">
+<meta property="og:url" content="http://example.com/2024/07/12/Kernel-1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="内核下载与编译 - CTF Wiki (ctf-wiki.org) 29、内核pwn环境搭建_哔哩哔哩_bilibili [原创]Linux内核入门——驱动模块-Pwn-看雪-安全社区|安全招聘|kanxue.com 【OS.0x01】Linux Kernel II：内核简易食用指北 - arttnba3’s blog Kernel Pwn 入门 (1)_内核pwn-CSDN博客 内核编译从htt">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-11T23:36:01.000Z">
+<meta property="article:modified_time" content="2024-07-11T23:36:33.842Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2024/07/12/Kernel-1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Kernel-1 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/07/12/Kernel-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kernel-1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-07-12 07:36:01 / Modified: 07:36:33" itemprop="dateCreated datePublished" datetime="2024-07-12T07:36:01+08:00">2024-07-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/environment/build-kernel/">内核下载与编译 - CTF Wiki (ctf-wiki.org)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Uv411j7fr/?p=29&vd_source=6b0fdd231a052436bd9b2c1c6bd27e40">29、内核pwn环境搭建_哔哩哔哩_bilibili</a></p>
+<p>[<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-271226.htm">原创]Linux内核入门——驱动模块-Pwn-看雪-安全社区|安全招聘|kanxue.com</a></p>
+<p><a target="_blank" rel="noopener" href="https://arttnba3.cn/2021/02/21/OS-0X01-LINUX-KERNEL-PART-II/#0x00-%E4%B8%80%E5%88%87%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D">【OS.0x01】Linux Kernel II：内核简易食用指北 - arttnba3’s blog</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_54218833/article/details/124360103">Kernel Pwn 入门 (1)_内核pwn-CSDN博客</a></p>
+<h1 id="内核编译"><a href="#内核编译" class="headerlink" title="内核编译"></a>内核编译</h1><p>从<a target="_blank" rel="noopener" href="https://www.kernel.org获取内核/">https://www.kernel.org获取内核</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~/kernel/linux-5.4.98</span><br><span class="line">$ make menuconfig</span><br><span class="line">//设置Kernel hacking -&gt; Compile-time checks and compiler options -&gt; Compile the kernel with debug info</span><br><span class="line">$ make -j3 bzImage</span><br></pre></td></tr></table></figure>
+
+<p>出现如下信息时</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Setup is 18012 bytes (padded to 18432 bytes).</span><br><span class="line">System is 9189 kB</span><br><span class="line">CRC df09b895</span><br><span class="line">Kernel: arch/x86/boot/bzImage is ready  (#1)</span><br></pre></td></tr></table></figure>
+
+<p>意味着编译成功。</p>
+<ul>
+<li><strong>bzImage</strong>：目前主流的 kernel 镜像格式，即 big zImage（即 bz 不是指 bzip2），适用于较大的（大于 512 KB） Kernel。这个镜像会被加载到内存的高地址，高于 1MB。bzImage 是用 gzip 压缩的，文件的开头部分有 gzip 解压缩的代码，所以我们不能用 gunzip 来解压缩。</li>
+<li><strong>zImage</strong>：比较老的 kernel 镜像格式，适用于较小的（不大于 512KB） Kernel。启动时，这个镜像会被加载到内存的低地址，即内存的前 640 KB。zImage 也不能用 gunzip 来解压缩。</li>
+<li><strong>vmlinuz</strong>：vmlinuz 不仅包含了压缩后的 vmlinux，还包含了 gzip 解压缩的代码。实际上就是 zImage 或者 bzImage 文件。该文件是 bootable 的。 bootable 是指它能够把内核加载到内存中。对于 Linux 系统而言，该文件位于 &#x2F;boot 目录下。该目录包含了启动系统时所需要的文件。</li>
+<li><strong>vmlinux</strong>：静态链接的 Linux kernel，以可执行文件的形式存在，尚未经过压缩。该文件往往是在生成 vmlinuz 的过程中产生的。该文件适合于调试。但是该文件不是 bootable 的。</li>
+<li><strong>vmlinux.bin</strong>：也是静态链接的 Linux kernel，只是以一个可启动的 (bootable) 二进制文件存在。所有的符号信息和重定位信息都被删除了。生成命令为：<code>objcopy -O binary vmlinux vmlinux.bin</code>。</li>
+<li><strong>uImage</strong>：uImage 是 U-boot 专用的镜像文件，它是在 zImage 之前加上了一个长度为 0x40 的 tag 而构成的。这个 tag 说明了这个镜像文件的类型、加载位置、生成时间、大小等信息。</li>
+</ul>
+<h1 id="编译内核模块"><a href="#编译内核模块" class="headerlink" title="编译内核模块"></a>编译内核模块</h1><p>LKM(Loadable Kernel Modules，可加载核心模块)同样是ELF文件，可单独编译但不能单独运行，只能作为内核中的一部分，可用ida分析</p>
+<p>模块通常用来实现一种文件系统、一个驱动程序或者其他内核上层的功能。</p>
+<blockquote>
+<p>Linux 内核之所以提供模块机制，是因为它本身是一个单内核 (monolithic kernel)。单内核的优点是效率高，因为所有的内容都集合在一起，但缺点是可扩展性和可维护性相对较差，模块机制就是为了弥补这一缺陷。</p>
+</blockquote>
+<h2 id="相关指令"><a href="#相关指令" class="headerlink" title="相关指令"></a>相关指令</h2><ul>
+<li><strong>insmod</strong>: 讲指定模块加载到内核中</li>
+<li><strong>rmmod</strong>: 从内核中卸载指定模块</li>
+<li><strong>lsmod</strong>: 列出已经加载的模块</li>
+<li><strong>modprobe</strong>: 添加或删除模块，modprobe 在加载模块时会查找依赖关系</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential</span><br></pre></td></tr></table></figure>
+
+<p>自己编译一个模块</p>
+<p>起名为<code>hello.c</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;linux/module.h&gt;</span><br><span class="line">#include &lt;linux/kernel.h&gt;</span><br><span class="line">#include &lt;linux/init.h&gt;</span><br><span class="line"></span><br><span class="line">static int __init kernel_module_init(void)</span><br><span class="line">&#123;</span><br><span class="line">    printk(&quot;&lt;1&gt;Hello the Linux kernel world!\n&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static void __exit kernel_module_exit(void)</span><br><span class="line">&#123;</span><br><span class="line">    printk(&quot;&lt;1&gt;Good bye the Linux kernel world! See you again!\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">module_init(kernel_module_init);</span><br><span class="line">module_exit(kernel_module_exit);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>linux/module.h</code>：对于LKM而言这是必须包含的一个头文件</li>
+<li><code>linux/kernel.h</code>：载入内核相关信息</li>
+<li><code>linux/init.h</code>：包含着一些有用的宏</li>
+</ul>
+<p>一个内核模块的入口点应当为<code> module_init()</code>，出口函数应当为<code>module_exit()</code>，在内核载入&#x2F;卸载内核模块时会缺省调用这两个函数</p>
+<ul>
+<li><code>__init &amp; __exit</code>：这两个宏用以在函数结束后释放相应的内存</li>
+<li><code>MODULE_AUTHOR() &amp; MODULE_LICENSE()</code>：声明内核作者与发行所用许可证</li>
+<li><code>printk()</code>：内核态函数，用以在内核缓冲区写入信息，其中<code>&lt;1&gt;</code>标识着信息的紧急级别（一共有8个优先级，0为最高，相关宏定义于linux&#x2F;kernel.h中）</li>
+</ul>
+<p>如下是<code>Makefile</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">obj-m += hello.o</span><br><span class="line">CURRENT_PATH := $(shell pwd)</span><br><span class="line">LINUX_KERNEL := 5.4.98</span><br><span class="line">LINUX_KERNEL_PATH := /root/kernel/linux-$(LINUX_KERNEL)</span><br><span class="line">all:</span><br><span class="line">	make -C $(LINUX_KERNEL_PATH) M=$(CURRENT_PATH) modules</span><br><span class="line">clean:</span><br><span class="line">	make -C $(LINUX_KERNEL_PATH) M=$(CURRENT_PATH) clean</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>obj-m</code>： 指定了编译的结果应当为<code>.ko</code>文件，即可装载内核模块，类似命令有： <code>obj-y</code> 编译进内核 ，<code>obj-n</code> 不编译</li>
+<li><code>CURRENT_PATH &amp; LINUX_KERNEL &amp; LINUX_KERNEL_PATH</code>：三个自定义变量，分别意味着通过shell命令获得当前路径、内核版本、内核源码路径</li>
+<li><code>all</code>：编译指令</li>
+<li><code>clean</code>：清理指令</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<p>这里要注意<code>tap</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//输出这样的信息表示编译成功</span><br><span class="line">make -C /root/kernel/linux-5.4.98 M=/root/kernel/moud modules</span><br><span class="line">make[1]: Entering directory &#x27;/root/kernel/linux-5.4.98&#x27;</span><br><span class="line">  CC [M]  /root/kernel/moud/hello.o</span><br><span class="line">  Building modules, stage 2.</span><br><span class="line">  MODPOST 1 modules</span><br><span class="line">WARNING: modpost: missing MODULE_LICENSE() in /root/kernel/moud/hello.o</span><br><span class="line">see include/linux/module.h for more information</span><br><span class="line">  CC [M]  /root/kernel/moud/hello.mod.o</span><br><span class="line">  LD [M]  /root/kernel/moud/hello.ko</span><br><span class="line">make[1]: Leaving directory &#x27;/root/kernel/linux-5.4.98&#x27;</span><br></pre></td></tr></table></figure>
+
+<h1 id="busybox编译-构建文件系统"><a href="#busybox编译-构建文件系统" class="headerlink" title="busybox编译(构建文件系统)"></a>busybox编译(构建文件系统)</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://busybox.net/downloads/busybox-1.36.1.tar.bz2</span><br><span class="line">tar -jxf busybox-1.32.1.tar.bz2</span><br></pre></td></tr></table></figure>
+
+<p>进行配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig</span><br></pre></td></tr></table></figure>
+
+<p>配置中最重要一点是设置为静态编译</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Setttings -&gt; Build static binary (no shared libs)</span><br></pre></td></tr></table></figure>
+
+<p>编译安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j3 &amp;&amp; install</span><br></pre></td></tr></table></figure>
+
+<p>在编译完成后，我们在 <code>_install</code> 目录下创建以下文件夹</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">❯ mkdir -p  proc sys dev etc/init.d</span><br></pre></td></tr></table></figure>
+
+<p>创建<code>init</code>为启动脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">echo &quot;INIT SCRIPT&quot;</span><br><span class="line">mkdir /tmp</span><br><span class="line">mount -t proc none /proc</span><br><span class="line">mount -t sysfs none /sys</span><br><span class="line">mount -t devtmpfs none /dev</span><br><span class="line">mount -t debugfs none /sys/kernel/debug</span><br><span class="line">mount -t tmpfs none /tmp</span><br><span class="line">echo -e &quot;Boot took $(cut -d&#x27; &#x27; -f1 /proc/uptime) seconds&quot;</span><br><span class="line">setsid /bin/cttyhack setuidgid 1000 /bin/sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x init</span><br></pre></td></tr></table></figure>
+
+<p>打包文件系统</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . | cpio -o --format=newc &gt; ../rootfs.img</span><br></pre></td></tr></table></figure>
+
+<p>ps:这个命令可以解包文件系统<code>cpio -idmv &lt; rootfs.img</code></p>
+<h1 id="启动内核"><a href="#启动内核" class="headerlink" title="启动内核"></a>启动内核</h1><p>所需有：</p>
+<ol>
+<li>编译完成的内核</li>
+<li>busybox构建的文件系统(rootfs.img)</li>
+<li>qemu</li>
+<li>LKM(可选)</li>
+</ol>
+<p>使用ctf-wiki中的脚本来启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">qemu-system-x86_64 \</span><br><span class="line">    -m 64M \</span><br><span class="line">    -nographic \</span><br><span class="line">    -kernel ./bzImage \</span><br><span class="line">    -initrd  ./rootfs.img \</span><br><span class="line">    -append &quot;root=/dev/ram rw console=ttyS0 oops=panic panic=1 kaslr&quot; \</span><br><span class="line">    -smp cores=2,threads=1 \</span><br><span class="line">    -cpu kvm64</span><br></pre></td></tr></table></figure>
+
+<p>此即为启动成功</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[    4.235165] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x2cd88e73b4e, max_idle_ns: 440795230258 ns</span><br><span class="line">[    4.236102] clocksource: Switched to clocksource tsc</span><br><span class="line">[    4.335487] ko_test: loading out-of-tree module taints kernel.</span><br><span class="line">[    4.342120] This is a test ko!</span><br><span class="line">Boot took 4.32 seconds</span><br><span class="line">~ # ls</span><br><span class="line">bin         etc         ko_test.ko  proc        sbin        tmp</span><br><span class="line">dev         init        linuxrc     root        sys         usr</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在用 qemu 启动内核时，常用的选项如下</p>
+<ul>
+<li>-m， 指定 RAM 大小，默认 384M</li>
+<li>-kernel，指定内核镜像文件 bzImage 路径</li>
+<li>-initrd，设置内核启动的内存文件系统</li>
+<li><code>-smp [cpus=]n[,cores=cores][,threads=threads][,dies=dies][,sockets=sockets][,maxcpus=maxcpus]</code>，指定使用到的核数。</li>
+<li>-cpu，指定指定要模拟的处理器架构，可以同时开启一些保护，如<ul>
+<li>+smap，开启 smap 保护</li>
+<li>+smep，开启 smep 保护</li>
+</ul>
+</li>
+<li>-nographic，表示不需要图形界面</li>
+<li>-monitor，对 qemu 提供的控制台进行重定向，如果没有设置的话，可以直接进入控制台。</li>
+<li>-append，附加选项<ul>
+<li><code>nokaslr</code> 关闭随机偏移</li>
+<li>console&#x3D;ttyS0，和 <code>nographic</code> 一起使用，启动的界面就变成了当前终端。</li>
+</ul>
+</li>
+</ul>
+<h2 id="加载模块"><a href="#加载模块" class="headerlink" title="加载模块"></a>加载模块</h2><p>将编译好的模块放入<code>文件系统目录</code>中</p>
+<p>在<code>init</code>中加入<code>insmod /hello.ko</code></p>
+<p>再次打包，就可在启动时加载模块了</p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>为了方便调试，设置为以root启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- setsid /bin/cttyhack setuidgid 1000 /bin/sh</span><br><span class="line">+ setsid /bin/cttyhack setuidgid 0 /bin/sh</span><br></pre></td></tr></table></figure>
+
+<p>同时关闭随机化</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">qemu-system-x86_64 \</span><br><span class="line">    -m 64M \</span><br><span class="line">    -nographic \</span><br><span class="line">    -kernel ./bzImage \</span><br><span class="line">    -initrd  ./rootfs.img \</span><br><span class="line">    -append &quot;root=/dev/ram rw console=ttyS0 oops=panic panic=1 nokaslr&quot; \</span><br><span class="line">    -smp cores=2,threads=1 \</span><br><span class="line">    -cpu kvm64</span><br></pre></td></tr></table></figure>
+
+<h2 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h2><p>获取内核特定符号地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep prepare_kernel_cred  /proc/kallsyms</span><br><span class="line">grep commit_creds  /proc/kallsyms</span><br></pre></td></tr></table></figure>
+
+<p>查看装载的驱动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod</span><br></pre></td></tr></table></figure>
+
+<p>获取驱动加载的基地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># method 1</span><br><span class="line">grep target_module_name /proc/modules </span><br><span class="line"># method 2</span><br><span class="line">cat /sys/module/target_module_name/sections/.text </span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;sys&#x2F;module&#x2F; 目录下存放着加载的各个模块的信息。</p>
+<h2 id="启动调试"><a href="#启动调试" class="headerlink" title="启动调试"></a>启动调试</h2><p>qemu可以启动调试服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu -gdb dev</span><br></pre></td></tr></table></figure>
+
+<p>同时提供了一个简写的方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu -s </span><br></pre></td></tr></table></figure>
+
+<p>即 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu -gdb tcp::1234</span><br></pre></td></tr></table></figure>
+
+<p>然后在gdb中即可使用来连接调试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target remote localhost:1234</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/12/20/2023-qwbs7-warmup/" rel="prev" title="2023-qwbs7-warmup">
+      <i class="fa fa-chevron-left"></i> 2023-qwbs7-warmup
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/09/26/pwn-college-debugging-refresher/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E7%BC%96%E8%AF%91"><span class="nav-number">1.</span> <span class="nav-text">内核编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97"><span class="nav-number">2.</span> <span class="nav-text">编译内核模块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4"><span class="nav-number">2.1.</span> <span class="nav-text">相关指令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#busybox%E7%BC%96%E8%AF%91-%E6%9E%84%E5%BB%BA%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.</span> <span class="nav-text">busybox编译(构建文件系统)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%86%85%E6%A0%B8"><span class="nav-number">4.</span> <span class="nav-text">启动内核</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E6%A8%A1%E5%9D%97"><span class="nav-number">4.1.</span> <span class="nav-text">加载模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E8%AF%95"><span class="nav-number">4.2.</span> <span class="nav-text">调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">4.3.</span> <span class="nav-text">基本操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E8%B0%83%E8%AF%95"><span class="nav-number">4.4.</span> <span class="nav-text">启动调试</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
