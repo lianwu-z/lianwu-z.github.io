@@ -20,19 +20,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="1234title: debugging-refreshertags: [pwn,pwn-college]date: 2023-09-18 21:19:06description: pwncollege的gdb模块    level312345678910111213141516You can examine the contents of memory using the &#96;x&#x2F;&lt;n&amp;gt">
+  <meta name="description" content="pwncollege的gdb模块">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/2024/09/26/pwn-college-debugging-refresher/index.html">
+<meta property="og:title" content="debugging-refresher">
+<meta property="og:url" content="http://example.com/2024/10/18/pwn-college-debugging-refresher/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="1234title: debugging-refreshertags: [pwn,pwn-college]date: 2023-09-18 21:19:06description: pwncollege的gdb模块    level312345678910111213141516You can examine the contents of memory using the &#96;x&#x2F;&lt;n&amp;gt">
+<meta property="og:description" content="pwncollege的gdb模块">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-09-25T23:58:34.704Z">
-<meta property="article:modified_time" content="2024-10-21T11:47:56.420Z">
+<meta property="article:published_time" content="2024-10-18T13:19:06.000Z">
+<meta property="article:modified_time" content="2024-10-21T12:11:14.248Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="pwn">
+<meta property="article:tag" content="pwn-college">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2024/09/26/pwn-college-debugging-refresher/">
+<link rel="canonical" href="http://example.com/2024/10/18/pwn-college-debugging-refresher/">
 
 
 <script id="page-configurations">
@@ -45,7 +47,7 @@
   };
 </script>
 
-  <title> | Hexo</title>
+  <title>debugging-refresher | Hexo</title>
   
 
 
@@ -155,7 +157,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/09/26/pwn-college-debugging-refresher/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/18/pwn-college-debugging-refresher/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -168,7 +170,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          debugging-refresher
         </h1>
 
         <div class="post-meta">
@@ -178,17 +180,18 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2024-09-26 07:58:34" itemprop="dateCreated datePublished" datetime="2024-09-26T07:58:34+08:00">2024-09-26</time>
+              <time title="Created: 2024-10-18 21:19:06" itemprop="dateCreated datePublished" datetime="2024-10-18T21:19:06+08:00">2024-10-18</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-10-21 19:47:56" itemprop="dateModified" datetime="2024-10-21T19:47:56+08:00">2024-10-21</time>
+                <time title="Modified: 2024-10-21 20:11:14" itemprop="dateModified" datetime="2024-10-21T20:11:14+08:00">2024-10-21</time>
               </span>
 
           
+            <div class="post-description">pwncollege的gdb模块</div>
 
         </div>
       </header>
@@ -199,11 +202,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">title: debugging-refresher</span><br><span class="line">tags: [pwn,pwn-college]</span><br><span class="line">date: 2023-09-18 21:19:06</span><br><span class="line">description: pwncollege的gdb模块</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">You can examine the contents of memory using the `x/&lt;n&gt;&lt;u&gt;&lt;f&gt; &lt;address&gt;` parameterized command. In this format `&lt;u&gt;` is</span><br><span class="line">the unit size to display, `&lt;f&gt;` is the format to display it in, and `&lt;n&gt;` is the number of elements to display. Valid</span><br><span class="line">unit sizes are `b` (1 byte), `h` (2 bytes), `w` (4 bytes), and `g` (8 bytes). Valid formats are `d` (decimal), `x`</span><br><span class="line">(hexadecimal), `s` (string) and `i` (instruction). The address can be specified using a register name, symbol name, or</span><br><span class="line">absolute address. Additionally, you can supply mathematical expressions when specifying the address.</span><br><span class="line"></span><br><span class="line">For example, `x/8i $rip` will print the next 8 instructions from the current instruction pointer. `x/16i main` will</span><br><span class="line">print the first 16 instructions of main. You can also use `disassemble main`, or `disas main` for short, to print all of</span><br><span class="line">the instructions of main. Alternatively, `x/16gx $rsp` will print the first 16 values on the stack. `x/gx $rbp-0x32`</span><br><span class="line">will print the local variable stored there on the stack.</span><br><span class="line"></span><br><span class="line">You will probably want to view your instructions using the CORRECT assembly syntax. You can do that with the command</span><br><span class="line">`set disassembly-flavor intel`.</span><br><span class="line"></span><br><span class="line">In order to solve this level, you must figure out the random value on the stack (the value read in from `/dev/urandom`).</span><br><span class="line">Think about what the arguments to the read system call are.</span><br></pre></td></tr></table></figure>
+        <h1 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">You can examine the contents of memory using the `x/&lt;n&gt;&lt;u&gt;&lt;f&gt; &lt;address&gt;` parameterized command. In this format `&lt;u&gt;` is</span><br><span class="line">the unit size to display, `&lt;f&gt;` is the format to display it in, and `&lt;n&gt;` is the number of elements to display. Valid</span><br><span class="line">unit sizes are `b` (1 byte), `h` (2 bytes), `w` (4 bytes), and `g` (8 bytes). Valid formats are `d` (decimal), `x`</span><br><span class="line">(hexadecimal), `s` (string) and `i` (instruction). The address can be specified using a register name, symbol name, or</span><br><span class="line">absolute address. Additionally, you can supply mathematical expressions when specifying the address.</span><br><span class="line"></span><br><span class="line">For example, `x/8i $rip` will print the next 8 instructions from the current instruction pointer. `x/16i main` will</span><br><span class="line">print the first 16 instructions of main. You can also use `disassemble main`, or `disas main` for short, to print all of</span><br><span class="line">the instructions of main. Alternatively, `x/16gx $rsp` will print the first 16 values on the stack. `x/gx $rbp-0x32`</span><br><span class="line">will print the local variable stored there on the stack.</span><br><span class="line"></span><br><span class="line">You will probably want to view your instructions using the CORRECT assembly syntax. You can do that with the command</span><br><span class="line">`set disassembly-flavor intel`.</span><br><span class="line"></span><br><span class="line">In order to solve this level, you must figure out the random value on the stack (the value read in from `/dev/urandom`).</span><br><span class="line">Think about what the arguments to the read system call are.</span><br></pre></td></tr></table></figure>
 
 <p>找到从&#x2F;dev&#x2F;urandom读入的随机数</p>
 <p>首先用<code>layout regs</code> 查看反编译代码和寄存器，找到源码</p>
@@ -268,6 +267,10 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+              <a href="/tags/pwn-college/" rel="tag"># pwn-college</a>
+          </div>
 
         
 
@@ -275,12 +278,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2024/07/12/Kernel-1/" rel="prev" title="Kernel-1">
-      <i class="fa fa-chevron-left"></i> Kernel-1
+    <a href="/2024/10/18/pwn-college-talking-web/" rel="prev" title="talking-web">
+      <i class="fa fa-chevron-left"></i> talking-web
     </a></div>
       <div class="post-nav-item">
-    <a href="/2024/09/27/pwn-college-talking-web/" rel="next" title="">
-       <i class="fa fa-chevron-right"></i>
+    <a href="/2024/10/18/pwn-college-Program-Interaction-Fundamentals/" rel="next" title="Program-Interaction-Fundamentals">
+      Program-Interaction-Fundamentals <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -354,14 +357,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
