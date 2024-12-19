@@ -150,6 +150,72 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/12/19/qemu_escape/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/12/19/qemu_escape/" class="post-title-link" itemprop="url">qemu_escape</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-12-19 10:08:50 / Modified: 11:54:21" itemprop="dateCreated datePublished" datetime="2024-12-19T10:08:50+08:00">2024-12-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>qemu逃逸</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/12/19/qemu_escape/">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/12/19/pwncpp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -198,95 +264,6 @@
             </div>
           <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/12/06/qemu_escape/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/12/06/qemu_escape/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2024-12-06 16:29:01 / Modified: 19:11:22" itemprop="dateCreated datePublished" datetime="2024-12-06T16:29:01+08:00">2024-12-06</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="qemu"><a href="#qemu" class="headerlink" title="qemu"></a>qemu</h1><p>QEMU是一个开源的虚拟机，它使用动态二进制转换技术来模拟处理器，并且提供多种硬件和外设模型，这使它能够运行多种未修改的客户机操作系统，能与<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%9F%BA%E4%BA%8E%E5%86%85%E6%A0%B8%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA">KVM</a>配合以接近本地速度运行虚拟机（接近真实电脑的速度）</p>
-<p>有多种运行模式：</p>
-<ol>
-<li>User mode：用户模式，在这种模式下，QEMU 运行某个单一的程序，并且适配其的系统调用。一般异构pwn都是这种模式。</li>
-<li>System mode：系统模式，在这种模式下，QEMU 可以模拟出一个完整的计算机系统。一般qemu逃逸都是这种模式。</li>
-</ol>
-<p>qemu逃逸中往往是打qemu中的模拟pci设备，通过共享内存交换数据，逃出qemu这个小系统，到宿主机上getshell(或是其他命令)</p>
-<h2 id="qemu内存结构"><a href="#qemu内存结构" class="headerlink" title="qemu内存结构"></a>qemu内存结构</h2><p>GPA(guest 物理地址)其实是由mmap得到的，这段地址是没有执行权限的</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Guest&#x27; processes</span><br><span class="line">                     +--------------------+</span><br><span class="line">Virtual addr space   |                    |</span><br><span class="line">                     +--------------------+</span><br><span class="line">                     |                    |</span><br><span class="line">                     \__   Page Table     \__</span><br><span class="line">                        \                    \</span><br><span class="line">                         |                    |  Guest kernel</span><br><span class="line">                    +----+--------------------+----------------+</span><br><span class="line">Guest&#x27;s phy. memory |    |                    |                |</span><br><span class="line">                    +----+--------------------+----------------+</span><br><span class="line">                    |                                          |</span><br><span class="line">                    \__                                        \__</span><br><span class="line">                       \                                          \</span><br><span class="line">                        |             QEMU process                 |</span><br><span class="line">                   +----+------------------------------------------+</span><br><span class="line">Virtual addr space |    |                                          |</span><br><span class="line">                   +----+------------------------------------------+</span><br><span class="line">                   |                                               |</span><br><span class="line">                    \__                Page Table                   \__</span><br><span class="line">                       \                                               \</span><br><span class="line">                        |                                               |</span><br><span class="line">                   +----+-----------------------------------------------++</span><br><span class="line">Physical memory    |    |                                               ||</span><br><span class="line">                   +----+-----------------------------------------------++</span><br></pre></td></tr></table></figure>
-
-<p>以strng为例分析</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">./qemu-system-x86_64 \</span><br><span class="line">-m 1G \</span><br><span class="line">-device strng \</span><br><span class="line">-hda my-disk.img \</span><br><span class="line">-hdb my-seed.img \</span><br><span class="line">-nographic \</span><br><span class="line">-L pc-bios/ \</span><br><span class="line">-enable-kvm \</span><br><span class="line">-device e1000,netdev=net0 \</span><br><span class="line">-netdev user,id=net0,hostfwd=tcp::5555-:22</span><br></pre></td></tr></table></figure>
-
-<p>分配了1g的内存空间</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x7f5a2fd00000     0x7f5a2fe00000 rw-p   100000      0 [anon_7f5a2fd00]                                                                                                                      </span><br><span class="line">   0x7f5a2fe00000     0x7f5a6fe00000 rw-p 40000000      0 [anon_7f5a2fe00]                                                                                                                      </span><br><span class="line">   0x7f5a6fe00000     0x7f5a6fe01000 ---p     1000      0 [anon_7f5a6fe00] </span><br></pre></td></tr></table></figure>
-
-<h2 id="地址转换"><a href="#地址转换" class="headerlink" title="地址转换"></a>地址转换</h2><p>qemu模拟的是一个小系统，实现了内存虚拟化，为Guest提供了一个在它看来从0开始的连续物理内存空间</p>
-<p>在qemu中存在两种地址转换</p>
-<p>一是GVA到GPA，从Guest虚拟地址到Guest物理地址，这一层是模拟真实设备中的虚拟地址和物理地址，通过分析转换规则，可以模拟这一层转换</p>
-<p>二是GPA到 HVA，从Guest物理地址到Host虚拟地址，这一层是把Guest的物理地址转换为qemu使用mmap申请的地址，我们只需要获取内存基址，再和GPA相加即可得到，因为GPA和HVA是一一对应的。到了这一步就相当于我们来到了libc那一层，qemu肯定也是要有libc依赖库的，就可以从libc中调用函数来实现对主机攻击。</p>
-<p>关于GVA-&gt;GPA这一步，核心在于pagemap这个接口，在&#x2F;proc&#x2F;pid&#x2F;下面有个文件叫pagemap，它会每个page，生成了一个64bit的描述符，来描述虚拟地址这一页对应的物理页帧号或者SWAP里面的偏移，详见文档：</p>
-<p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/Documentation/admin-guide/mm/pagemap.rst">pagemap</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- Bits 0-54  : physical frame number if present.</span><br><span class="line">- Bit  55    : page table entry is soft-dirty.</span><br><span class="line">- Bit  56    : page exclusively mapped.</span><br><span class="line">- Bits 57-60 : zero</span><br><span class="line">- Bit  61    : page is file-page or shared-anon.</span><br><span class="line">- Bit  62    : page is swapped.</span><br><span class="line">- Bit  63    : page is present.</span><br></pre></td></tr></table></figure>
-
-<p>我们只需要获取当前页帧号，再加上页内偏移即可得到物理地址</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;assert.h&gt;</span><br><span class="line">#include &lt;inttypes.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">#define PAGE_SHIFT  12</span><br><span class="line">#define PAGE_SIZE   (1 &lt;&lt; PAGE_SHIFT)</span><br><span class="line">#define PFN_PRESENT (1ull &lt;&lt; 63)</span><br><span class="line">#define PFN_PFN     ((1ull &lt;&lt; 55) - 1)</span><br><span class="line"> </span><br><span class="line">int fd;</span><br><span class="line">// 获取页内偏移</span><br><span class="line">uint32_t page_offset(uint32_t addr)</span><br><span class="line">&#123;</span><br><span class="line">    // addr &amp; 0xfff</span><br><span class="line">    return addr &amp; ((1 &lt;&lt; PAGE_SHIFT) - 1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">uint64_t gva_to_gfn(void *addr)</span><br><span class="line">&#123;</span><br><span class="line">    uint64_t pme, gfn;</span><br><span class="line">    size_t offset;</span><br><span class="line"> </span><br><span class="line">    printf(&quot;pfn_item_offset : %p\n&quot;, (uintptr_t)addr &gt;&gt; 9);</span><br><span class="line">    offset = ((uintptr_t)addr &gt;&gt; 9) &amp; ~7;</span><br><span class="line"> 	</span><br><span class="line">    ////下面是网上其他人的代码，只是为了理解上面的代码</span><br><span class="line">    //一开始除以 0x1000  （getpagesize=0x1000，4k对齐，而且本来低12位就是页内索引，需要去掉），即除以2**12, 这就获取了页号了，</span><br><span class="line">    //pagemap中一个地址64位，即8字节，也即sizeof(uint64_t)，所以有了页号后，我们需要乘以8去找到对应的偏移从而获得对应的物理地址</span><br><span class="line">    //最终  vir/2^12 * 8 = (vir / 2^9) &amp; ~7</span><br><span class="line">    //这跟上面的右移9正好对应，但是为什么要 &amp; ~7 ,因为你  vir &gt;&gt; 12 &lt;&lt; 3 , 跟vir &gt;&gt; 9 是有区别的，vir &gt;&gt; 12 &lt;&lt; 3低3位肯定是0，所以通过&amp; ~7将低3位置0</span><br><span class="line">    // int page_size=getpagesize();</span><br><span class="line">    // unsigned long vir_page_idx = vir/page_size;</span><br><span class="line">    // unsigned long pfn_item_offset = vir_page_idx*sizeof(uint64_t);</span><br><span class="line"> </span><br><span class="line">    lseek(fd, offset, SEEK_SET);</span><br><span class="line">    //得到页表项偏移后移到pagemap对应的页表项</span><br><span class="line">    read(fd, &amp;pme, 8);</span><br><span class="line">    // 确保页面存在——page is present.</span><br><span class="line">    if (!(pme &amp; PFN_PRESENT))</span><br><span class="line">        return -1;</span><br><span class="line">    // physical frame number</span><br><span class="line">    gfn = pme &amp; PFN_PFN;    </span><br><span class="line">    return gfn;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">uint64_t gva_to_gpa(void *addr)</span><br><span class="line">&#123;</span><br><span class="line">    uint64_t gfn = gva_to_gfn(addr);</span><br><span class="line">    assert(gfn != -1);</span><br><span class="line">    return (gfn &lt;&lt; PAGE_SHIFT) | page_offset((uint64_t)addr);</span><br><span class="line">&#125;   </span><br><span class="line"> </span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    uint8_t *ptr;</span><br><span class="line">    uint64_t ptr_mem;</span><br><span class="line"> </span><br><span class="line">    fd = open(&quot;/proc/self/pagemap&quot;, O_RDONLY);</span><br><span class="line">    if (fd &lt; 0) &#123;</span><br><span class="line">        perror(&quot;open&quot;);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    ptr = malloc(256);</span><br><span class="line">    strcpy(ptr, &quot;Where am I?&quot;);</span><br><span class="line">    printf(&quot;%s\n&quot;, ptr);</span><br><span class="line">    ptr_mem = gva_to_gpa(ptr);</span><br><span class="line">    printf(&quot;Your physical address is at 0x%&quot;PRIx64&quot;\n&quot;, ptr_mem);</span><br><span class="line">    printf(&quot;Your virtual address is at 0x%&quot;PRIx64&quot;\n&quot;, (uint64_t)ptr);</span><br><span class="line">    printf(&quot;pagesize: %d\n&quot;, getpagesize());</span><br><span class="line">    getchar();</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>该程序向guest中写入了Where am i?字符串</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; x /s 0x7f5a2fe00000+0x3e046f30</span><br><span class="line">0x7f5a6de46f30: &quot;Where am I?&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>gdb中也是成功获取到HVA</p>
-
       
     </div>
 
