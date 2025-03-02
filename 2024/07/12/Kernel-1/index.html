@@ -28,7 +28,7 @@
 <meta property="og:description" content="kernel搭建">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-07-11T23:36:01.000Z">
-<meta property="article:modified_time" content="2024-11-22T01:26:33.960Z">
+<meta property="article:modified_time" content="2025-03-01T09:06:44.704Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
@@ -186,7 +186,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-11-22 09:26:33" itemprop="dateModified" datetime="2024-11-22T09:26:33+08:00">2024-11-22</time>
+                <time title="Modified: 2025-03-01 17:06:44" itemprop="dateModified" datetime="2025-03-01T17:06:44+08:00">2025-03-01</time>
               </span>
 
           
@@ -206,7 +206,7 @@
 <p>[<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-271226.htm">原创]Linux内核入门——驱动模块-Pwn-看雪-安全社区|安全招聘|kanxue.com</a></p>
 <p><a target="_blank" rel="noopener" href="https://arttnba3.cn/2021/02/21/OS-0X01-LINUX-KERNEL-PART-II/#0x00-%E4%B8%80%E5%88%87%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D">【OS.0x01】Linux Kernel II：内核简易食用指北 - arttnba3’s blog</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_54218833/article/details/124360103">Kernel Pwn 入门 (1)_内核pwn-CSDN博客</a></p>
-<h1 id="内核编译"><a href="#内核编译" class="headerlink" title="内核编译"></a>内核编译</h1><p>从<a target="_blank" rel="noopener" href="https://www.kernel.org获取内核/">https://www.kernel.org获取内核</a></p>
+<h1 id="内核编译"><a href="#内核编译" class="headerlink" title="内核编译"></a>内核编译</h1><p>从<code>https://www.kernel.org</code>获取内核</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~/kernel/linux-5.4.98</span><br><span class="line">$ make menuconfig</span><br><span class="line">//设置Kernel hacking -&gt; Compile-time checks and compiler options -&gt; Compile the kernel with debug info</span><br><span class="line">$ make -j3 bzImage</span><br></pre></td></tr></table></figure>
 
 <p>出现如下信息时</p>
@@ -273,6 +273,8 @@
 
 <p>编译安装</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j3 &amp;&amp; install</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">补充一下编译busybox遇到的问题</span><br><span class="line">1.缺少ncurses库,因为非标准的c导致的警告,在报错文件里的main前加个int就行</span><br><span class="line">	https://github.com/espressif/ESP8266_RTOS_SDK/issues/1283</span><br><span class="line">2.make[1]: *** [scripts/Makefile.build:197: networking/tc.o] Error 1</span><br><span class="line">	make[1]: *** Waiting for unfinished jobs.... </span><br><span class="line">	应该是不兼容较新的内核,一直到现在的1.37还没修,但所幸找到补丁了</span><br><span class="line">	https://bugs.busybox.net/show_bug.cgi?id=15931</span><br></pre></td></tr></table></figure>
 
 <p>在编译完成后，我们在 <code>_install</code> 目录下创建以下文件夹</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">❯ mkdir -p  proc sys dev etc/init.d</span><br></pre></td></tr></table></figure>
@@ -348,7 +350,6 @@
 
 <p>然后在gdb中即可使用来连接调试</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target remote localhost:1234</span><br></pre></td></tr></table></figure>
-
 
     </div>
 
