@@ -19,26 +19,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="V8-Pwn入门 概述v8 是 Google 用 C++ 开发的一个开源 JavaScript 引擎.简单来说, 就是执行 js 代码的一个程序.Chromium, Node.js 都使用 v8 解析并运行 js. v8开源仓库 环境搭建 Chromium and Chromium OS use a package of scripts called depot_tools to manage c">
+    <meta name="description" content="v8pwn入门">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/2025/03/04/V8-ENVIONMENT/index.html">
+<meta property="og:title" content="V8-BASIC">
+<meta property="og:url" content="http://example.com/2025/03/09/V8-ENVIONMENT/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="V8-Pwn入门 概述v8 是 Google 用 C++ 开发的一个开源 JavaScript 引擎.简单来说, 就是执行 js 代码的一个程序.Chromium, Node.js 都使用 v8 解析并运行 js. v8开源仓库 环境搭建 Chromium and Chromium OS use a package of scripts called depot_tools to manage c">
+<meta property="og:description" content="v8pwn入门">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-03-04T14:38:21.774Z">
-<meta property="article:modified_time" content="2025-03-09T13:22:42.042Z">
+<meta property="article:published_time" content="2025-03-09T02:14:02.000Z">
+<meta property="article:modified_time" content="2025-03-09T15:47:10.749Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="pwn">
+<meta property="article:tag" content="v8">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/2025/03/04/V8-ENVIONMENT/">
+<link rel="canonical" href="http://example.com/2025/03/09/V8-ENVIONMENT/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2025/03/04/V8-ENVIONMENT/","path":"2025/03/04/V8-ENVIONMENT/","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2025/03/09/V8-ENVIONMENT/","path":"2025/03/09/V8-ENVIONMENT/","title":"V8-BASIC"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title> | Hexo</title>
+<title>V8-BASIC | Hexo</title>
   
 
 
@@ -122,7 +124,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -149,7 +151,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2025/03/04/V8-ENVIONMENT/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/03/09/V8-ENVIONMENT/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -162,12 +164,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Hexo">
-      <meta itemprop="description" content="">
+      <meta itemprop="name" content="V8-BASIC | Hexo">
+      <meta itemprop="description" content="v8pwn入门">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          V8-BASIC
         </h1>
 
         <div class="post-meta-container">
@@ -177,28 +179,22 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
+      
 
-      <time title="Created: 2025-03-04 22:38:21" itemprop="dateCreated datePublished" datetime="2025-03-04T22:38:21+08:00">2025-03-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-03-09 21:22:42" itemprop="dateModified" datetime="2025-03-09T21:22:42+08:00">2025-03-09</time>
+      <time title="Created: 2025-03-09 10:14:02 / Modified: 23:47:10" itemprop="dateCreated datePublished" datetime="2025-03-09T10:14:02+08:00">2025-03-09</time>
     </span>
 
   
 </div>
 
+            <div class="post-description">v8pwn入门</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>V8-Pwn入门</p>
-<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>v8 是 Google 用 C++ 开发的一个开源 JavaScript 引擎.<br>简单来说, 就是执行 js 代码的一个程序.<br>Chromium, Node.js 都使用 v8 解析并运行 js.</p>
+    <div class="post-body" itemprop="articleBody"><h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>v8 是 Google 用 C++ 开发的一个开源 JavaScript 引擎.<br>简单来说, 就是执行 js 代码的一个程序.<br>Chromium, Node.js 都使用 v8 解析并运行 js.</p>
 <p><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8/">v8开源仓库</a></p>
 <h1 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h1><blockquote>
 <p>Chromium and Chromium OS use a package of scripts called <a target="_blank" rel="noopener" href="https://www.chromium.org/developers/how-tos/depottools"><strong>depot_tools</strong></a> to manage checkouts and code reviews.</p>
@@ -288,18 +284,22 @@
     
 
     <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+              <a href="/tags/v8/" rel="tag"># v8</a>
+          </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2025/01/26/2025-%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/" rel="prev" title="Glacierctf-2024">
-                  <i class="fa fa-angle-left"></i> Glacierctf-2024
+                <a href="/2025/01/26/2025-%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/" rel="prev" title="西湖论剑-2025">
+                  <i class="fa fa-angle-left"></i> 西湖论剑-2025
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2025/03/05/IOT%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" rel="next" title="">
-                   <i class="fa fa-angle-right"></i>
+                <a href="/2025/03/09/IOT%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" rel="next" title="iot环境遇到的一些问题">
+                  iot环境遇到的一些问题 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
